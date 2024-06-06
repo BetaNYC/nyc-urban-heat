@@ -8,11 +8,12 @@ import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
+import {Fill, Stroke, Style} from 'ol/style.js';
 
 function App() {
   const mapElement = useRef<HTMLDivElement>(null);
-  const [mapObj, setMapObj] = useState<Map|null>(null);
-  const [data, setData] = useState<object|null>(null);
+  const [mapObj, setMapObj] = useState<Map | null>(null);
+  const [data, setData] = useState<any | null>(null);
 
   useEffect(() => {
     // Initialize map
@@ -27,7 +28,7 @@ function App() {
       layers: [osmLayer],
       view: new View({
         center: [-73.84200928305255, 40.76043006443475],
-        zoom: 12,
+        zoom: 12
       }),
     });
 
@@ -40,20 +41,22 @@ function App() {
         const sample = data.filter((d: any, i: number) => i < 3);
 
         const geoJSONObj: any = {
-          'type': 'FeatureCollection',
-          'features': sample.map((d: any) => ({
-            type: 'Feature',
-            properties: {
-              ...d
-            },
-            geometry: {
-              type: "MultiPolygon",
-              coordinates: d.geometry.coordinates
+          "type": "FeatureCollection",
+          "features": sample.map((d:any) => {
+            const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
+            delete d.geometry
+            return {
+              "type": "Feature",
+              "properties": { ...d },
+              "geometry": {
+                coordinates,
+                "type": "MultiPolygon"
+              }
             }
-          }))
-        };
-
-        setData(geoJSONObj);
+          })
+        }
+        
+        setData(geoJSONObj); 
       });
 
     return () => initialMapObj.setTarget(undefined);
@@ -62,16 +65,28 @@ function App() {
   useEffect(() => {
     if (data && mapObj) {
       try {
-        // @ts-ignore
-        const features = new GeoJSON().readFeatures(data);
-
-        if (features && features.length > 0) {
-          const vectorSource = new VectorSource({
-            features
-          });
+        if (data.features.length) {
+          const features = new GeoJSON().readFeatures(data);
+          const vectorSource = new VectorSource({ features })
+          
+          const styles: any = {
+            'MultiPolygon': new Style({
+              stroke: new Stroke({
+                color: 'red',
+                width: 1,
+              }),
+              fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.1)',
+              }),
+            })
+          }
+          const styleFunction = function (feature: any) {
+            return styles[feature.getGeometry().getType()];
+          };
 
           const vectorLayer = new VectorLayer({
-            source: new VectorSource(data)
+            source: vectorSource,
+            style: styleFunction,
           });
 
           mapObj.addLayer(vectorLayer);
