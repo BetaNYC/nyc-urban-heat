@@ -10,9 +10,9 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
 
 function App() {
-  const mapElement = useRef();
-  const [mapObj, setMapObj] = useState(null);
-  const [data, setData] = useState(null);
+  const mapElement = useRef<HTMLDivElement>(null);
+  const [mapObj, setMapObj] = useState<Map|null>(null);
+  const [data, setData] = useState<object|null>(null);
 
   useEffect(() => {
     // Initialize map
@@ -22,8 +22,8 @@ function App() {
 
     useGeographic();
 
-    const initialMapObj = new Map({
-      target: mapElement.current,
+    const initialMapObj: Map = new Map({
+      target: mapElement.current || undefined,
       layers: [osmLayer],
       view: new View({
         center: [-73.84200928305255, 40.76043006443475],
@@ -37,11 +37,11 @@ function App() {
     fetch("https://zkcygezgkswabugyieuz.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprY3lnZXpna3N3YWJ1Z3lpZXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU5MDk0MTIsImV4cCI6MjAzMTQ4NTQxMn0.41iJLd8aGYm5BSbwUANqNW1xSdxbONvSXVrqwp6yPSU")
       .then((res) => res.json())
       .then((data) => {
-        const sample = data.filter((d, i) => i < 3);
+        const sample = data.filter((d: any, i: number) => i < 3);
 
-        const geoJSONObj = {
+        const geoJSONObj: any = {
           'type': 'FeatureCollection',
-          'features': sample.map(d => ({
+          'features': sample.map((d: any) => ({
             type: 'Feature',
             properties: {
               ...d
@@ -56,7 +56,7 @@ function App() {
         setData(geoJSONObj);
       });
 
-    return () => initialMapObj.setTarget(null);
+    return () => initialMapObj.setTarget(undefined);
   }, []);
 
   useEffect(() => {
@@ -71,7 +71,7 @@ function App() {
           });
 
           const vectorLayer = new VectorLayer({
-            source: vectorSource
+            source: new VectorSource(data)
           });
 
           mapObj.addLayer(vectorLayer);
