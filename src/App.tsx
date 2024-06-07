@@ -8,11 +8,12 @@ import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM';
 import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
+import {Fill, Stroke, Style} from 'ol/style.js';
 
 function App() {
-  const mapElement = useRef();
-  const [mapObj, setMapObj] = useState(null);
-  const [data, setData] = useState(null);
+  const mapElement = useRef<HTMLDivElement>(null);
+  const [mapObj, setMapObj] = useState<Map | null>(null);
+  const [data, setData] = useState<any | null>(null);
 
   useEffect(() => {
     // Initialize map
@@ -22,12 +23,12 @@ function App() {
 
     useGeographic();
 
-    const initialMapObj = new Map({
-      target: mapElement.current,
+    const initialMapObj: Map = new Map({
+      target: mapElement.current || undefined,
       layers: [osmLayer],
       view: new View({
         center: [-73.84200928305255, 40.76043006443475],
-        zoom: 12,
+        zoom: 12
       }),
     });
 
@@ -37,41 +38,55 @@ function App() {
     fetch("https://zkcygezgkswabugyieuz.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprY3lnZXpna3N3YWJ1Z3lpZXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU5MDk0MTIsImV4cCI6MjAzMTQ4NTQxMn0.41iJLd8aGYm5BSbwUANqNW1xSdxbONvSXVrqwp6yPSU")
       .then((res) => res.json())
       .then((data) => {
-        const sample = data.filter((d, i) => i < 3);
+        const sample = data.filter((d: any, i: number) => i < 3);
 
-        const geoJSONObj = {
-          'type': 'FeatureCollection',
-          'features': sample.map(d => ({
-            type: 'Feature',
-            properties: {
-              ...d
-            },
-            geometry: {
-              type: "MultiPolygon",
-              coordinates: d.geometry.coordinates
+        const geoJSONObj: any = {
+          "type": "FeatureCollection",
+          "features": sample.map((d:any) => {
+            const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
+            delete d.geometry
+            return {
+              "type": "Feature",
+              "properties": { ...d },
+              "geometry": {
+                coordinates,
+                "type": "MultiPolygon"
+              }
             }
-          }))
-        };
-
-        setData(geoJSONObj);
+          })
+        }
+        
+        setData(geoJSONObj); 
       });
 
-    return () => initialMapObj.setTarget(null);
+    return () => initialMapObj.setTarget(undefined);
   }, []);
 
   useEffect(() => {
     if (data && mapObj) {
       try {
-        // @ts-ignore
-        const features = new GeoJSON().readFeatures(data);
-
-        if (features && features.length > 0) {
-          const vectorSource = new VectorSource({
-            features
-          });
+        if (data.features.length) {
+          const features = new GeoJSON().readFeatures(data);
+          const vectorSource = new VectorSource({ features })
+          
+          const styles: any = {
+            'MultiPolygon': new Style({
+              stroke: new Stroke({
+                color: 'red',
+                width: 1,
+              }),
+              fill: new Fill({
+                color: 'rgba(255, 0, 0, 0.1)',
+              }),
+            })
+          }
+          const styleFunction = function (feature: any) {
+            return styles[feature.getGeometry().getType()];
+          };
 
           const vectorLayer = new VectorLayer({
-            source: vectorSource
+            source: vectorSource,
+            style: styleFunction,
           });
 
           mapObj.addLayer(vectorLayer);
