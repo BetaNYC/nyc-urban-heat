@@ -11,7 +11,7 @@ import { useGeographic } from 'ol/proj';
 import { Fill, Stroke, Style } from 'ol/style.js';
 import { MapboxVectorLayer } from 'ol-mapbox-style';
 
-const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYW5keTkxMDYxNCIsImEiOiJjbG5heGQ0YnAwN2hoMmxvMm1rbjR5aW9jIn0.HD5O5lWSWsJUMfKkW-WDaQ'
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw'
 
 const MapContainer = () => {
 
@@ -27,7 +27,7 @@ const MapContainer = () => {
             target: mapElement.current || undefined,
             layers: [
                 new MapboxVectorLayer({
-                    styleUrl: 'mapbox://styles/andy910614/clvd8escd01r401ph6uue19hy',
+                    styleUrl: 'mapbox://styles/cloudlun/clxa8cwsd09ly01nx62o9fjyo',
                     accessToken: MAPBOX_ACCESS_TOKEN
                 }),
             ],

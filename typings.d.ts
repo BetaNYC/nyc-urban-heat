@@ -1,0 +1,10 @@
+type layers =
+  | "Heat Vulnerability Index"
+  | "Disadvantages Communities"
+  | "Air Temperature"
+  | "Air Heat Index"
+  | "Surface Temperature"
+  | "Weather Stations"
+  | "Tree Canopy"
+  | "Cool Roofs"
+  | "Cooling Centers"
