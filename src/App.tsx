@@ -9,6 +9,9 @@ import OSM from 'ol/source/OSM';
 import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
 import {Fill, Stroke, Style} from 'ol/style.js';
+import {MapboxVectorLayer} from 'ol-mapbox-style';
+
+const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiYW5keTkxMDYxNCIsImEiOiJjbG5heGQ0YnAwN2hoMmxvMm1rbjR5aW9jIn0.HD5O5lWSWsJUMfKkW-WDaQ'
 
 function App() {
   const mapElement = useRef<HTMLDivElement>(null);
@@ -17,15 +20,16 @@ function App() {
 
   useEffect(() => {
     // Initialize map
-    const osmLayer = new TileLayer({
-      source: new OSM(),
-    });
-
     useGeographic();
-
+  
     const initialMapObj: Map = new Map({
       target: mapElement.current || undefined,
-      layers: [osmLayer],
+      layers: [
+        new MapboxVectorLayer({
+          styleUrl: 'mapbox://styles/andy910614/clvd8escd01r401ph6uue19hy',
+          accessToken: MAPBOX_ACCESS_TOKEN
+        }),
+      ],
       view: new View({
         center: [-73.84200928305255, 40.76043006443475],
         zoom: 12

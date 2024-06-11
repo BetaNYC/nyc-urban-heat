@@ -12,6 +12,7 @@
   "dependencies": {
     "@types/openlayers": "^4.6.23",
     "ol": "^9.2.4",
+    "ol-mapbox-style": "^12.3.3",
     "ol-pmtiles": "^0.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
