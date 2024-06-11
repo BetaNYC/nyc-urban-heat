@@ -5,6 +5,14 @@ import LayerSelectionOption from './LayerSelectionOption'
 
 import heatVulnerabilityIndex from "/icons/bar_chart.svg"
 import disadvantagesCommunites from "/icons/sick.svg"
+import airTemperature from "/icons/thermostat_auto.svg"
+import airHeatIndex from "/icons/air.svg"
+import surfaceTemperature from "/icons/device_thermostat.svg"
+import weatherStations from "/icons/settings_input_antenna.svg"
+import treeCanopy from "/icons/park.svg"
+import coolRoofs from "/icons/wb_shade.svg"
+import coolingCenters from "/icons/wind_power.svg"
+
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 
 
@@ -28,8 +36,21 @@ const LayerSelections = () => {
           <LayerSelectionOption title="Heat Vulnerability Index" img={heatVulnerabilityIndex} />
           <LayerSelectionOption title="Disadvantages Communities" img={disadvantagesCommunites} />
         </div>
-        <div></div>
-        <div></div>
+        <div>
+          <h3 className="px-6 text-[0.75rem] text-[#4F4F4F]">Temperature</h3>
+          <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
+          <LayerSelectionOption title="Air Temperature" img={airTemperature} />
+          <LayerSelectionOption title="Air Heat Index" img={airHeatIndex} />
+          <LayerSelectionOption title="Surface Temperature" img={surfaceTemperature} />
+          <LayerSelectionOption title="Weather Stations" img={weatherStations} />
+        </div>
+        <div>
+          <h3 className="px-6 text-[0.75rem] text-[#4F4F4F]">Heat Mitigation</h3>
+          <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
+          <LayerSelectionOption title="Tree Canopy" img={airTemperature} />
+          <LayerSelectionOption title="Cool Roofs" img={airHeatIndex} />
+          <LayerSelectionOption title="Cooling Centers" img={surfaceTemperature} />
+        </div>
       </div>
       <div></div>
     </div>

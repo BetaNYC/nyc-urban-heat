@@ -43,11 +43,10 @@ const MapContainer = () => {
         fetch("https://zkcygezgkswabugyieuz.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprY3lnZXpna3N3YWJ1Z3lpZXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU5MDk0MTIsImV4cCI6MjAzMTQ4NTQxMn0.41iJLd8aGYm5BSbwUANqNW1xSdxbONvSXVrqwp6yPSU")
             .then((res) => res.json())
             .then((data) => {
-                const sample = data.filter((d: any, i: number) => i < 3);
 
                 const geoJSONObj: any = {
                     "type": "FeatureCollection",
-                    "features": sample.map((d: any) => {
+                    "features": data.map((d: any) => {
                         const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
                         delete d.geometry
                         return {
