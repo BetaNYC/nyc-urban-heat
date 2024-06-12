@@ -47,9 +47,9 @@ const LayerSelections = () => {
         <div>
           <h3 className="px-6 text-[0.75rem] text-[#4F4F4F]">Heat Mitigation</h3>
           <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
-          <LayerSelectionOption title="Tree Canopy" img={airTemperature} />
-          <LayerSelectionOption title="Cool Roofs" img={airHeatIndex} />
-          <LayerSelectionOption title="Cooling Centers" img={surfaceTemperature} />
+          <LayerSelectionOption title="Tree Canopy" img={treeCanopy} />
+          <LayerSelectionOption title="Cool Roofs" img={coolRoofs} />
+          <LayerSelectionOption title="Cooling Centers" img={coolingCenters} />
         </div>
       </div>
       <div></div>

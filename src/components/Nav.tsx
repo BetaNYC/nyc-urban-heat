@@ -1,5 +1,3 @@
-import React from 'react'
-
 import ProjectLogo from "/icons/NYC Urban Heat Portal.svg"
 
 const Nav = () => {
