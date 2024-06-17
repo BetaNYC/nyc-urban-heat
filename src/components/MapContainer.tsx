@@ -1,4 +1,4 @@
-import  { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -40,7 +40,7 @@ const MapContainer = () => {
         setMapObj(initialMapObj);
 
         // Fetch data
-        fetch("https://zkcygezgkswabugyieuz.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprY3lnZXpna3N3YWJ1Z3lpZXV6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU5MDk0MTIsImV4cCI6MjAzMTQ4NTQxMn0.41iJLd8aGYm5BSbwUANqNW1xSdxbONvSXVrqwp6yPSU")
+        fetch("https://vcadeeaimofyayyevakl.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo")
             .then((res) => res.json())
             .then((data) => {
 
@@ -62,6 +62,28 @@ const MapContainer = () => {
 
                 setData(geoJSONObj);
             });
+
+        fetch("https://vcadeeaimofyayyevakl.supabase.co/rest/v1/stations_point?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo")
+            .then(res => res.json())
+            .then(data => {
+                const geoJSONObj: any = {
+                    "type": "FeatureCollection",
+                    "features": data.map((d: any) => {
+                        const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
+                        delete d.geometry
+                        return {
+                            "type": "Feature",
+                            "properties": { ...d },
+                            "geometry": {
+                                coordinates,
+                                "type": "Point"
+                            }
+                        }
+                    })
+                }
+
+                console.log(geoJSONObj)
+            })
 
         return () => initialMapObj.setTarget(undefined);
     }, []);
