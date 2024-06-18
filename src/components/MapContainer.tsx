@@ -10,6 +10,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
 import { Fill, Stroke, Style } from 'ol/style.js';
 import { MapboxVectorLayer } from 'ol-mapbox-style';
+//@ts-ignore
+import { fetchCoolRoofs } from "../api/api.js"
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw'
 
@@ -40,28 +42,36 @@ const MapContainer = () => {
         setMapObj(initialMapObj);
 
         // Fetch data
-        fetch("https://vcadeeaimofyayyevakl.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo")
-            .then((res) => res.json())
-            .then((data) => {
+        // fetch("https://vcadeeaimofyayyevakl.supabase.co/rest/v1/cd_coolroofs?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo")
+        //     .then((res) => res.json())
+        //     .then((data) => {
 
-                const geoJSONObj: any = {
-                    "type": "FeatureCollection",
-                    "features": data.map((d: any) => {
-                        const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
-                        delete d.geometry
-                        return {
-                            "type": "Feature",
-                            "properties": { ...d },
-                            "geometry": {
-                                coordinates,
-                                "type": "MultiPolygon"
-                            }
-                        }
-                    })
-                }
+        //         const geoJSONObj: any = {
+        //             "type": "FeatureCollection",
+        //             "features": data.map((d: any) => {
+        //                 const coordinates = JSON.parse(JSON.stringify(d.geometry.coordinates))
+        //                 delete d.geometry
+        //                 return {
+        //                     "type": "Feature",
+        //                     "properties": { ...d },
+        //                     "geometry": {
+        //                         coordinates,
+        //                         "type": "MultiPolygon"
+        //                     }
+        //                 }
+        //             })
+        //         }
 
-                setData(geoJSONObj);
-            });
+        //         setData(geoJSONObj);
+        //     });
+
+        const getLayersAsync = async () => {
+            const res = await fetchCoolRoofs()
+            setData(res)
+        }
+
+        getLayersAsync()
+
 
         fetch("https://vcadeeaimofyayyevakl.supabase.co/rest/v1/stations_point?select=*&apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo")
             .then(res => res.json())
@@ -81,7 +91,6 @@ const MapContainer = () => {
                         }
                     })
                 }
-
                 console.log(geoJSONObj)
             })
 
