@@ -18,7 +18,8 @@
     "ol-mapbox-style": "^12.3.3",
     "ol-pmtiles": "^0.4.0",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-responsive": "^10.0.0"
   },
   "devDependencies": {
     "@originjs/vite-plugin-commonjs": "^1.0.3",
