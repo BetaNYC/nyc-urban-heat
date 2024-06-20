@@ -1,5 +1,6 @@
 import Nav from "../components/Nav"
 
+
 const AboutPage = () => {
   return (
     <>

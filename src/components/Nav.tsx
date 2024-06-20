@@ -1,7 +1,7 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ProjectLogo from "/icons/NYC Urban Heat Portal.svg"
 import { useMediaQuery } from "react-responsive"
-import { useNavigate } from "react-router"
+import { useNavigate, useLocation } from "react-router"
 
 
 
@@ -10,7 +10,7 @@ const Nav = () => {
   const [clicked, setClicked] = useState('map')
 
   const navigate = useNavigate()
-
+  const location = useLocation()
 
   const isDesktop = useMediaQuery({
     query: '(min-width: 1280px)'
@@ -18,7 +18,6 @@ const Nav = () => {
   const isTablet = useMediaQuery({
     query: '(min-width: 1024px)'
   })
-
 
   const clickHandler = (page: "map" | "resources" | "about" | "download") => {
     setClicked(page)
@@ -37,6 +36,14 @@ const Nav = () => {
         break;
     }
   }
+
+  useEffect(() => {
+    location.pathname === "/nyc-urban-heat/" ? setClicked('map')
+      : location.pathname === "/nyc-urban-heat/resources" ? setClicked('resources')
+        : location.pathname === "/nyc-urban-heat/about" ? setClicked('about')
+          : setClicked('download')
+  },[])
+
 
 
   return (
