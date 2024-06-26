@@ -4,7 +4,7 @@ const ResourcesPage = () => {
   return (
     <>
       <Nav />
-      <div className="px-6 pt-6 max-w-[55rem]">
+      <div className="px-6 pt-5 max-w-[55rem]">
         <div>
           <h1 className="mb-4 font-semibold text-headline">NYC Extreme Heat Resources</h1>
           <div className="mb-[1.563rem]">

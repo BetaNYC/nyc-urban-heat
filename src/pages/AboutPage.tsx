@@ -5,7 +5,7 @@ const AboutPage = () => {
   return (
     <>
       <Nav />
-      <div className="px-6 pt-6 max-w-[55rem]">
+      <div className="px-6 pt-5 max-w-[55rem]">
         <div className="mb-12">
           <h1 className="mb-2 font-semibold text-headline">About the project</h1>
           <p className="font-light text-small">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus optio, porro magni iure asperiores totam, quod nihil dolorem maxime provident iusto facere quasi, voluptates sapiente pariatur laborum nesciunt veniam rerum!</p>
