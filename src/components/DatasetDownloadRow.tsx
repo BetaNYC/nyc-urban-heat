@@ -17,10 +17,24 @@ type Props = {
 }
 
 const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict, source, content, hasDate }: Props) => {
+
+    const isDesktop = useMediaQuery({
+        query: '(min-width: 1280px)'
+    })
+    const isTablet = useMediaQuery({
+        query: '(min-width: 768px)'
+    })
+
+    const isMobile = useMediaQuery({
+        query: '(max-width: 768px)'
+    })
+
+
+
     return (
         <div className="w-[90%] ">
-            <div className="flex mb-10">
-                <div className="w-[55%] ">
+            <div className={`md:flex mb-10`}>
+                <div className={`mb-5 md:w-[55%]`}>
                     {hasTitle && <h3 className="mb-2 font-semibold text-subheadline">{title}</h3>}
                     <p className="font-light text-small">
                         <a href="">{source}</a> | date <br />
@@ -29,10 +43,10 @@ const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict,
                         </p>
                     </p>
                 </div>
-                <div className="flex-1 flex justify-end gap-[1.875rem] ">
+                <div className="flex-1 flex md:justify-end gap-[1.875rem] ">
                     {hasDate &&
-                        <div className="w-[40%]">
-                            <h3 className="mb-2 font-semibold text-small">Date</h3>
+                        <div className="md:w-[40%]">
+                            <h3 className="mb-2  font-semibold text-small">Date</h3>
                             <div className="relative">
                                 <CalendarDaysIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500 pointer-events-none" />
                                 <select
@@ -54,7 +68,7 @@ const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict,
                         hasYear &&
                         <div className="w-[40%]">
                             <h3 className="mb-2 font-semibold text-small">Date</h3>
-                            <select name="Date" id="" className="pl-3 pr-6 h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
+                            <select name="Date" id="" className="pl-3  h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
                                 <option value="">2023</option>
                             </select>
                         </div>
@@ -63,7 +77,7 @@ const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict,
                         hasStation &&
                         <div className="w-[40%]">
                             <h3 className="mb-2 font-semibold text-small">Date</h3>
-                            <select name="Date" id="" className="pl-3 pr-6 h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
+                            <select name="Date" id="" className="pl-3  h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
                                 <option value="">Station Name D8569</option>
                             </select>
                         </div>
@@ -72,7 +86,7 @@ const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict,
                         hasDistrict &&
                         <div className="w-[40%]">
                             <h3 className="mb-2 font-semibold text-small">Date</h3>
-                            <select name="Date" id="" className="pl-3 pr-6 h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
+                            <select name="Date" id="" className="pl-3  h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]">
                                 <option value="">Manhattan CD1</option>
                             </select>
                         </div>
