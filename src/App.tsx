@@ -15,7 +15,7 @@ function App() {
   })
 
   return (
-    <main className='relative w-[100vw] h-[100vh]'>
+    <main className='relative w-[100vw] h-[100vh] overflow-y-scroll'>
       <BrowserRouter>
         <Routes>
           <Route path='/nyc-urban-heat/' element={<MapPage />} />

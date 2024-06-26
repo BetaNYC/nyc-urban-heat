@@ -9,6 +9,7 @@ export default {
         large: "1rem",
         regular: "0.875rem",
         small: "0.75rem",
+        xsmall: "0.625rem"
       },
     },
   },
