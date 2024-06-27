@@ -1,6 +1,6 @@
 
 import { ArrowDownTrayIcon, CalendarDaysIcon } from "@heroicons/react/24/outline"
-import { useMediaQuery } from "react-responsive"
+// import { useMediaQuery } from "react-responsive"
 
 
 
@@ -18,16 +18,16 @@ type Props = {
 
 const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict, source, content, hasDate }: Props) => {
 
-    const isDesktop = useMediaQuery({
-        query: '(min-width: 1280px)'
-    })
-    const isTablet = useMediaQuery({
-        query: '(min-width: 768px)'
-    })
+    // const isDesktop = useMediaQuery({
+    //     query: '(min-width: 1280px)'
+    // })
+    // const isTablet = useMediaQuery({
+    //     query: '(min-width: 768px)'
+    // })
 
-    const isMobile = useMediaQuery({
-        query: '(max-width: 768px)'
-    })
+    // const isMobile = useMediaQuery({
+    //     query: '(max-width: 768px)'
+    // })
 
 
 
