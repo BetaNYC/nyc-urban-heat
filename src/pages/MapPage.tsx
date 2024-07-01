@@ -2,7 +2,11 @@ import { useState, useEffect, useRef, useContext } from 'react'
 import { useQuery } from 'react-query';
 //@ts-ignore
 import { fetchStationsPoint } from "../api/api.js"
+
 import Nav from "../components/Nav"
+import CommunityDistrictsProfile from '../components/CommunityDistrictsProfile.js';
+
+
 import * as mapboxPmTiles from 'mapbox-pmtiles';
 import mapboxgl from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContexts"
@@ -15,12 +19,15 @@ const loadScript = (src: string, onLoad: () => void) => {
   document.head.appendChild(script);
 };
 
+
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const { setMap } = useContext(MapContext) as MapContextType;
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [profileExpanded, setProfileExpanded] = useState(false)
-  const coolRoofsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationsPoint });
+  const [profileExpanded, setProfileExpanded] = useState(true)
+  const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationsPoint });
+
+
 
   useEffect(() => {
     loadScript(
@@ -30,7 +37,7 @@ const MapPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!coolRoofsQuery.isSuccess || !mapContainer.current || !isScriptLoaded) return;
+    if (!weatherStationsQuery.isSuccess || !mapContainer.current || !isScriptLoaded) return;
 
     mapboxgl.accessToken = "pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw";
 
@@ -77,27 +84,27 @@ const MapPage = () => {
         });
 
         // m.showTileBoundaries = true;
-        m.addLayer({
-          id: 'surface_temperature',
-          source: 'surface_temperature',
-          'source-layer': 'raster-layer',
-          type: 'raster',
-          layout: { visibility: 'visible' },
-          interactive: true,
-          paint: {
-            "raster-resampling": "nearest",
-          },
-        });
-        m.on("click", 'surface_temperature', (e) => {
-          console.log("Clicked on surface_temperature layer", e.features);
-          setProfileExpanded(true); // Verify that setProfileExpanded function is working as expected
-        });
+        // m.addLayer({
+        //   id: 'surface_temperature',
+        //   source: 'surface_temperature',
+        //   'source-layer': 'raster-layer',
+        //   type: 'raster',
+        //   layout: { visibility: 'visible' },
+        //   interactive: true,
+        //   paint: {
+        //     "raster-resampling": "nearest",
+        //   },
+        // });
+        // m.on("click", 'surface_temperature', () => {
+        //   console.log("Clicked on surface_temperature layer");
+        //   setProfileExpanded(true); 
+        // });
 
 
 
         // m.addSource('cool_roofs', {
         //   type: 'geojson',
-        //   data: coolRoofsQuery.data as GeoJSON.FeatureCollection
+        //   data: weatherStationsQuery.data as GeoJSON.FeatureCollection
         // });
 
         // m.addLayer({
@@ -117,13 +124,13 @@ const MapPage = () => {
     return () => {
       if (m) m.remove();
     };
-  }, [coolRoofsQuery.isSuccess, coolRoofsQuery.data, isScriptLoaded]);
+  }, [weatherStationsQuery.isSuccess, weatherStationsQuery.data, isScriptLoaded]);
 
   return (
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <div className={`transition-all duration-75 dabsolute top-[3.125rem] right-0 ${profileExpanded ? "w-[50%]" : "w-0"}  h-[calc(100%_-_3.125rem)] bg-[#1B1B1B] z-20`}></div>
+      <CommunityDistrictsProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded}/>
     </div>
   );
 };

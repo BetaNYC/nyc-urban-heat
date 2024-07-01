@@ -11,6 +11,10 @@ export default {
         small: "0.75rem",
         xsmall: "0.625rem"
       },
+      colors: {
+        gray_six: '#F2F2F2',
+        
+      }
     },
   },
   plugins: [],
