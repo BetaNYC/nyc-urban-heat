@@ -1,6 +1,5 @@
-import { useState } from "react"
 import { ArrowRightIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction } from "react"
+import { useState, Dispatch, SetStateAction } from "react"
 
 import { useMediaQuery } from "react-responsive"
 
@@ -18,17 +17,13 @@ type Props = {
 const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
 
     const [clickedIndex, setClickedIndex] = useState("cool_roofs")
-
     const isTablet = useMediaQuery({
         query: '(min-width: 768px)'
     })
-
     const clickHandler = () => {
         setProfileExpanded(false)
         console.log("aa")
     }
-
-
 
     return (
         <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-x-[calc(55vw_+_3rem)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
@@ -37,10 +32,10 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                     <ArrowRightIcon width={24} height={24} className="text-white" />
                 </div>
             }
-            <div className={`px-4 lg:px-8 pt-12 lg:grid lg:grid-cols-2 lg:grid-rows-5 lg:w-[55vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] overflow-y-auto `}>
+            <div className={`px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-2 lg:grid-rows-5 lg:w-[55vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] overflow-y-auto `}>
                 <div className="lg:mr-6 lg:row-span-2">
                     <h2 className="text-regular lg:text-subheadline text-gray_six">Brooklyn</h2>
-                    <h1 className="mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">Neighrborhood Name</h1>
+                    <h1 className="lg:mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">Neighrborhood Name</h1>
                     {
                         isTablet &&
                         <p className="text-small text-[#D5D5D5]">
@@ -49,16 +44,16 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                         </p>
                     }
                 </div>
-                <div className="lg:row-span-2 grid grid-cols-5 grid-rows-5 p-4 w-full bg-[#333333] rounded-lg">
-                    <div className="col-span-3 row-span-2">
+                <div className="grid grid-cols-6 lg:grid-cols-5 grid-rows-3 lg:grid-rows-5 my-6 p-4 w-full bg-[#333333] rounded-lg">
+                    <div className="col-span-4 lg:col-span-3 row-span-1">
                         <h2 className="mb-1 font-semibold text-regular lg:text-subheadline text-gray_six">Heat Vulnerability Index</h2>
                         <p className="text-xsmall text-[#9B9B9B]">The Heat Vulnerability Index (HVI) shows neighborhoods whose residents are more at risk for dying during and immediately following extreme heat.</p>
                     </div>
-                    <div className="col-span-2 row-span-2 flex flex-col  items-center ">
+                    <div className="col-span-2 row-span-1 flex flex-col items-center">
                         <h1 className="font-bold text-[2.5rem]  lg:text-[3.75rem] text-gray_six leading-tight  lg:leading-none">4.0</h1>
                         <h3 className="font-regular text-regular lg:text-4 text-[#BDBDBD]">Medium High</h3>
                     </div>
-                    <div className="col-span-5 row-start-3 row-end-6 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575]">
+                    <div className="col-span-6 row-span-2 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575]">
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Air Temperature</h3>
                             <div className="flex items-center gap-3">
@@ -139,12 +134,12 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                         </div>
                     </div>
                 </div>
-                <div className="lg:col-span-2 lg:row-start-3 lg:row-end-6 lg:pt-8">
+                <div className="lg:col-span-2 lg:row-start-3 lg:row-end-6 lg:pt-8 w-full h-[16rem] ">
                     <div className="flex gap-4">
                         <h2 className="font-semibold text-regular lg:text-subheadline text-gray_six">Heat Vulnerability Index</h2>
                         <InformationCircleIcon width={24} height={24} className="text-[#828282]" />
                     </div>
-                    <div className="flex flex-col lg:my-6  lg:h-[75%]">
+                    <div className="flex flex-col mt-4 mb-6 lg:my-6 w-full h-[60%] lg:h-[75%]">
                         {
                             isTablet &&
                             <div className="flex">
