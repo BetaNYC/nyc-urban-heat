@@ -156,7 +156,6 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                         Download profile
                     </button>
                 </div>
-
             </div>
         </div>
     )

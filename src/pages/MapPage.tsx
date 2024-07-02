@@ -84,21 +84,21 @@ const MapPage = () => {
         });
 
         // m.showTileBoundaries = true;
-        // m.addLayer({
-        //   id: 'surface_temperature',
-        //   source: 'surface_temperature',
-        //   'source-layer': 'raster-layer',
-        //   type: 'raster',
-        //   layout: { visibility: 'visible' },
-        //   interactive: true,
-        //   paint: {
-        //     "raster-resampling": "nearest",
-        //   },
-        // });
-        // m.on("click", 'surface_temperature', () => {
-        //   console.log("Clicked on surface_temperature layer");
-        //   setProfileExpanded(true); 
-        // });
+        m.addLayer({
+          id: 'surface_temperature',
+          source: 'surface_temperature',
+          'source-layer': 'raster-layer',
+          type: 'raster',
+          layout: { visibility: 'visible' },
+          interactive: true,
+          paint: {
+            "raster-resampling": "nearest",
+          },
+        });
+        m.on("click", 'surface_temperature', () => {
+          console.log("Clicked on surface_temperature layer");
+          setProfileExpanded(true); 
+        });
 
 
 
