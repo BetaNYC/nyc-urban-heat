@@ -44,16 +44,16 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                         </p>
                     }
                 </div>
-                <div className="grid grid-cols-6 lg:grid-cols-5 grid-rows-3 lg:grid-rows-5 my-6 p-4 w-full bg-[#333333] rounded-lg">
+                <div className="grid grid-cols-6 lg:grid-cols-5 grid-rows-3 lg:grid-rows-5 lg:row-span-2 my-6 lg:my-0 p-4 w-full bg-[#333333] rounded-lg">
                     <div className="col-span-4 lg:col-span-3 row-span-1">
                         <h2 className="mb-1 font-semibold text-regular lg:text-subheadline text-gray_six">Heat Vulnerability Index</h2>
                         <p className="text-xsmall text-[#9B9B9B]">The Heat Vulnerability Index (HVI) shows neighborhoods whose residents are more at risk for dying during and immediately following extreme heat.</p>
                     </div>
-                    <div className="col-span-2 row-span-1 flex flex-col items-center">
+                    <div className="col-span-2 row-span-1 lg:row-span-2 flex flex-col items-center">
                         <h1 className="font-bold text-[2.5rem]  lg:text-[3.75rem] text-gray_six leading-tight  lg:leading-none">4.0</h1>
                         <h3 className="font-regular text-regular lg:text-4 text-[#BDBDBD]">Medium High</h3>
                     </div>
-                    <div className="col-span-6 row-span-2 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575]">
+                    <div className="col-span-6 lg:col row-span-2 lg:row-span-3 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575]">
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Air Temperature</h3>
                             <div className="flex items-center gap-3">
@@ -134,13 +134,13 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                         </div>
                     </div>
                 </div>
-                <div className="lg:col-span-2 lg:row-start-3 lg:row-end-6 lg:pt-8 w-full h-[16rem] ">
+                <div className="lg:col-span-2 lg:row-start-3 lg:row-end-6 lg:pt-8 w-full">
                     <div className="flex gap-4">
                         <h2 className="font-semibold text-regular lg:text-subheadline text-gray_six">Heat Vulnerability Index</h2>
                         <InformationCircleIcon width={24} height={24} className="text-[#828282]" />
                     </div>
-                    <div className="flex flex-col mt-4 mb-6 lg:my-6 w-full h-[60%] lg:h-[75%]">
-                        {
+                    <div className="flex flex-col mt-4 mb-6 lg:my-6 w-full h-[16rem] lg:h-[75%]">
+                        {/* {
                             isTablet &&
                             <div className="flex">
                                 <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "heat_vulnerability" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("heat_vulnerability")}>Heat Vulnerability Index</button>
@@ -148,7 +148,7 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
                                 <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "tree_canopies" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("tree_canopies")}>Tree Canopies</button>
                                 <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "cooling_centers" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("cooling_centers")}>Cooling Centers</button>
                             </div>
-                        }
+                        } */}
                         <div className="flex-1 bg-[#333]">
                         </div>
                     </div>

@@ -44,7 +44,8 @@ const DatasetDownloadRow = ({ title, hasTitle, hasYear, hasStation, hasDistrict,
                     </p>
                 </div>
                 <div className="flex-1 flex md:justify-end gap-[1.875rem] ">
-                    {hasDate &&
+                    {
+                        hasDate &&
                         <div className="md:w-[40%]">
                             <h3 className="mb-2  font-semibold text-small">Date</h3>
                             <div className="relative">
