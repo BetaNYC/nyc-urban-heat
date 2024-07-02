@@ -14,7 +14,7 @@ type Props = {
 
 
 
-const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
+const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
 
     const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isTablet = useMediaQuery({
@@ -162,4 +162,4 @@ const CommunityDistrictsProfile = ({ profileExpanded, setProfileExpanded }: Prop
     )
 }
 
-export default CommunityDistrictsProfile
+export default NeighborhoodProfile

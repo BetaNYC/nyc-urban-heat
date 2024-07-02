@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { fetchStationsPoint } from "../api/api.js"
 
 import Nav from "../components/Nav"
-import CommunityDistrictsProfile from '../components/CommunityDistrictsProfile.js';
+import CommunityDistrictsProfile from '../components/NeighborhoodProfile.js';
 
 
 import * as mapboxPmTiles from 'mapbox-pmtiles';
