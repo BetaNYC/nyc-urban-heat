@@ -58,26 +58,28 @@ const Nav = () => {
 
 
   return (
-    <nav className='relative flex justify-between items-center px-6 w-full h-[3.125rem] bg-[#333]'>
-      <img src={ProjectLogo} alt="Urban Heat logo" className='' />
-      {isMobile && <Bars3Icon className="text-white w-6 h-6 cursor-pointer" onClick={navBarClickHandler} />}
-      {
-        isMobile && expanded &&
-        <div className="absolute right-6 top-[3.125rem] flex flex-col items-start w-[5.625rem] bg-white border-r-[1px] border-l-[1px] border-b-[1px] border-[#828282]">
-          <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("map")}>Map</button>
-          <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("resources")}>Resources</button>
-          <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("download")}>Download</button>
-          <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282]" onClick={() => clickHandler("about")}>About</button>
-        </div>
-      }
-      {
-        isTablet && <div className={`flex text-regular ${isDesktop ? "gap-[6rem]" : isTablet ? "gap-[4rem]" : "gap-[2rem]"}`}>
-          <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'map' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("map")}>Map</button>
-          <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'resources' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("resources")}>Resources</button>
-          <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === "download" && "text-[#FF7E6C]"}`} onClick={() => clickHandler("download")}>Download</button>
-          <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'about' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("about")}>About</button>
-        </div>
-      }
+    <nav className='flex justify-center w-full h-[3.125rem] bg-[#333]'>
+      <div className="relative flex justify-between items-center w-[85%] h-full bg-[#333]">
+        <img src={ProjectLogo} alt="Urban Heat logo" className='' />
+        {isMobile && <Bars3Icon className="text-white w-6 h-6 cursor-pointer" onClick={navBarClickHandler} />}
+        {
+          isMobile && expanded &&
+          <div className="absolute right-6 top-[3.125rem] flex flex-col items-start w-[5.625rem] bg-white border-r-[1px] border-l-[1px] border-b-[1px] border-[#828282]">
+            <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("map")}>Map</button>
+            <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("resources")}>Resources</button>
+            <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282] border-b-[1.5px] border-[#828282]" onClick={() => clickHandler("download")}>Download</button>
+            <button className="px-1 py-2 w-full font-regular text-left hover:text-white hover:bg-[#828282]" onClick={() => clickHandler("about")}>About</button>
+          </div>
+        }
+        {
+          isTablet && <div className={`flex text-regular ${isDesktop ? "gap-[6rem]" :  "gap-[2rem]"}`}>
+            <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'map' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("map")}>Map</button>
+            <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'resources' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("resources")}>Resources</button>
+            <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === "download" && "text-[#FF7E6C]"}`} onClick={() => clickHandler("download")}>Download</button>
+            <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'about' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("about")}>About</button>
+          </div>
+        }
+      </div>
 
     </nav>
   )
