@@ -1,4 +1,4 @@
-import { ArrowRightIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
+import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
 import { useState, Dispatch, SetStateAction } from "react"
 
 import { useMediaQuery } from "react-responsive"
@@ -21,15 +21,15 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
         query: '(min-width: 1024px)'
     })
     const clickHandler = () => {
-        setProfileExpanded(false)
+        setProfileExpanded(!profileExpanded)
         console.log("aa")
     }
 
     return (
-        <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-x-[calc(75vw_+_3rem)] xl:translate-x-[calc(65vw_+_3rem)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
+        <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
             {
                 isDesktop && <div className="flex items-center justify-center w-12 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
-                    <ArrowRightIcon width={24} height={24} className="text-white" />
+                    {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
                 </div>
             }
             <div className={`px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-6 w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
@@ -57,6 +57,7 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Air Temperature</h3>
                             <div className="flex items-center gap-3">
+                                <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 <div className="text-small text-[#C5C5C5]">Score</div>
                                 <div className="flex gap-1">
                                     <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -65,11 +66,13 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                                     <div className="w-7 h-2 bg-[#D9D9D9]"></div>
                                     <div className="w-7 h-2 rounded-r-[20px] bg-[#D9D9D9]"></div>
                                 </div>
+                                <div className="text-small text-[#C5C5C5]">5</div>
                             </div>
                         </div>
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Mean Radiant Temperature</h3>
                             <div className="flex items-center gap-3">
+                                <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 <div className="text-small text-[#C5C5C5]">Score</div>
                                 <div className="flex gap-1">
                                     <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -78,11 +81,13 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                                     <div className="w-7 h-2 bg-[#D9D9D9]"></div>
                                     <div className="w-7 h-2 rounded-r-[20px] bg-[#D9D9D9]"></div>
                                 </div>
+                                <div className="text-small text-[#C5C5C5]">5</div>
                             </div>
                         </div>
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Tree Canopy</h3>
                             <div className="flex items-center gap-3">
+                                <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 <div className="text-small text-[#C5C5C5]">Score</div>
                                 <div className="flex gap-1">
                                     <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -91,11 +96,13 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                                     <div className="w-7 h-2 bg-[#D9D9D9]"></div>
                                     <div className="w-7 h-2 rounded-r-[20px] bg-[#D9D9D9]"></div>
                                 </div>
+                                <div className="text-small text-[#C5C5C5]">5</div>
                             </div>
                         </div>
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Cool Roofs</h3>
                             <div className="flex items-center gap-3">
+                                <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 <div className="text-small text-[#C5C5C5]">Score</div>
                                 <div className="flex gap-1">
                                     <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -104,11 +111,13 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                                     <div className="w-7 h-2 bg-[#D9D9D9]"></div>
                                     <div className="w-7 h-2 rounded-r-[20px] bg-[#4F4F4F]"></div>
                                 </div>
+                                <div className="text-small text-[#C5C5C5]">4</div>
                             </div>
                         </div>
                         <div className="flex justify-between">
                             <h3 className="text-small text-gray_six">Premeable Surfaces</h3>
                             <div className="flex items-center gap-3">
+                                <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 <div className="text-small text-[#C5C5C5]">Score</div>
                                 <div className="flex gap-1">
                                     <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -117,6 +126,7 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                                     <div className="w-7 h-2 bg-[#D9D9D9]"></div>
                                     <div className="w-7 h-2 rounded-r-[20px] bg-[#4F4F4F]"></div>
                                 </div>
+                                <div className="text-small text-[#C5C5C5]">4</div>
                             </div>
                         </div>
                     </div>
