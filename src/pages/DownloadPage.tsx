@@ -14,33 +14,33 @@ const DownloadPage = () => {
         <div>
           <h1 className="mb-4 font-semibold text-headline">NYC Urban Heat Datasets</h1>
           <DatasetDownloadRow
-            title="NYC Heat Vulnerability Index"
+            title="Outdoor Heat Exposure Index"
             hasTitle={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="The Heat Vulnerability Index (HVI) shows community districts that are more at risk for dying during and immediately following extreme heat."
             hasDate={true}
           />
           <DatasetDownloadRow
             title="Air Temperature"
             hasTitle={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter."
             hasDate={true}
           />
           <DatasetDownloadRow
             title="Air Heat Index"
             hasTitle={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort."
             hasDate={true}
           />
           <DatasetDownloadRow
             title="Cool Roofs"
             hasTitle={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect."
           />
-          <DatasetDownloadRow
+          {/* <DatasetDownloadRow
             title="Cooling Centers"
             hasTitle={true}
             source="[data source]"
@@ -51,19 +51,19 @@ const DownloadPage = () => {
             hasTitle={true}
             source="[data source]"
             content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
-          />
+          /> */}
           <DatasetDownloadRow
             title="Surface Temperature"
             hasTitle={true}
             hasYear={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="Surface Temperature indicates how hot the “surface” of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report."
           />
           <DatasetDownloadRow
             title="Tree Canopies"
             hasTitle={true}
             source="[data source]"
-            content="Dataset description. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+            content="Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution."
           />
           <DatasetDownloadRow
             title="Weather Stations"
