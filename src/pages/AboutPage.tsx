@@ -23,7 +23,7 @@ const AboutPage = () => {
           <div className="">
             <h2 className="mb-2 font-semibold text-subheadline">BetaNYC</h2>
             <p className="mb-4 font-light text-small">
-              oA partner project of the Fund for the City of New York, BetaNYC is a civic organization dedicated to improving lives in New York through civic design, technology, and data. This  project was designed and developed by BetaNYC’s Civic Innovation Lab in collaboration with [_____], through a BetaNYC service called Research and Data Assistance Request (RADAR). To learn more about RADARs and how to submit a request, visit: beta.nyc/radar.
+              oA partner project of the Fund for the City of New York, BetaNYC is a civic organization dedicated to improving lives in New York through civic design, technology, and data. This  project was designed and developed by BetaNYC’s Civic Innovation Lab in collaboration with [_____], through a BetaNYC service called Research and Data Assistance Request (RADAR). To learn more about RADARs and how to submit a request, visit: <a href="beta.nyc/radar" className="underline font-light text-small hover:text-[#EB583B]">beta.nyc/radar</a>.
             </p>
             <h3 className="font-semibold text-small">BetaNYC Civic Innovation Lab Team</h3>
             <p className="font-light text-small">Ashley Louie (Director), Hao Lun Hung, Zhi Keng He, Hailee Hoa Luong</p>
