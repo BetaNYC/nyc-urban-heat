@@ -4,10 +4,9 @@ import { MapLayersContext, MapLayersContextType, LayersType } from '../contexts/
 import { InformationCircleIcon } from "@heroicons/react/24/outline"
 
 
-
 type Props = {
     title: LayersType
-    img:string
+    img?:string
 }
 
 const LayerSelectionOption = ({ title, img }: Props) => {

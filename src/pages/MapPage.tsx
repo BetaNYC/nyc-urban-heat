@@ -4,7 +4,7 @@ import { useQuery } from 'react-query';
 import { fetchStationsPoint } from "../api/api.js"
 
 import Nav from "../components/Nav"
-import CommunityDistrictsProfile from '../components/NeighborhoodProfile.js';
+import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 
@@ -140,7 +140,7 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <CommunityDistrictsProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
+      <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
       <LayerSelections />
       <MapDateSelections />
     </div>
