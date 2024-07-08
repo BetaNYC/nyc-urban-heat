@@ -1,4 +1,4 @@
-type layers =
+type layersTyoe =
   | "Heat Vulnerability Index"
   | "Disadvantages Communities"
   | "Air Temperature"
