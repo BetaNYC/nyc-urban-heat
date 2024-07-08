@@ -4,12 +4,14 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-import { MapProvider } from './contexts/mapContexts';
+import { MapProvider } from './contexts/mapContext';
+import { MapLayersProvider } from './contexts/mapLayersContext';
 
 import MapPage from './pages/MapPage';
 import AboutPage from './pages/AboutPage';
 import ResourcesPage from './pages/ResourcesPage';
 import DownloadPage from './pages/DownloadPage';
+
 
 
 function App() {
@@ -24,14 +26,16 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <main className='relative w-[100vw] h-[100vh] overflow-y-scroll'>
         <MapProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path='/nyc-urban-heat/' element={<MapPage />} />
-              <Route path='/nyc-urban-heat/resources' element={<ResourcesPage />} />
-              <Route path='/nyc-urban-heat/about' element={<AboutPage />} />
-              <Route path='/nyc-urban-heat/download' element={<DownloadPage />} />
-            </Routes>
-          </BrowserRouter>
+          <MapLayersProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path='/nyc-urban-heat/' element={<MapPage />} />
+                <Route path='/nyc-urban-heat/resources' element={<ResourcesPage />} />
+                <Route path='/nyc-urban-heat/about' element={<AboutPage />} />
+                <Route path='/nyc-urban-heat/download' element={<DownloadPage />} />
+              </Routes>
+            </BrowserRouter>
+          </MapLayersProvider>
         </MapProvider>
       </main >
     </QueryClientProvider>

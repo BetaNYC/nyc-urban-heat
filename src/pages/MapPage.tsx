@@ -5,11 +5,13 @@ import { fetchStationsPoint } from "../api/api.js"
 
 import Nav from "../components/Nav"
 import CommunityDistrictsProfile from '../components/NeighborhoodProfile.js';
+import LayerSelections from '../components/LayerSelections.js';
+import MapDateSelections from '../components/MapDateSelections.js';
 
 
 import * as mapboxPmTiles from 'mapbox-pmtiles';
 import mapboxgl from "mapbox-gl"
-import { MapContext, MapContextType } from "../contexts/mapContexts"
+import { MapContext, MapContextType } from "../contexts/mapContext.js"
 
 const loadScript = (src: string, onLoad: () => void) => {
   const script = document.createElement('script');
@@ -24,7 +26,8 @@ const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const { setMap } = useContext(MapContext) as MapContextType;
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
-  const [profileExpanded, setProfileExpanded] = useState(true)
+  const [profileExpanded, setProfileExpanded] = useState(false)
+  const [layers, setLayers] = useState("")
   const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationsPoint });
 
 
@@ -66,7 +69,7 @@ const MapPage = () => {
         //@ts-ignore
         mapboxgl.Style.setSourceType(SOURCE_TYPE, PmTilesSource);
 
-        const PMTILES_URL = 'https://urban-heat-portal-tiles.s3.amazonaws.com/ST_Clipped_20130601.pmtiles';
+        const PMTILES_URL = 'https://urban-heat-portal-tiles.s3.amazonaws.com/ST_Clipped_20230902.pmtiles';
         const header = await PmTilesSource.getHeader(PMTILES_URL);
         const bounds = [
           header.minLon,
@@ -92,12 +95,12 @@ const MapPage = () => {
           layout: { visibility: 'visible' },
           interactive: true,
           paint: {
-            "raster-resampling": "nearest",
+            // "raster-resampling": "nearest",
           },
         });
         m.on("click", 'surface_temperature', () => {
           console.log("Clicked on surface_temperature layer");
-          setProfileExpanded(true); 
+          setProfileExpanded(true);
         });
 
 
@@ -126,11 +129,20 @@ const MapPage = () => {
     };
   }, [weatherStationsQuery.isSuccess, weatherStationsQuery.data, isScriptLoaded]);
 
+
+  useEffect(() => {
+    if (layers === "surface_temperature") {
+      console.log("S")
+    }
+  })
+
   return (
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <CommunityDistrictsProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded}/>
+      <CommunityDistrictsProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
+      <LayerSelections />
+      <MapDateSelections />
     </div>
   );
 };
