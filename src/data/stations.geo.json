@@ -1,0 +1,1337 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7013,40.781 ]
+   },
+   "properties": {
+   "FIELD1":0,
+   "address":"0826W",
+   "tempmax":"78.70522875816994",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":73,
+   "Days_warmer_than_normal_min":73,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9661,40.8535 ]
+   },
+   "properties": {
+   "FIELD1":1,
+   "address":"A3655",
+   "tempmax":"81.39346405228758",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":97,
+   "Days_warmer_than_normal_min":78,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1261,40.6703 ]
+   },
+   "properties": {
+   "FIELD1":2,
+   "address":"A3676",
+   "tempmax":"81.0156862745098",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":88,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2084,40.6414 ]
+   },
+   "properties": {
+   "FIELD1":3,
+   "address":"AN396",
+   "tempmax":"81.36601307189542",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":101,
+   "Days_warmer_than_normal_min":80,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1929,40.721 ]
+   },
+   "properties": {
+   "FIELD1":4,
+   "address":"AN736",
+   "tempmax":"82.22745098039215",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":106,
+   "Days_warmer_than_normal_min":87,
+   "Days_warmer_than_max_record":4
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0308,40.6352 ]
+   },
+   "properties": {
+   "FIELD1":5,
+   "address":"AU015",
+   "tempmax":"79.96601307189542",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":85,
+   "Days_warmer_than_normal_min":84,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1583,40.9603 ]
+   },
+   "properties": {
+   "FIELD1":6,
+   "address":"AV066",
+   "tempmax":"82.31372549019608",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":114,
+   "Days_warmer_than_normal_min":60,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0142,40.7006 ]
+   },
+   "properties": {
+   "FIELD1":7,
+   "address":"BATN6",
+   "tempmax":"78.13725490196079",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":72,
+   "Days_warmer_than_normal_min":111,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.152,40.7482 ]
+   },
+   "properties": {
+   "FIELD1":8,
+   "address":"C1099",
+   "tempmax":"82.43071895424836",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":7,
+   "NYC_HeatEvent":24,
+   "Days_warmer_than_normal_max":110,
+   "Days_warmer_than_normal_min":87,
+   "Days_warmer_than_max_record":4
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2833,40.8667 ]
+   },
+   "properties": {
+   "FIELD1":9,
+   "address":"C2504",
+   "tempmax":"80.20196078431373",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":6,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":54,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.6938,40.6512 ]
+   },
+   "properties": {
+   "FIELD1":10,
+   "address":"C3340",
+   "tempmax":"79.51830065359476",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":84,
+   "Days_warmer_than_normal_min":78,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2353,40.6795 ]
+   },
+   "properties": {
+   "FIELD1":11,
+   "address":"C3712",
+   "tempmax":"81.5673202614379",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":102,
+   "Days_warmer_than_normal_min":87,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9775,40.9147 ]
+   },
+   "properties": {
+   "FIELD1":12,
+   "address":"C5425",
+   "tempmax":"80.02222222222223",
+   "Excessive_Heat_Event":3,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":17,
+   "Days_warmer_than_normal_max":91,
+   "Days_warmer_than_normal_min":61,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1142,40.9286 ]
+   },
+   "properties": {
+   "FIELD1":13,
+   "address":"C5885",
+   "tempmax":"81.61437908496733",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":105,
+   "Days_warmer_than_normal_min":69,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1697,40.8325 ]
+   },
+   "properties": {
+   "FIELD1":14,
+   "address":"C9476",
+   "tempmax":"81.040522875817",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":98,
+   "Days_warmer_than_normal_min":68,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1408,40.7728 ]
+   },
+   "properties": {
+   "FIELD1":15,
+   "address":"D1415",
+   "tempmax":"82.04705882352941",
+   "Excessive_Heat_Event":4,
+   "HeatAdvisory":9,
+   "NYC_HeatEvent":19,
+   "Days_warmer_than_normal_max":109,
+   "Days_warmer_than_normal_min":97,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7108,40.7226 ]
+   },
+   "properties": {
+   "FIELD1":16,
+   "address":"D1891",
+   "tempmax":"79.83006535947712",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":85,
+   "Days_warmer_than_normal_min":81,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0044,40.8775 ]
+   },
+   "properties": {
+   "FIELD1":17,
+   "address":"D2034",
+   "tempmax":"80.57516339869281",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":94,
+   "Days_warmer_than_normal_min":68,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.911,40.7763 ]
+   },
+   "properties": {
+   "FIELD1":18,
+   "address":"D3216",
+   "tempmax":"81.18169934640522",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":101,
+   "Days_warmer_than_normal_min":79,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2732,40.576 ]
+   },
+   "properties": {
+   "FIELD1":19,
+   "address":"D5516",
+   "tempmax":"81.68692810457516",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":96,
+   "Days_warmer_than_normal_min":81,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9488,40.6 ]
+   },
+   "properties": {
+   "FIELD1":20,
+   "address":"D5729",
+   "tempmax":"78.69607843137256",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":72,
+   "Days_warmer_than_normal_min":104,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1044,40.9217 ]
+   },
+   "properties": {
+   "FIELD1":21,
+   "address":"D6004",
+   "tempmax":"82.33921568627451",
+   "Excessive_Heat_Event":3,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":20,
+   "Days_warmer_than_normal_max":112,
+   "Days_warmer_than_normal_min":51,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0845,40.8563 ]
+   },
+   "properties": {
+   "FIELD1":22,
+   "address":"D8219",
+   "tempmax":"81.02287581699346",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":19,
+   "Days_warmer_than_normal_max":99,
+   "Days_warmer_than_normal_min":70,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9817,40.9245 ]
+   },
+   "properties": {
+   "FIELD1":23,
+   "address":"D8340",
+   "tempmax":"80.42941176470589",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":60,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1613,40.5537 ]
+   },
+   "properties": {
+   "FIELD1":24,
+   "address":"D8569",
+   "tempmax":"80.02745098039216",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":82,
+   "Days_warmer_than_normal_min":73,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2163,40.8442 ]
+   },
+   "properties": {
+   "FIELD1":25,
+   "address":"D9424",
+   "tempmax":"80.96209150326798",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":100,
+   "Days_warmer_than_normal_min":71,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0787,40.7875 ]
+   },
+   "properties": {
+   "FIELD1":26,
+   "address":"E0405",
+   "tempmax":"81.20196078431373",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":98,
+   "Days_warmer_than_normal_min":83,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2775,40.8615 ]
+   },
+   "properties": {
+   "FIELD1":27,
+   "address":"E0732",
+   "tempmax":"79.94901960784314",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":95,
+   "Days_warmer_than_normal_min":55,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.013,40.6245 ]
+   },
+   "properties": {
+   "FIELD1":28,
+   "address":"E1296",
+   "tempmax":"83.38823529411765",
+   "Excessive_Heat_Event":5,
+   "HeatAdvisory":8,
+   "NYC_HeatEvent":31,
+   "Days_warmer_than_normal_max":112,
+   "Days_warmer_than_normal_min":112,
+   "Days_warmer_than_max_record":6
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0372,40.628 ]
+   },
+   "properties": {
+   "FIELD1":29,
+   "address":"E2876",
+   "tempmax":"79.32810457516341",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":73,
+   "Days_warmer_than_normal_min":83,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7898,40.85 ]
+   },
+   "properties": {
+   "FIELD1":30,
+   "address":"E3462",
+   "tempmax":"77.39346405228758",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":64,
+   "Days_warmer_than_normal_min":90,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1298,40.8522 ]
+   },
+   "properties": {
+   "FIELD1":31,
+   "address":"E4570",
+   "tempmax":"77.03464052287582",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":7,
+   "Days_warmer_than_normal_max":50,
+   "Days_warmer_than_normal_min":105,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1327,40.5673 ]
+   },
+   "properties": {
+   "FIELD1":32,
+   "address":"E5465",
+   "tempmax":"80.77712418300653",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":19,
+   "Days_warmer_than_normal_max":92,
+   "Days_warmer_than_normal_min":69,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2742,40.5555 ]
+   },
+   "properties": {
+   "FIELD1":33,
+   "address":"E5922",
+   "tempmax":"82.94575163398693",
+   "Excessive_Heat_Event":5,
+   "HeatAdvisory":9,
+   "NYC_HeatEvent":27,
+   "Days_warmer_than_normal_max":112,
+   "Days_warmer_than_normal_min":79,
+   "Days_warmer_than_max_record":3
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2565,40.6692 ]
+   },
+   "properties": {
+   "FIELD1":34,
+   "address":"E6780",
+   "tempmax":"81.25032679738561",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":17,
+   "Days_warmer_than_normal_max":100,
+   "Days_warmer_than_normal_min":74,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9577,40.9403 ]
+   },
+   "properties": {
+   "FIELD1":35,
+   "address":"E7562",
+   "tempmax":"79.97450980392158",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":88,
+   "Days_warmer_than_normal_min":59,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1455,40.6157 ]
+   },
+   "properties": {
+   "FIELD1":36,
+   "address":"E7893",
+   "tempmax":"81.51307189542484",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":22,
+   "Days_warmer_than_normal_max":95,
+   "Days_warmer_than_normal_min":68,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1483,40.777 ]
+   },
+   "properties": {
+   "FIELD1":37,
+   "address":"E9345",
+   "tempmax":"81.69084967320262",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":18,
+   "Days_warmer_than_normal_max":104,
+   "Days_warmer_than_normal_min":83,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.718,40.728 ]
+   },
+   "properties": {
+   "FIELD1":38,
+   "address":"F1075",
+   "tempmax":"83.64183006535949",
+   "Excessive_Heat_Event":7,
+   "HeatAdvisory":10,
+   "NYC_HeatEvent":30,
+   "Days_warmer_than_normal_max":122,
+   "Days_warmer_than_normal_min":81,
+   "Days_warmer_than_max_record":4
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0292,40.7453 ]
+   },
+   "properties": {
+   "FIELD1":39,
+   "address":"F1417",
+   "tempmax":"82.77647058823528",
+   "Excessive_Heat_Event":4,
+   "HeatAdvisory":11,
+   "NYC_HeatEvent":22,
+   "Days_warmer_than_normal_max":111,
+   "Days_warmer_than_normal_min":104,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.8,40.8 ]
+   },
+   "properties": {
+   "FIELD1":40,
+   "address":"F1633",
+   "tempmax":"80.24640522875818",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":15,
+   "Days_warmer_than_normal_max":86,
+   "Days_warmer_than_normal_min":89,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.932,40.5772 ]
+   },
+   "properties": {
+   "FIELD1":41,
+   "address":"F1729",
+   "tempmax":"72.3718954248366",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":7,
+   "Days_warmer_than_normal_min":110,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1885,40.5913 ]
+   },
+   "properties": {
+   "FIELD1":42,
+   "address":"F2134",
+   "tempmax":"80.66013071895425",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":17,
+   "Days_warmer_than_normal_max":91,
+   "Days_warmer_than_normal_min":64,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0365,40.7017 ]
+   },
+   "properties": {
+   "FIELD1":43,
+   "address":"F2280",
+   "tempmax":"74.40915032679739",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":18,
+   "Days_warmer_than_normal_min":112,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7605,40.9163 ]
+   },
+   "properties": {
+   "FIELD1":44,
+   "address":"F2966",
+   "tempmax":"77.55751633986928",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":13,
+   "Days_warmer_than_normal_max":68,
+   "Days_warmer_than_normal_min":63,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.673,40.63 ]
+   },
+   "properties": {
+   "FIELD1":45,
+   "address":"F3861",
+   "tempmax":"78.940522875817",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":80,
+   "Days_warmer_than_normal_min":82,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9572,40.7717 ]
+   },
+   "properties": {
+   "FIELD1":46,
+   "address":"F4321",
+   "tempmax":"81.22287581699347",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":99,
+   "Days_warmer_than_normal_min":87,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2385,40.5818 ]
+   },
+   "properties": {
+   "FIELD1":47,
+   "address":"F5744",
+   "tempmax":"80.99281045751634",
+   "Excessive_Heat_Event":2,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":20,
+   "Days_warmer_than_normal_max":94,
+   "Days_warmer_than_normal_min":81,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0652,40.8907 ]
+   },
+   "properties": {
+   "FIELD1":48,
+   "address":"F6101",
+   "tempmax":"81.20130718954248",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":104,
+   "Days_warmer_than_normal_min":70,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.721,40.7937 ]
+   },
+   "properties": {
+   "FIELD1":49,
+   "address":"F6107",
+   "tempmax":"79.65032679738562",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":3,
+   "NYC_HeatEvent":16,
+   "Days_warmer_than_normal_max":84,
+   "Days_warmer_than_normal_min":65,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0325,40.9552 ]
+   },
+   "properties": {
+   "FIELD1":50,
+   "address":"F6481",
+   "tempmax":"81.36928104575163",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":107,
+   "Days_warmer_than_normal_min":68,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.8603,40.8603 ]
+   },
+   "properties": {
+   "FIELD1":51,
+   "address":"F6867",
+   "tempmax":"80.74183006535948",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":70,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7537,40.7568 ]
+   },
+   "properties": {
+   "FIELD1":52,
+   "address":"F7223",
+   "tempmax":"80.65228758169934",
+   "Excessive_Heat_Event":3,
+   "HeatAdvisory":6,
+   "NYC_HeatEvent":16,
+   "Days_warmer_than_normal_max":96,
+   "Days_warmer_than_normal_min":90,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9815,40.671 ]
+   },
+   "properties": {
+   "FIELD1":53,
+   "address":"F8726",
+   "tempmax":"80.56797385620915",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":91,
+   "Days_warmer_than_normal_min":86,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2722,40.9312 ]
+   },
+   "properties": {
+   "FIELD1":54,
+   "address":"F8945",
+   "tempmax":"80.76601307189543",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":6,
+   "Days_warmer_than_normal_max":98,
+   "Days_warmer_than_normal_min":53,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.28,40.88 ]
+   },
+   "properties": {
+   "FIELD1":55,
+   "address":"KCDW",
+   "tempmax":"81.69346405228758",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":105,
+   "Days_warmer_than_normal_min":64,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.17,40.7 ]
+   },
+   "properties": {
+   "FIELD1":56,
+   "address":"KEWR",
+   "tempmax":"83.06405228758169",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":5,
+   "NYC_HeatEvent":15,
+   "Days_warmer_than_normal_max":107,
+   "Days_warmer_than_normal_min":105,
+   "Days_warmer_than_max_record":4
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.78,40.65 ]
+   },
+   "properties": {
+   "FIELD1":57,
+   "address":"KJFK",
+   "tempmax":"79.11111111111111",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":6,
+   "Days_warmer_than_normal_max":74,
+   "Days_warmer_than_normal_min":96,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.01,40.7 ]
+   },
+   "properties": {
+   "FIELD1":58,
+   "address":"KJRB",
+   "tempmax":"80.80196078431374",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":12,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":104,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2446,40.6174 ]
+   },
+   "properties": {
+   "FIELD1":59,
+   "address":"KLDJ",
+   "tempmax":"81.67908496732026",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":14,
+   "Days_warmer_than_normal_max":101,
+   "Days_warmer_than_normal_min":81,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.9,40.77 ]
+   },
+   "properties": {
+   "FIELD1":60,
+   "address":"KLGA",
+   "tempmax":"80.63986928104575",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":6,
+   "Days_warmer_than_normal_max":90,
+   "Days_warmer_than_normal_min":113,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.98,40.77 ]
+   },
+   "properties": {
+   "FIELD1":61,
+   "address":"KNYC",
+   "tempmax":"79.87843137254902",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":5,
+   "Days_warmer_than_normal_max":84,
+   "Days_warmer_than_normal_min":103,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -73.7649,40.8103 ]
+   },
+   "properties": {
+   "FIELD1":62,
+   "address":"KPTN6",
+   "tempmax":"76.70980392156864",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":51,
+   "Days_warmer_than_normal_min":86,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.06,40.85 ]
+   },
+   "properties": {
+   "FIELD1":63,
+   "address":"KTEB",
+   "tempmax":"81.02941176470588",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":10,
+   "Days_warmer_than_normal_max":99,
+   "Days_warmer_than_normal_min":76,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0883,40.8767 ]
+   },
+   "properties": {
+   "FIELD1":64,
+   "address":"LOIN4",
+   "tempmax":"81.36339869281046",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":105,
+   "Days_warmer_than_normal_min":73,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1577,40.9519 ]
+   },
+   "properties": {
+   "FIELD1":65,
+   "address":"NJ07",
+   "tempmax":"81.39346405228758",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":9,
+   "Days_warmer_than_normal_max":103,
+   "Days_warmer_than_normal_min":62,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0531,40.7087 ]
+   },
+   "properties": {
+   "FIELD1":66,
+   "address":"NJ12",
+   "tempmax":"80.29411764705883",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":8,
+   "Days_warmer_than_normal_max":89,
+   "Days_warmer_than_normal_min":58,
+   "Days_warmer_than_max_record":1
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0136,40.9593 ]
+   },
+   "properties": {
+   "FIELD1":67,
+   "address":"NJ48",
+   "tempmax":"80.03921568627452",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":90,
+   "Days_warmer_than_normal_min":51,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1231,40.7131 ]
+   },
+   "properties": {
+   "FIELD1":68,
+   "address":"NWKN4",
+   "tempmax":"81.16470588235295",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":93,
+   "Days_warmer_than_normal_min":89,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2819,40.9697 ]
+   },
+   "properties": {
+   "FIELD1":69,
+   "address":"PPPN4",
+   "tempmax":"80.77058823529411",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":6,
+   "Days_warmer_than_normal_max":97,
+   "Days_warmer_than_normal_min":53,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.065,40.6567 ]
+   },
+   "properties": {
+   "FIELD1":70,
+   "address":"ROBN4",
+   "tempmax":"76.63333333333333",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":48,
+   "Days_warmer_than_normal_min":112,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.0094,40.4669 ]
+   },
+   "properties": {
+   "FIELD1":71,
+   "address":"SDHN4",
+   "tempmax":"75.00392156862745",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":0,
+   "NYC_HeatEvent":0,
+   "Days_warmer_than_normal_max":35,
+   "Days_warmer_than_normal_min":108,
+   "Days_warmer_than_max_record":0
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.1817,40.8847 ]
+   },
+   "properties": {
+   "FIELD1":72,
+   "address":"WTPN4",
+   "tempmax":"81.77450980392157",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":4,
+   "NYC_HeatEvent":11,
+   "Days_warmer_than_normal_max":104,
+   "Days_warmer_than_normal_min":72,
+   "Days_warmer_than_max_record":2
+   }
+ },
+ {
+   "type": "Feature",
+   "geometry": {
+      "type": "Point",
+      "coordinates":  [ -74.2528,40.9103 ]
+   },
+   "properties": {
+   "FIELD1":73,
+   "address":"WYNN4",
+   "tempmax":"81.33006535947712",
+   "Excessive_Heat_Event":0,
+   "HeatAdvisory":2,
+   "NYC_HeatEvent":8,
+   "Days_warmer_than_normal_max":104,
+   "Days_warmer_than_normal_min":58,
+   "Days_warmer_than_max_record":2
+   }
+ }
+]
+}

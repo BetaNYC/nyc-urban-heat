@@ -8,6 +8,7 @@ import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 
+import stations from "../data/stations.geo.json";
 
 import * as mapboxPmTiles from 'mapbox-pmtiles';
 import mapboxgl from "mapbox-gl"
@@ -21,16 +22,14 @@ const loadScript = (src: string, onLoad: () => void) => {
   document.head.appendChild(script);
 };
 
-
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const { setMap } = useContext(MapContext) as MapContextType;
+
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
   const [profileExpanded, setProfileExpanded] = useState(false)
-  const [layers, setLayers] = useState("")
+
   const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationsPoint });
-
-
 
   useEffect(() => {
     loadScript(
@@ -86,39 +85,81 @@ const MapPage = () => {
           bounds: bounds,
         });
 
+
+        m.addSource('weather_stations', {
+          type: 'geojson',
+          data: stations as GeoJSON.FeatureCollection
+        });
+
         // m.showTileBoundaries = true;
         m.addLayer({
           id: 'surface_temperature',
           source: 'surface_temperature',
           'source-layer': 'raster-layer',
           type: 'raster',
-          layout: { visibility: 'visible' },
+          layout: { visibility: 'none' },
           interactive: true,
           paint: {
             // "raster-resampling": "nearest",
           },
         });
-        m.on("click", 'surface_temperature', () => {
-          console.log("Clicked on surface_temperature layer");
-          setProfileExpanded(true);
-        });
-
-
-
-        // m.addSource('cool_roofs', {
-        //   type: 'geojson',
-        //   data: weatherStationsQuery.data as GeoJSON.FeatureCollection
+        // m.on("click", 'surface_temperature', () => {
+        //   console.log("Clicked on surface_temperature layer");
+        //   setProfileExpanded(true);
         // });
 
-        // m.addLayer({
-        //   id: 'cool_roofs',
-        //   source: 'cool_roofs',
-        //   type: 'circle',
-        //   paint: {
-        //     'circle-color': "#306DDD",
-        //     'circle-radius': 6,
-        //   }
-        // });
+        m.addLayer({
+          id: "weather_stations_heat_event",
+          type: "circle",
+          source: "weather_stations",
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            "circle-radius": [
+              "*",
+              ['-', 0, ['number', ['get', 'NYC_HeatEvent']]], 1.08
+            ],
+            "circle-color": "#ad844a",
+            'circle-opacity': 0.8
+          }
+        })
+
+        m.addLayer({
+          id: "weather_stations_heat_advisory",
+          type: "circle",
+          source: "weather_stations",
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            "circle-radius":
+              [
+                "*",
+                ['-', 0, ['number', ['get', 'HeatAdvisory']]], 1.08
+              ],
+            "circle-color": "#a46338",
+            'circle-opacity': 0.8
+          }
+        })
+
+        m.addLayer({
+          id: "weather_stations_heat_excessive",
+          type: "circle",
+          source: "weather_stations",
+          layout: {
+            visibility: 'none'
+          },
+          paint: {
+            "circle-radius":
+              [
+                "*",
+                ['-', 0, ['number', ['get', 'Excessive_Heat_Event']]], 1.08
+              ],
+            "circle-color": "#823e35",
+            'circle-opacity': 0.8
+          }
+        })
 
         setMap(m);
       }
@@ -130,11 +171,7 @@ const MapPage = () => {
   }, [weatherStationsQuery.isSuccess, weatherStationsQuery.data, isScriptLoaded]);
 
 
-  useEffect(() => {
-    if (layers === "surface_temperature") {
-      console.log("S")
-    }
-  })
+
 
   return (
     <div className='relative w-full h-full'>

@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 
-
+import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType, LayersType } from '../contexts/mapLayersContext'
 
 import LayerSelectionOption from './LayerSelectionOption'
@@ -38,7 +38,37 @@ const layerImgSource = {
 const LayerSelections = () => {
 
   const [expand, setExpand] = useState<boolean>(false)
+  const { map } = useContext(MapContext) as MapContextType
   const { layer } = useContext(MapLayersContext) as MapLayersContextType
+
+  const [prevLayer, setPrevLayer] = useState<LayersType | null>(null)
+
+  useEffect(() => {
+    if (prevLayer && map) {
+      if (prevLayer === "Weather Stations") {
+        map.setLayoutProperty("weather_stations_heat_event", "visibility", "none");
+        map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "none");
+        map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "none");
+      } else {
+        const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
+        map.setLayoutProperty(prevLayerName, "visibility", "none");
+      }
+    }
+    if (layer && map) {
+      if (layer === "Weather Stations") {
+        console.log('w')
+        map.setLayoutProperty("weather_stations_heat_event", "visibility", "visible");
+        map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "visible");
+        map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "visible");
+      } else {
+        const layerName = layer?.toLocaleLowerCase().replace(" ", "_")
+        map.setLayoutProperty(`${layerName}`, "visibility", "visible")
+      }
+
+    }
+
+    setPrevLayer(layer)
+  }, [layer])
 
   return (
     <div className={`absolute left-6 top-[4.625rem] py-3 w-[18rem] lg:w-[24rem] ${!expand ? "h-[4.5rem] overflow-hidden" : "h-[85%] overflow-scroll"} bg-white rounded-lg drop-shadow-lg`}>
