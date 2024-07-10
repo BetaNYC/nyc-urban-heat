@@ -71,12 +71,12 @@ const LayerSelections = () => {
   }, [layer])
 
   return (
-    <div className={`absolute left-6 top-[4.625rem] py-3 w-[18rem] lg:w-[24rem] ${!expand ? "h-[4.5rem] overflow-hidden" : "h-[85%] overflow-scroll"} bg-white rounded-lg drop-shadow-lg`}>
-      <div className='flex justify-between items-center h-[3rem] mb-3  px-6 '>
+    <div className={`absolute left-6 top-[4.625rem] w-[18rem] lg:w-[24rem] ${!expand ? "h-[3rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`}>
+      <div className='flex justify-between items-center h-[3rem] mb-3  px-6'>
         <div className="flex items-center  gap-3 ">
           {
-            layer && <div className="flex justify-center items-center w-10 h-10 bg-[#F2F2F2] rounded-full">
-              <img src={layerImgSource[layer]} alt="" className="w-6 h-6" />
+            layer && <div className="flex justify-center items-center w-6 h-6 bg-[#F2F2F2] rounded-full">
+              <img src={layerImgSource[layer]} alt="" className="w-4 h-4" />
             </div>
           }
           <h2 className="font-medium">{!layer ? "Urban Heat Data Layers" : layer}</h2>
@@ -87,13 +87,13 @@ const LayerSelections = () => {
       <div>
         <div className=''>
           <h3 className="px-6 text-small text-[#4F4F4F]">Outdoor Heat Exposure</h3>
-          <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
+          <div className='my-2 w-full h-[1px] bg-[#828282]'></div>
           <LayerSelectionOption title="Outdoor Heat Exposure Index" img={layerImgSource['Outdoor Heat Exposure Index']} />
           {/* <LayerSelectionOption title="Disadvantages Communities" img={disadvantagesCommunites} /> */}
         </div>
         <div>
-          <h3 className="px-6 text-small text-[#4F4F4F]">Temperature</h3>
-          <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
+          <h3 className="px-6 pt-3 text-small text-[#4F4F4F]">Temperature</h3>
+          <div className='my-2 w-full h-[1px] bg-[#828282]'></div>
           <LayerSelectionOption title="Air Temperature" img={layerImgSource["Air Temperature"]} />
           <LayerSelectionOption title="Air Heat Index" img={layerImgSource["Air Heat Index"]} />
           <LayerSelectionOption title="Mean Radiant Temperature" img={layerImgSource["Mean Radiant Temperature"]} />
@@ -101,8 +101,8 @@ const LayerSelections = () => {
           <LayerSelectionOption title="Weather Stations" img={layerImgSource["Weather Stations"]} />
         </div>
         <div>
-          <h3 className="px-6 text-small text-[#4F4F4F]">Heat Mitigation</h3>
-          <div className='my-3 w-full h-[1px] bg-[#828282]'></div>
+          <h3 className="px-6 pt-3 text-small text-[#4F4F4F]">Heat Mitigation</h3>
+          <div className='my-2 w-full h-[1px] bg-[#828282]'></div>
           <LayerSelectionOption title="Tree Canopy" img={layerImgSource["Tree Canopy"]} />
           <LayerSelectionOption title="Cool Roofs" img={layerImgSource["Cool Roofs"]} />
           <LayerSelectionOption title="Premeable Surfaces" img={layerImgSource["Premeable Surfaces"]} />
