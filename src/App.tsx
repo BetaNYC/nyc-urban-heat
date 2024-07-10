@@ -24,7 +24,7 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <main className=' w-[100vw] h-[100vh] overflow-y-scroll'>
+      <main className=' w-[100vw] h-[100vh] overflow-x-hidden overflow-y-scroll'>
         <MapProvider>
           <MapLayersProvider>
             <BrowserRouter>
