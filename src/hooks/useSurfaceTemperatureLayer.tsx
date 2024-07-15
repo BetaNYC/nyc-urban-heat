@@ -20,7 +20,6 @@ const useSurfaceTemperatureLayer = (date: string | null, map: mapboxgl.Map | nul
     const [isScriptLoaded, setIsScriptLoaded] = useState(false);
     const { layer } = useContext(MapLayersContext) as MapLayersContextType
 
-
     const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
 

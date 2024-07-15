@@ -1,14 +1,9 @@
 import { useState, useEffect, useRef, useContext } from 'react'
-import { useQuery } from 'react-query';
-//@ts-ignore
-import { fetchStationsPoint } from "../api/api.js"
 
 import Nav from "../components/Nav"
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
-
-import stations from "../data/stations.geo.json";
 
 
 import mapboxgl from "mapbox-gl"
@@ -16,6 +11,7 @@ import { MapContext, MapContextType } from "../contexts/mapContext.js"
 
 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
+import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 
 
 const MapPage = () => {
@@ -25,14 +21,9 @@ const MapPage = () => {
   const [profileExpanded, setProfileExpanded] = useState(false)
   const [date, setDate] = useState<string | null>("20230902")
 
-  const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationsPoint });
-  // console.log(weatherStationsQuery.data)
-
-
-
 
   useEffect(() => {
-    if (!weatherStationsQuery.isSuccess || !mapContainer.current) return;
+    if (!mapContainer.current) return;
 
     mapboxgl.accessToken = "pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw";
 
@@ -55,81 +46,19 @@ const MapPage = () => {
     m.touchZoomRotate.disableRotation();
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
-    m.on('load', async () => {
-      m.addSource('weather_stations', {
-        type: 'geojson',
-        data: stations as GeoJSON.FeatureCollection
-      });
-
-      m.addLayer({
-        id: "weather_stations_heat_event",
-        type: "circle",
-        source: "weather_stations",
-        layout: {
-          visibility: 'none'
-        },
-        paint: {
-          "circle-radius": [
-            "*",
-            ['-', 0, ['number', ['get', 'NYC_HeatEvent']]], 1.08
-          ],
-          "circle-color": "#ad844a",
-          'circle-opacity': 0.8
-        }
-      })
-
-      m.addLayer({
-        id: "weather_stations_heat_advisory",
-        type: "circle",
-        source: "weather_stations",
-        layout: {
-          visibility: 'none'
-        },
-        paint: {
-          "circle-radius":
-            [
-              "*",
-              ['-', 0, ['number', ['get', 'HeatAdvisory']]], 1.08
-            ],
-          "circle-color": "#a46338",
-          'circle-opacity': 0.8
-        }
-      })
-
-      m.addLayer({
-        id: "weather_stations_heat_excessive",
-        type: "circle",
-        source: "weather_stations",
-        layout: {
-          visibility: 'none'
-        },
-        paint: {
-          "circle-radius":
-            [
-              "*",
-              ['-', 0, ['number', ['get', 'Excessive_Heat_Event']]], 1.08
-            ],
-          "circle-color": "#823e35",
-          'circle-opacity': 0.8
-        }
-      })
-
-      setMap(m);
-    }
-    );
-
-
+    m.on('load', () => { setMap(m); });
 
     return () => {
       if (m) m.remove();
     };
-  }, [weatherStationsQuery.isSuccess, weatherStationsQuery.data]);
+  }, []);
 
 
 
 
 
   useSurfaceTemperatureLayer(date, map)
+  useWeatherStationLayer(map)
 
 
 
