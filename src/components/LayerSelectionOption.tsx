@@ -16,7 +16,7 @@ const LayerSelectionOption = ({ title, img }: Props) => {
 
 
     return (
-        <div className="flex justify-between items-center px-6 py-3 hover:bg-[#828282] hover:text-white cursor-pointer" onClick={() => setLayer(title)}>
+        <div className="flex justify-between items-center gap-3 px-5 py-3 hover:bg-[#828282] hover:text-white cursor-pointer" onClick={() => setLayer(title)}>
             <div className="flex items-center gap-3">
                 <div className="flex justify-center items-center w-6 h-6 bg-[#F2F2F2] rounded-full">
                     <img src={img} alt="" className="w-4 h-4" />

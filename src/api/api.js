@@ -41,6 +41,9 @@ export const fetchStationsPoint = async () => {
 
 export const fetchSurfaceTemp = async () => {
   const res = await fetch(
-    `${baseUrl}stations_point?select=*&apikey=${API_KEY}`
+    `${baseUrl}pmtiles?select=*&apikey=${API_KEY}`
   );
+  const data  = await res.json()
+
+  return data
 };

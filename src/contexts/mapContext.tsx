@@ -1,7 +1,9 @@
-import { createContext, useState, Dispatch, SetStateAction, ReactNode } from "react";
+import { createContext, useState, Dispatch, SetStateAction, ReactNode, useEffect } from "react";
 
 
 import mapboxgl from 'mapbox-gl';
+
+
 
 
 export type MapContextType = {
@@ -22,8 +24,7 @@ const MapProvider = ({ children }: Props) => {
     const [map, setMap] = useState<mapboxgl.Map | null>(null)
 
 
-
-    return <MapContext.Provider value={{ map, setMap}} >
+    return <MapContext.Provider value={{ map, setMap }} >
         {children}
     </MapContext.Provider>
 }

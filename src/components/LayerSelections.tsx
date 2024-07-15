@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, Dispatch, SetStateAction } from 'react'
 
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType, LayersType } from '../contexts/mapLayersContext'
@@ -35,6 +35,7 @@ const layerImgSource = {
 
 
 
+
 const LayerSelections = () => {
 
   const [expand, setExpand] = useState<boolean>(false)
@@ -42,6 +43,7 @@ const LayerSelections = () => {
   const { layer } = useContext(MapLayersContext) as MapLayersContextType
 
   const [prevLayer, setPrevLayer] = useState<LayersType | null>(null)
+
 
   useEffect(() => {
     if (prevLayer && map) {
@@ -51,18 +53,17 @@ const LayerSelections = () => {
         map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "none");
       } else {
         const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
-        map.setLayoutProperty(prevLayerName, "visibility", "none");
+        // map.setLayoutProperty(prevLayerName, "visibility", "none");
       }
     }
     if (layer && map) {
       if (layer === "Weather Stations") {
-        console.log('w')
         map.setLayoutProperty("weather_stations_heat_event", "visibility", "visible");
         map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "visible");
         map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "visible");
       } else {
         const layerName = layer?.toLocaleLowerCase().replace(" ", "_")
-        map.setLayoutProperty(`${layerName}`, "visibility", "visible")
+        // map.setLayoutProperty(layerName, "visibility", "visible");
       }
 
     }
@@ -70,19 +71,21 @@ const LayerSelections = () => {
     setPrevLayer(layer)
   }, [layer])
 
+
+
   return (
-    <div className={`absolute left-6 top-[4.625rem] w-[18rem] lg:w-[24rem] ${!expand ? "h-[3rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`}>
-      <div className='flex justify-between items-center h-[3rem] mb-3  px-6'>
+    <div className={`absolute left-6 top-[4.625rem] pb-4  cursor-pointer ${!expand ? "h-[4rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`} onClick={() => setExpand(!expand)} >
+      <div className='flex justify-between items-center mb-3  px-5 h-[4rem]'>
         <div className="flex items-center  gap-3 ">
           {
             layer && <div className="flex justify-center items-center w-6 h-6 bg-[#F2F2F2] rounded-full">
               <img src={layerImgSource[layer]} alt="" className="w-4 h-4" />
             </div>
           }
-          <h2 className="font-medium">{!layer ? "Urban Heat Data Layers" : layer}</h2>
+          <h2 className="font-medium text-regular">{!layer ? "Urban Heat Data Layers" : layer}</h2>
         </div>
-        {expand ? <ChevronUpIcon width={24} height={24} className='cursor-pointer' onClick={() => setExpand(false)} />
-          : <ChevronDownIcon width={24} height={24} className='cursor-pointer' onClick={() => setExpand(true)} />}
+        {expand ? <ChevronUpIcon width={24} height={24} />
+          : <ChevronDownIcon width={24} height={24} />}
       </div>
       <div>
         <div className=''>
