@@ -1,17 +1,16 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 
-import Nav from "../components/Nav"
-import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
-import LayerSelections from '../components/LayerSelections.js';
-import MapDateSelections from '../components/MapDateSelections.js';
-
-
 import mapboxgl from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 
 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
+
+import Nav from "../components/Nav"
+import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
+import LayerSelections from '../components/LayerSelections.js';
+import MapDateSelections from '../components/MapDateSelections.js';
 
 
 const MapPage = () => {
@@ -46,11 +45,14 @@ const MapPage = () => {
     m.touchZoomRotate.disableRotation();
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
-    m.on('load', () => { setMap(m); });
+    m.on('load', () => { 
+      
 
-    return () => {
-      if (m) m.remove();
-    };
+      setMap(m); });
+
+    // return () => {
+    //   if (m) m.remove();
+    // };
   }, []);
 
 

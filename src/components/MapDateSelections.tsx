@@ -49,46 +49,61 @@ const MapDateSelections = ({ date, setDate }: Props) => {
   const clippedPMTiles = surfaceTemperatureQuery.data?.filter(d => d.filename.includes("ST_Clipped_")) || [];
 
 
+
+  const years = ["2023", "2022", "2021", "2020", "2019", "2017", "2016", "2014", "2013"]
+
+
+
   return (
-    <div className={`absolute left-[22rem] top-[4.625rem] pb-4 bg-white rounded-[0.5rem] cursor-pointer ${!expand && "h-[4rem] overflow-hidden"}`} onClick={() => setExpand(!expand)}>
-      <div className="flex justify-between items-center gap-3 mb-3 px-5 h-[4rem]">
+    <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
+      <div className="flex justify-between items-center gap-3 px-5 h-[4rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
         {isTablet && <div className="mr-5 font-medium text-regular">{layer ? date : "Available Datasets"}</div>}
         {expand ? <ChevronUpIcon width={24} height={24} />
           : <ChevronDownIcon width={24} height={24} />}
       </div>
-      <div className="flex flex-col gap-4">
-        <div className="">
-          <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">2023</h3>
-          <div className='my-2 h-[1px] bg-[#828282]'></div>
-          <div className="flex flex-col items-start ">
-            {
-              //@ts-ignore
-              clippedPMTiles.filter(d => d.date.includes("2023")).map((d) => (
-                <div key={d.date} className="px-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => setDate(d.date)}>
-                  {formatDateString(d.date)}
+      <div className={`flex flex-col gap-4 my-3 w-full ${!expand ? "hidden" : "h-[60vh] overflow-scroll"}`}>
+        {
+          years.map((y) => {
+            return (
+              <div className="" key={y}>
+                <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">{y}</h3>
+                <div className='my-2 h-[1px] bg-[#828282]'></div>
+                <div className="flex flex-col items-start ">
+                  {
+                    //@ts-ignore
+                    clippedPMTiles.filter(d => d.date.includes(y)).map((d) => (
+                      <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => {
+                        setDate(d.date)
+                      }}>
+                        {formatDateString(d.date)}
+                      </div>
+                    ))
+                  }
                 </div>
-              ))
-            }
-          </div>
-        </div>
-        <div className="">
-          <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">2022</h3>
-          <div className='my-2  h-[1px] bg-[#828282]'></div>
-          <div className="flex flex-col items-start">
-            {
-              //@ts-ignore
-              clippedPMTiles.filter(d => d.date.includes("2022")).map((d) => (
-                <div key={d.date} className="px-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => setDate(d.date)}>
-                  {formatDateString(d.date)}
-                </div>
-              ))
-            }
-          </div>
-        </div>
+              </div>
+            )
+          })
+        }
       </div>
     </div>
   )
 }
 
 export default MapDateSelections
+
+
+{/* <div className="">
+<h3 className="px-5 font-medium text-regular text-[#4F4F4F]">2022</h3>
+<div className='my-2  h-[1px] bg-[#828282]'></div>
+<div className="flex flex-col items-start">
+  {
+    //@ts-ignore
+    clippedPMTiles.filter(d => d.date.includes("2022")).map((d) => (
+      <div key={d.date} className="px-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => setDate(d.date)}>
+        {formatDateString(d.date)}
+      </div>
+    ))
+  }
+</div>
+</div> */}
