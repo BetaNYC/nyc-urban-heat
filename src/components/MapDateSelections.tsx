@@ -22,14 +22,8 @@ const formatDateString = (dateString: string) => {
   const month = dateString.slice(4, 6);
   const day = dateString.slice(6, 8);
 
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
 
-  const monthName = months[parseInt(month, 10) - 1];
-
-  return `${monthName} ${parseInt(day, 10)}, ${year}`;
+  return `${month}/${day}/${year}`;
 };
 
 
@@ -49,20 +43,18 @@ const MapDateSelections = ({ date, setDate }: Props) => {
   const clippedPMTiles = surfaceTemperatureQuery.data?.filter(d => d.filename.includes("ST_Clipped_")) || [];
 
 
-
   const years = ["2023", "2022", "2021", "2020", "2019", "2017", "2016", "2014", "2013"]
-
 
 
   return (
     <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
       <div className="flex justify-between items-center gap-3 px-5 h-[4rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
-        {isTablet && <div className="mr-5 font-medium text-regular">{layer ? date : "Available Datasets"}</div>}
-        {expand ? <ChevronUpIcon width={24} height={24} />
+        {isTablet && <div className="mr-5 font-medium text-regular">{layer ? formatDateString(date) : "Available Datasets"}</div>}
+        {expand && layer ? <ChevronUpIcon width={24} height={24} />
           : <ChevronDownIcon width={24} height={24} />}
       </div>
-      <div className={`flex flex-col gap-4 my-3 w-full ${!expand ? "hidden" : "h-[60vh] overflow-scroll"}`}>
+      <div className={`flex flex-col gap-4 my-3 w-full ${expand && layer ? "h-[60vh] overflow-scroll" : "hidden"}`}>
         {
           years.map((y) => {
             return (

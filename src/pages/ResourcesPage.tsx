@@ -2,7 +2,7 @@ import Nav from "../components/Nav"
 
 const ResourcesPage = () => {
   return (
-    <>
+    <div className="w-full">
       <Nav />
       <div className="px-6 pt-5 max-w-[55rem]">
         <div>
@@ -101,7 +101,7 @@ const ResourcesPage = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

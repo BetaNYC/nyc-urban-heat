@@ -37,7 +37,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                         ['-', 0, ['number', ['get', 'NYC_HeatEvent']]], 1.08
                     ],
                     "circle-color": "#ad844a",
-                    'circle-opacity': 0.8
+                    'circle-opacity': 1
                 }
             })
 
@@ -55,7 +55,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                             ['-', 0, ['number', ['get', 'HeatAdvisory']]], 1.08
                         ],
                     "circle-color": "#a46338",
-                    'circle-opacity': 0.8
+                    'circle-opacity': 1
                 }
             })
 
@@ -73,7 +73,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                             ['-', 0, ['number', ['get', 'Excessive_Heat_Event']]], 1.08
                         ],
                     "circle-color": "#823e35",
-                    'circle-opacity': 0.8
+                    'circle-opacity': 1
                 }
             })
         }

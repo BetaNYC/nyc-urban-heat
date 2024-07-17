@@ -51,8 +51,13 @@ const LayerSelections = () => {
         map.setLayoutProperty("weather_stations_heat_event", "visibility", "none");
         map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "none");
         map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "none");
-      } else {
+      } else if (prevLayer === "Surface Temperature") {
+        map.removeLayer('surface_temperature');
+        map.removeSource('surface_temperature');
+      }
+      else {
         const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
+
         // map.setLayoutProperty(prevLayerName, "visibility", "none");
       }
     }
