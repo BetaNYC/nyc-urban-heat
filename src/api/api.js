@@ -39,11 +39,61 @@ export const fetchStationsPoint = async () => {
   return geoJSONObj;
 };
 
-export const fetchSurfaceTemp = async () => {
+export const fetchStationHeatStats = async () => {
   const res = await fetch(
-    `${baseUrl}pmtiles?select=*&apikey=${API_KEY}`
+    `${baseUrl}stations_summerstat?select=*&apikey=${API_KEY}`
   );
-  const data  = await res.json()
+  const data = await res.json();
 
-  return data
+  return data;
+};
+
+export const fetchCombinedData = async () => {
+  // Fetch the data
+  const [stationPoints, stationHeatStats] = await Promise.all([
+    fetchStationsPoint(),
+    fetchStationHeatStats(),
+  ]);
+
+  // Create a map of heat stats by address for quick lookup
+  const heatStatsMap = new Map();
+  stationHeatStats.forEach((stat) => {
+    heatStatsMap.set(stat.address, stat);
+  });
+
+  // Combine the data
+  const combinedFeatures = stationPoints.features.map((feature) => {
+    const address = feature.properties.address;
+    const heatStat = heatStatsMap.get(address) || {};
+
+    return {
+      ...feature,
+      geometry: {
+        ...feature.geometry,
+        type:"Point"
+      },
+      properties: {
+        ...feature.properties,
+        ...heatStat,
+        // Days_with_NWS_Excessive_Heat_Event: Number(heatStat.Days_with_NWS_Excessive_Heat_Event) || 0,
+        // Days_with_NWS_HeatAdvisory: Number(heatStat.Days_with_NWS_HeatAdvisory) || 0,
+        // Days_with_NYC_HeatEvent: Number(heatStat.Days_with_NYC_HeatEvent) || 0 
+      },
+    };
+  });
+
+  // Return the combined GeoJSON object
+  const combinedGeoJSONObj = {
+    type: "FeatureCollection",
+    features: combinedFeatures,
+  };
+
+  return combinedGeoJSONObj;
+};
+
+export const fetchSurfaceTemp = async () => {
+  const res = await fetch(`${baseUrl}pmtiles?select=*&apikey=${API_KEY}`);
+  const data = await res.json();
+
+  return data;
 };

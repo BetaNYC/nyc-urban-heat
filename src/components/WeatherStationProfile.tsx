@@ -28,13 +28,13 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
 
 
     return (
-        <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
+        <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
             {
                 isDesktop && <div className="flex items-center justify-center w-12 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
                     {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
                 </div>
             }
-            <div className={`px-6 lg:px-10 pb-6 pt-12 md:pt-[3.75rem] w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+            <div className={`px-6 lg:px-10 pb-6 pt-12 md:pt-[3.75rem] w-[100vw] lg:w-[75vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
                 <div className="md:flex md:gap-[3.375rem] md:mb-[1.75rem] md:h-[40%]">
                     <div className="md:flex md:flex-col w-full md:w-[50%]">
                         <div className="flex items-start justify-between mb-6 ">
@@ -131,7 +131,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
                     </div>
                 )}
                 <div className="flex md:justify-between gap-5 ">
-                    <button className="p-[0.625rem] text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download</button>
+                    <button className="p-[0.625rem] text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download Profile</button>
                     {isTablet ?
                         <div className="flex items-center md:border-b-[1px] md:border-[#333]">
                             <button className="p-[0.625rem] text-regular text-[#E0E0E0] ">View the Outdoor Heat Exposure Index for this neighborhood</button> :
