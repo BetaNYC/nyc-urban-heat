@@ -16,13 +16,13 @@ type Props = {
 
 const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
 
-    const [clickedIndex, setClickedIndex] = useState("cool_roofs")
+    // const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isDesktop = useMediaQuery({
         query: '(min-width: 1024px)'
     })
+
     const clickHandler = () => {
         setProfileExpanded(!profileExpanded)
-        console.log("aa")
     }
 
     return (

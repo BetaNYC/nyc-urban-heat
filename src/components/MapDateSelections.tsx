@@ -50,7 +50,7 @@ const MapDateSelections = ({ date, setDate }: Props) => {
     <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
       <div className="flex justify-between items-center gap-3 px-5 h-[4rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
-        {isTablet && <div className="mr-5 font-medium text-regular">{layer ? formatDateString(date) : "Available Datasets"}</div>}
+        {isTablet && <div className="mr-5 font-medium text-regular">{layer === "Surface Temperature" ? formatDateString(date) : "Available Datasets"}</div>}
         {expand && layer ? <ChevronUpIcon width={24} height={24} />
           : <ChevronDownIcon width={24} height={24} />}
       </div>

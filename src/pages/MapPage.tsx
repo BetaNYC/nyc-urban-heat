@@ -11,6 +11,7 @@ import Nav from "../components/Nav"
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
+import WeatherStationProfile from '../components/WeatherStationProfile.js';
 
 
 const MapPage = () => {
@@ -45,10 +46,11 @@ const MapPage = () => {
     m.touchZoomRotate.disableRotation();
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
-    m.on('load', () => { 
-      
+    m.on('load', () => {
 
-      setMap(m); });
+
+      setMap(m);
+    });
 
     // return () => {
     //   if (m) m.remove();
@@ -76,7 +78,7 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
+      < WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
       <LayerSelections />
       <MapDateSelections date={date!} setDate={setDate} />
     </div>
