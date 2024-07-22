@@ -34,9 +34,12 @@ const layerImgSource = {
 
 
 
+type Props = {
+  setTimeScale: Dispatch<SetStateAction<"date" | "year" | "default">>
+}
 
 
-const LayerSelections = () => {
+const LayerSelections = ({ setTimeScale }: Props) => {
 
   const [expand, setExpand] = useState<boolean>(false)
   const { map } = useContext(MapContext) as MapContextType
@@ -48,29 +51,39 @@ const LayerSelections = () => {
   useEffect(() => {
     if (prevLayer && map) {
       if (prevLayer === "Weather Stations") {
-        map.setLayoutProperty("weather_stations_heat_event", "visibility", "none");
-        map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "none");
-        map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "none");
-      } else if (prevLayer === "Surface Temperature") {
-        map.removeLayer('surface_temperature');
-        map.removeSource('surface_temperature');
+        //     map.setLayoutProperty("weather_stations_heat_event", "visibility", "none");
+        //     map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "none");
+        //     map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "none");
+        map.removeLayer("weather_stations_heat_event");
+        map.removeLayer("weather_stations_heat_advisory")
+        map.removeLayer("weather_stations_heat_excessive")
+        map.removeSource('weather_stations');
       }
-      else {
-        const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
+      if (prevLayer === "Surface Temperature") {
+            map.removeLayer('surface_temperature');
+            map.removeSource('surface_temperature');
+      }
+      //   else {
+      //     const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
 
-        // map.setLayoutProperty(prevLayerName, "visibility", "none");
-      }
+      //   map.setLayoutProperty(prevLayerName, "visibility", "none");
+      //   }
     }
     if (layer && map) {
       if (layer === "Weather Stations") {
-        map.setLayoutProperty("weather_stations_heat_event", "visibility", "visible");
-        map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "visible");
-        map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "visible");
-      } else {
-        const layerName = layer?.toLocaleLowerCase().replace(" ", "_")
-        // map.setLayoutProperty(layerName, "visibility", "visible");
+        setTimeScale("year")
+        // map.setLayoutProperty("weather_stations_heat_event", "visibility", "visible");
+        // map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "visible");
+        // map.setLayoutProperty("weather_stations_heat_excessive", "visibility", "visible");
       }
 
+      if (layer === "Surface Temperature") {
+        setTimeScale("date")
+      }
+      // else {
+      //   const layerName = layer?.toLocaleLowerCase().replace(" ", "_")
+      // map.setLayoutProperty(layerName, "visibility", "visible");
+      // }
     }
 
     setPrevLayer(layer)

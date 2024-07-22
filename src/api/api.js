@@ -48,47 +48,43 @@ export const fetchStationHeatStats = async () => {
   return data;
 };
 
-export const fetchCombinedData = async () => {
+export const fetchStationData = async () => {
   // Fetch the data
   const [stationPoints, stationHeatStats] = await Promise.all([
     fetchStationsPoint(),
     fetchStationHeatStats(),
   ]);
 
-  // Create a map of heat stats by address for quick lookup
-  const heatStatsMap = new Map();
-  stationHeatStats.forEach((stat) => {
-    heatStatsMap.set(stat.address, stat);
+  // Create a map of station points by address for quick lookup
+  const stationPointsMap = new Map();
+  stationPoints.features.forEach((feature) => {
+    const address = feature.properties.address;
+    stationPointsMap.set(address, feature.geometry.coordinates);
   });
 
-  // Combine the data
-  const combinedFeatures = stationPoints.features.map((feature) => {
-    const address = feature.properties.address;
-    const heatStat = heatStatsMap.get(address) || {};
+  // Combine the data with coordinates
+  const stationFeatures = stationHeatStats.map((stat) => {
+    const coordinates = stationPointsMap.get(stat.address) || [0, 0]; // Default to [0, 0] if coordinates not found
 
     return {
-      ...feature,
+      type: "Feature",
       geometry: {
-        ...feature.geometry,
-        type:"Point"
+        type: "Point",
+        coordinates: coordinates,
       },
       properties: {
-        ...feature.properties,
-        ...heatStat,
-        // Days_with_NWS_Excessive_Heat_Event: Number(heatStat.Days_with_NWS_Excessive_Heat_Event) || 0,
-        // Days_with_NWS_HeatAdvisory: Number(heatStat.Days_with_NWS_HeatAdvisory) || 0,
-        // Days_with_NYC_HeatEvent: Number(heatStat.Days_with_NYC_HeatEvent) || 0 
+        ...stat,
       },
     };
   });
 
   // Return the combined GeoJSON object
-  const combinedGeoJSONObj = {
+  const stationGeoJSONObj = {
     type: "FeatureCollection",
-    features: combinedFeatures,
+    features: stationFeatures,
   };
 
-  return combinedGeoJSONObj;
+  return stationGeoJSONObj;
 };
 
 export const fetchSurfaceTemp = async () => {

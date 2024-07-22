@@ -13,8 +13,11 @@ import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 
 
 type Props = {
-  date: string
-  setDate: Dispatch<SetStateAction<string | null>>
+  date: string,
+  year: string
+  timeScale: 'year' | 'date' | "default",
+  setDate: Dispatch<SetStateAction<string>>
+  setYear: Dispatch<SetStateAction<string>>
 }
 
 const formatDateString = (dateString: string) => {
@@ -28,10 +31,9 @@ const formatDateString = (dateString: string) => {
 
 
 
-const MapDateSelections = ({ date, setDate }: Props) => {
+const MapDateSelections = ({ date, timeScale, setDate, setYear, year }: Props) => {
 
   const { layer } = useContext(MapLayersContext) as MapLayersContextType
-
   const [expand, setExpand] = useState(false)
   const isTablet = useMediaQuery({
     query: '(min-width: 768px)'
@@ -50,32 +52,46 @@ const MapDateSelections = ({ date, setDate }: Props) => {
     <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
       <div className="flex justify-between items-center gap-3 px-5 h-[4rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
-        {isTablet && <div className="mr-5 font-medium text-regular">{layer === "Surface Temperature" ? formatDateString(date) : "Available Datasets"}</div>}
+        {isTablet && <div className="mr-5 font-medium text-regular">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}
         {expand && layer ? <ChevronUpIcon width={24} height={24} />
           : <ChevronDownIcon width={24} height={24} />}
       </div>
-      <div className={`flex flex-col gap-4 my-3 w-full ${expand && layer ? "h-[60vh] overflow-scroll" : "hidden"}`}>
+      <div className={`flex flex-col ${timeScale === 'year' ? "gap-0" : "gap-4"} my-3 w-full ${expand && timeScale === 'date' ? "h-[60vh] overflow-scroll" : expand && timeScale === 'year' ? "overflow-scroll" : "hidden"}`}>
         {
-          years.map((y) => {
-            return (
-              <div className="" key={y}>
-                <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">{y}</h3>
-                <div className='my-2 h-[1px] bg-[#828282]'></div>
-                <div className="flex flex-col items-start ">
-                  {
-                    //@ts-ignore
-                    clippedPMTiles.filter(d => d.date.includes(y)).map((d) => (
-                      <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => {
-                        setDate(d.date)
-                      }}>
-                        {formatDateString(d.date)}
-                      </div>
-                    ))
-                  }
+          timeScale === "date" && (
+            years.map((y) => {
+              return (
+                <div className="" key={y}>
+                  <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">{y}</h3>
+                  <div className='my-2 h-[1px] bg-[#828282]'></div>
+                  <div className="flex flex-col items-start ">
+                    {
+                      //@ts-ignore
+                      clippedPMTiles.filter(d => d.date.includes(y)).map((d) => (
+                        <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => {
+                          setDate(d.date)
+                        }}>
+                          {formatDateString(d.date)}
+                        </div>
+                      ))
+                    }
+                  </div>
                 </div>
-              </div>
-            )
-          })
+              )
+            })
+          )
+        }
+        {
+          timeScale === 'year' && (
+            years.map((y) => {
+              return (
+                <div className="hover:bg-[#828282] text-[#4F4F4F] hover:text-white" key={y} onClick={() => setYear(y)}>
+                  <h3 className="my-2 px-5 font-medium text-regular ">{y}</h3>
+                  <div className=' h-[1px] bg-[#828282]'></div>
+                </div>
+              )
+            })
+          )
         }
       </div>
     </div>

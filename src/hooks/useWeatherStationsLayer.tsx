@@ -1,8 +1,9 @@
 import { useState, useEffect, useContext } from 'react'
+import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 import { useQuery } from 'react-query';
 
 //@ts-ignore
-import { fetchCombinedData } from "../api/api.js"
+import { fetchStationData } from "../api/api.js"
 
 import stations from "../data/stations.geo.json";
 
@@ -10,33 +11,45 @@ import stations from "../data/stations.geo.json";
 
 
 
-const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
-    const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchCombinedData });
-    // console.log(weatherStationsQuery.data)
+const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
+    const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData});
+
+    const { layer } = useContext(MapLayersContext) as MapLayersContextType;
 
     useEffect(() => {
-        if (weatherStationsQuery.isSuccess && weatherStationsQuery.data) {
-            const weatherStationsData2023 = {
-                type: "FeatureCollection",
-                features: weatherStationsQuery.data.features.filter(d => d.properties.year === 2023)
-            };
+        if (layer === "Weather Stations") {
+            if (weatherStationsQuery.isSuccess && weatherStationsQuery.data) {
+                const weatherStationsDataForYear = {
+                    type: "FeatureCollection",
+                    //@ts-ignore
+                    features: weatherStationsQuery.data.features.filter(d => d.properties.year === +year)
+                };
+
+                if (map?.getSource('weather_stations')) {
+                    // If the source already exists, update its data
+                    const source = map.getSource('weather_stations') as mapboxgl.GeoJSONSource;
+                    source.setData(weatherStationsDataForYear as GeoJSON.FeatureCollection);
+                } else {
+                    // If the source does not exist, add it
+                    map?.addSource('weather_stations', {
+                        type: 'geojson',
+                        data: weatherStationsDataForYear as GeoJSON.FeatureCollection
+                    });
+                }
+
+                // Remove existing layers if they exist
+                if (map?.getLayer("weather_stations_heat_event")) map.removeLayer("weather_stations_heat_event");
+                if (map?.getLayer("weather_stations_heat_excessive")) map.removeLayer("weather_stations_heat_excessive");
+                if (map?.getLayer("weather_stations_heat_advisory")) map.removeLayer("weather_stations_heat_advisory");
 
 
-            if (!map?.getSource('weather_stations')) {
-                console.log(weatherStationsData2023)
-                map?.addSource('weather_stations', {
-                    type: 'geojson',
-                    data: weatherStationsData2023 as GeoJSON.FeatureCollection
-                });
-            }
-
-            if (!map?.getLayer("weather_stations_heat_event")) {
+                // Add layers
                 map?.addLayer({
                     id: "weather_stations_heat_event",
                     type: "circle",
                     source: "weather_stations",
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     },
                     paint: {
                         "circle-radius": [
@@ -45,14 +58,14 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                         ],
                         "circle-color": "#ad844a"
                     }
-
                 });
+
                 map?.addLayer({
                     id: "weather_stations_heat_advisory",
                     type: "circle",
                     source: "weather_stations",
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     },
                     paint: {
                         "circle-radius": [
@@ -69,7 +82,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                     type: "circle",
                     source: "weather_stations",
                     layout: {
-                        visibility: 'none'
+                        visibility: 'visible'
                     },
                     paint: {
                         "circle-radius": [
@@ -82,7 +95,8 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null) => {
                 });
             }
         }
-    }, [map, weatherStationsQuery.isSuccess, weatherStationsQuery.data]);
-}
+    }, [map, year, weatherStationsQuery.isSuccess, weatherStationsQuery.data, layer]);
+};
+
 
 export default useWeatherStationLayer;

@@ -19,8 +19,9 @@ const MapPage = () => {
   const { map, setMap } = useContext(MapContext) as MapContextType;
 
   const [profileExpanded, setProfileExpanded] = useState(false)
-  const [date, setDate] = useState<string | null>("20230902")
-
+  const [date, setDate] = useState<string>("20230902")
+  const [year, setYear] = useState<string>('2023')
+  const [timeScale, setTimeScale] = useState<"date" | "year" | "default">('default')
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -62,11 +63,7 @@ const MapPage = () => {
 
 
   useSurfaceTemperatureLayer(date, map)
-  useWeatherStationLayer(map)
-
-
-
-
+  useWeatherStationLayer(map, year)
 
 
 
@@ -78,9 +75,9 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      < WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
-      <LayerSelections />
-      <MapDateSelections date={date!} setDate={setDate} />
+      <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
+      <LayerSelections setTimeScale={setTimeScale}/>
+      <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />
     </div>
   );
 };
