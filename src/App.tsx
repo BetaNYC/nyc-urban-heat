@@ -7,6 +7,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { MapProvider } from './contexts/mapContext';
 import { MapLayersProvider } from './contexts/mapLayersContext';
 
+
+
 import MapPage from './pages/MapPage';
 import AboutPage from './pages/AboutPage';
 import ResourcesPage from './pages/ResourcesPage';

@@ -5,6 +5,9 @@ import { Dispatch, SetStateAction } from "react"
 
 import { useMediaQuery } from "react-responsive"
 
+import AirHeatIndexLineChart from '../components/AirHeatIndexLineChart';
+
+
 type Props = {
     profileExpanded: boolean
     setProfileExpanded: Dispatch<SetStateAction<boolean>>
@@ -127,7 +130,9 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
                             <button className={`pt-2 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "air_heat_index" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"} `} onClick={() => setClickedIndex("air_heat_index")}>Air Heat Index</button>
                             <button className={`pt-2xs px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "air_temperature" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"} `} onClick={() => setClickedIndex("air_temperature")}>Air Temperature</button>
                         </div>
-                        <div className="flex flex-col mb-6  w-full h-full bg-[#333] rounded-[0.75rem] rounded-t-[0]"></div>
+                        <div className="flex justify-center items-center mb-6 w-full h-full bg-[#333] rounded-[0.75rem] rounded-t-[0]">
+                            <AirHeatIndexLineChart />
+                        </div>
                     </div>
                 )}
                 <div className="flex md:justify-between gap-5 ">

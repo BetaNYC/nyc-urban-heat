@@ -43,8 +43,6 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year }: Props) =
   const surfaceTemperatureQuery = useQuery({ queryKey: ['temperature'], queryFn: fetchSurfaceTemp })
   //@ts-ignore
   const clippedPMTiles = surfaceTemperatureQuery.data?.filter(d => d.filename.includes("ST_Clipped_")) || [];
-
-
   const years = ["2023", "2022", "2021", "2020", "2019", "2017", "2016", "2014", "2013"]
 
 
