@@ -63,6 +63,10 @@ const LayerSelections = ({ setTimeScale }: Props) => {
             map.removeLayer('surface_temperature');
             map.removeSource('surface_temperature');
       }
+      if(prevLayer === 'Tree Canopy') {
+        map.removeLayer('tree_canopy');
+        map.removeSource('tree_canopy');
+      }
       //   else {
       //     const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
 

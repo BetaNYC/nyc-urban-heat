@@ -45,7 +45,7 @@ const useTreeCanopyLayer = (map: mapboxgl.Map | null) => {
                     header.maxLat,
                 ];
 
-                map!.addSource('pmTile', {
+                map!.addSource("tree_canopy", {
                     type: mapboxPmTiles.PmTilesSource.SOURCE_TYPE as any,
                     url: PMTILES_URL,
                     minzoom: header.minZoom,
@@ -55,8 +55,8 @@ const useTreeCanopyLayer = (map: mapboxgl.Map | null) => {
 
                 map!.showTileBoundaries = true;
                 map!.addLayer({
-                    id: "raster-layer",
-                    source: "pmTile",
+                    id: "tree_canopy",
+                    source: "tree_canopy",
                     "source-layer": "raster-layer",
                     type: "raster",
                     "layout": { "visibility": "visible" },
@@ -75,7 +75,7 @@ const useTreeCanopyLayer = (map: mapboxgl.Map | null) => {
 
             })()
         }
-    })
+    }, [map, layer])
 
 }
 
