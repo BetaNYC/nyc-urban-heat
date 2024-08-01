@@ -1,20 +1,18 @@
 import { useState, useEffect, useContext } from 'react'
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
+import { MapMouseEvent, EventData } from 'mapbox-gl'
 import { useQuery } from 'react-query';
 
 //@ts-ignore
 import { fetchStationData } from "../api/api.js"
 
-import stations from "../data/stations.geo.json";
-
-
-
-
 
 const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
-    const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData});
+    const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData });
 
     const { layer } = useContext(MapLayersContext) as MapLayersContextType;
+
+    const [address, setAddress] = useState("")
 
     useEffect(() => {
         if (layer === "Weather Stations") {
@@ -93,6 +91,17 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
                         'circle-opacity': 1
                     }
                 });
+
+                map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
+                    const properties = e.features[0].properties
+                    const address = properties.address
+                    setAddress(address)
+                    // const excessiveEventDays = properties.Days_with_NWS_Excessive_Heat_Event
+                    // const heatAdvisoryDays = properties.Days_with_NWS_HeatAdvisory
+                    // const heatEventDays = properties.HeatEvent
+
+
+                })
             }
         }
     }, [map, year, weatherStationsQuery.isSuccess, weatherStationsQuery.data, layer]);

@@ -92,8 +92,8 @@ const LayerSelections = ({ setTimeScale }: Props) => {
 
 
   return (
-    <div className={`absolute left-6 top-[4.625rem] pb-4  cursor-pointer ${!expand ? "h-[4rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`} onClick={() => setExpand(!expand)} >
-      <div className='flex justify-between items-center mb-3  px-5 h-[4rem]'>
+    <div className={`absolute left-6 top-[4.625rem] pb-4  cursor-pointer ${!expand ? "h-[3rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`} onClick={() => setExpand(!expand)} >
+      <div className='flex justify-between items-center mb-2  px-3 h-[3rem]'>
         <div className="flex items-center  gap-3 ">
           {
             layer && <div className="flex justify-center items-center w-6 h-6 bg-[#F2F2F2] rounded-full">

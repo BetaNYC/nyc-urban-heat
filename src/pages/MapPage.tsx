@@ -13,6 +13,7 @@ import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
+import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
 
 
 const MapPage = () => {
@@ -52,6 +53,13 @@ const MapPage = () => {
 
 
       setMap(m);
+
+
+
+
+      
+
+
     });
 
     // return () => {
@@ -65,6 +73,7 @@ const MapPage = () => {
 
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year)
+  useTreeCanopyLayer(map)
 
 
 

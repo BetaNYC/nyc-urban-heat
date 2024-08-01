@@ -48,7 +48,7 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year }: Props) =
 
   return (
     <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
-      <div className="flex justify-between items-center gap-3 px-5 h-[4rem] ">
+      <div className="flex justify-between items-center gap-3 px-3 h-[3rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
         {isTablet && <div className="mr-5 font-medium text-regular">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}
         {expand && layer ? <ChevronUpIcon width={24} height={24} />

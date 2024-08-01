@@ -17,9 +17,10 @@ const AirHeatIndexLineChart = () => {
 
     const renderChart = () => {
 
+
         const parseDate = d3.timeParse('%Y-%m-%d');
 
-        console.log(airHeatIndex)
+        // console.log(airHeatIndex)
 
 
         const data = (airHeatIndex as AirHeatIndexData[])
@@ -34,13 +35,15 @@ const AirHeatIndexLineChart = () => {
         if (!svgElement) return;
 
 
-        const margin = { top: 20, right: 20, bottom: 20, left: 30 };
+        const margin = { top: 15, right: 15, bottom: 40, left: 40 };
         const width = svgElement.clientWidth
         const height = svgElement.clientHeight
 
         const svg = d3.select(svgElement)
             .attr('width', width)
             .attr('height', height);;
+
+        svg.selectAll('*').remove();
 
         const x = d3.scaleTime()
             .domain([
@@ -61,6 +64,23 @@ const AirHeatIndexLineChart = () => {
             parseDate('2022-09-01'),
             parseDate('2022-10-01')
         ];
+
+        svg.append('text')
+            .attr('x', -margin.top) // X position
+            .attr('y', 12) // Y position
+            .attr("text-anchor", "end")
+            .attr("transform", "rotate(-90)") // Center text horizontally
+            .text('Heat Index (℉)') // Set label text
+            .style('font-size', '12px') // Adjust font size
+            .style('fill', '#ccc'); // Adjust text color
+
+        svg.append('text')
+            .attr('x', width - margin.right - 24)
+            .attr('y', height - margin.bottom / 4)
+            .text('Date')
+            .style('font-size', '12px') // Adjust font size
+            .style('fill', '#ccc'); // Adjust text color
+
 
         const xAxis = svg.append("g")
             .attr("transform", `translate(0, ${height - margin.bottom})`)
@@ -91,7 +111,6 @@ const AirHeatIndexLineChart = () => {
         xGrid.selectAll(".tick line")
             .attr("stroke", "#999")
             .attr("stroke-width", 0.5);
-
 
         const yAxis = svg.append("g")
             .attr("transform", `translate(${margin.left}, 0)`)
@@ -167,9 +186,9 @@ const AirHeatIndexLineChart = () => {
         // heatAdvisoryDates = [parseDate('2022-08-09')]
         // excessiveHeatDates = [parseDate('2022-08-09')]
 
-        heatDaysRectsDrawer(nycHeatEventDates, "#AD844A", 0); 
+        heatDaysRectsDrawer(nycHeatEventDates, "#AD844A", 0);
         heatDaysRectsDrawer(heatAdvisoryDates, "#A46338", 1);
-        heatDaysRectsDrawer(excessiveHeatDates, "#823E35", 2); 
+        heatDaysRectsDrawer(excessiveHeatDates, "#823E35", 2);
 
 
 
@@ -207,7 +226,7 @@ const AirHeatIndexLineChart = () => {
     }, []);
 
     return (
-        <svg ref={svgRef} className='w-[90%] h-[90%] border-2'></svg>
+        <svg ref={svgRef} className='w-full h-[80%]'></svg>
     );
 };
 
