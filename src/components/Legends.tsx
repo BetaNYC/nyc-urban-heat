@@ -23,10 +23,12 @@ const Legends = () => {
     }
 
     const openClickHandler = () => {
-        console.log('aaa')
         const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
-        const newShown = { ...shown, [targetLegend]: true }
-        setShown(newShown)
+        //@ts-ignore
+        if (shown[targetLegend] === false) {
+            setShown({ ...shown, [targetLegend]: true })
+        }
+
     }
 
     return (
