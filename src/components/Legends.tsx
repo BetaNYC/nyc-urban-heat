@@ -18,25 +18,29 @@ const Legends = () => {
 
     const closeClickHandler = () => {
         const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
-        const newShown = { ...shown, [targetLegend]: false }
-        setShown(newShown)
+        setShown(prevShown => ({ ...prevShown, [targetLegend]: false }));
     }
 
     const openClickHandler = () => {
-        const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
+        if (!layer) return; // Guard clause if layer is undefined
+
+        const targetLegend = (layer.charAt(0).toLowerCase() + layer.slice(1)).replace(/\s+/g, '');
+
         //@ts-ignore
         if (shown[targetLegend] === false) {
-            setShown({ ...shown, [targetLegend]: true })
+            setShown(prevShown => ({ ...prevShown, [targetLegend]: true }));
         }
-
-    }
+    };
 
     return (
-        <>
-            <div className='absolute right-[0.5%] bottom-[15%] flex justify-center items-center w-10 h-10  bg-white rounded-full drop-shadow-xl cursor-pointer' onClick={openClickHandler}>
+        <div>
+            <div
+                className='absolute right-[6%] bottom-[3%] flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer'
+                onClick={openClickHandler}
+            >
                 <ListBulletIcon width={18} height={18} />
             </div>
-            <div className='absolute right-[4%] bottom-[4%] drop-shadow-xl'>
+            <div className='absolute right-[6%] bottom-[3%] drop-shadow-xl'>
 
                 {
                     //@ts-ignore
@@ -44,7 +48,7 @@ const Legends = () => {
                         <div className='mb-4'>
                             <div className='flex gap-4 mb-2 items-center font-medium'>
                                 <h3 className='text-[#2D2D2D]'>Extreme Heat Advisory Alert</h3>
-                                <XMarkIcon width={20} height={20} className='text-[#2D2D2D]' onClick={closeClickHandler} />
+                                <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={closeClickHandler} />
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
@@ -120,7 +124,7 @@ const Legends = () => {
                     </div>
                 }
             </div>
-        </>
+        </div>
 
     )
 }
