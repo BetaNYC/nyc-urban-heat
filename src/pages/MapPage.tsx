@@ -6,6 +6,7 @@ import { MapContext, MapContextType } from "../contexts/mapContext.js"
 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
+import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
 
 
 import Nav from "../components/Nav"
@@ -13,7 +14,7 @@ import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
-import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
+import Legends from '../components/Legends.js';
 
 
 const MapPage = () => {
@@ -36,7 +37,7 @@ const MapPage = () => {
 
     const m = new mapboxgl.Map({
       container: mapContainer.current,
-      style: "mapbox://styles/cloudlun/clxa8cwsd09ly01nx62o9fjyo",
+      style: "mapbox://styles/cloudlun/clle3783901j201p43864c07n",
       center: [lng, lat],
       zoom: zoom,
       minZoom: 10,
@@ -88,6 +89,7 @@ const MapPage = () => {
       <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
       <LayerSelections setTimeScale={setTimeScale}/>
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />
+      <Legends />
     </div>
   );
 };

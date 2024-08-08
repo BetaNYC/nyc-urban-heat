@@ -53,7 +53,8 @@ const useTreeCanopyLayer = (map: mapboxgl.Map | null) => {
                     bounds: bounds,
                 })
 
-                map!.showTileBoundaries = true;
+                // map!.showTileBoundaries = true;
+                
                 map!.addLayer({
                     id: "tree_canopy",
                     source: "tree_canopy",
@@ -65,8 +66,8 @@ const useTreeCanopyLayer = (map: mapboxgl.Map | null) => {
                             'interpolate',
                             ['linear'],
                             ['raster-value'],
-                            0, 'rgba(0,0,0,0)',
-                            1 / 255, 'rgba(0,100,0,0.6)',
+                            0, 'rgba(188,188,195,1)',
+                            1 / 255, 'rgba(52,92,103,0.6)',
                         ],
                         "raster-resampling": "nearest",
                     },

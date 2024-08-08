@@ -10,6 +10,8 @@ import { fetchStationData } from "../api/api.js"
 const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
     const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData });
 
+    // console.log(weatherStationsQuery.data)
+
     const { layer } = useContext(MapLayersContext) as MapLayersContextType;
 
     const [address, setAddress] = useState("")
@@ -52,9 +54,10 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.08
+                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]],1.08
                         ],
-                        "circle-color": "#ad844a"
+                        "circle-color": "#BA8E50",
+                        "circle-opacity": .4
                     }
                 });
 
@@ -68,10 +71,10 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NWS_HeatAdvisory']]], 2
+                            ['-', 0, ['number', ['get', 'Days_with_NWS_HeatAdvisory']]], 1.08
                         ],
-                        "circle-color": "#a46338",
-                        'circle-opacity': 1
+                        "circle-color": "#c9733A",
+                        'circle-opacity': .4
                     }
                 });
 
@@ -87,13 +90,14 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
                             "*",
                             ['-', 0, ['number', ['get', 'Days_with_NWS_Excessive_Heat_Event']]], 2
                         ],
-                        "circle-color": "#823e35",
-                        'circle-opacity': 1
+                        "circle-color": "#823E35",
+                        'circle-opacity': .4
                     }
                 });
 
                 map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
                     const properties = e.features[0].properties
+                    console.log(properties)
                     const address = properties.address
                     setAddress(address)
                     // const excessiveEventDays = properties.Days_with_NWS_Excessive_Heat_Event

@@ -1,13 +1,13 @@
-import { useState } from "react"
+import { useState,Dispatch, SetStateAction } from "react"
 
 import * as d3 from 'd3';
 
-import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline"
-import { Dispatch, SetStateAction } from "react"
-
+import { useQuery } from 'react-query';
 import { useMediaQuery } from "react-responsive"
 
 import AirHeatIndexLineChart from '../components/AirHeatIndexLineChart';
+
+import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline"
 
 import airHeatIndex from "../data/airHeatIndex2022.json";
 
@@ -41,14 +41,14 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
         }))
         .filter(d => d.datetime !== null);
 
-    console.log(data)
+    // console.log(data)
 
     const HeatEventDays = data.filter(d => d.NYC_HeatEvent !== '').length;
     const HeatAdvisoryDays = data.filter(d => d.HeatAdvisory !== "").length;
     const ExcessiveHeatDays = data.filter(d => d.ExcessiveHeat !== "").length;
 
     const aboveHistoricMaxDays = data.filter(d => d.feelslikemax > d.Record_Max).length
-    const aboveHistoricMinDays = data.filter(d => d.feelslikemax > d.Record_Min).length
+    const aboveHistoricMinDays = data.filter(d => d.feelslikemin > d.Record_Min).length
 
 
     const [clickedIndex, setClickedIndex] = useState("air_heat_index")
@@ -82,7 +82,11 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
                                 <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">Weather Station</h1>
                             </div>
                             <select name="" id="" className="px-2 w-32 md:h-10 font-medium text-[#BDBDBD] bg-[#1B1B1B] border-2 border-[#333] rounded-[0.5rem]">
+                                <option value="" className="">2022</option>
+                                <option value="" className="">2021</option>
                                 <option value="" className="">2020</option>
+                                <option value="" className="">2019</option>
+                                <option value="" className="">2018</option>
                             </select>
                         </div>
                         <div className="md:flex-1 p-4 w-full border-[1px] border-[#333] rounded-[0.5rem]">
@@ -135,11 +139,11 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded }: Props) =
                                 <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Days Exceeding Historic Normal</h2>
                                 <div className="">
                                     <div className="flex gap-4 text-[#E97159] text-xsmall">
-                                        <p className="w-4">30</p>
+                                        <p className="w-4">{aboveHistoricMaxDays}</p>
                                         <p className="font-medium ">days above historic maximum</p>
                                     </div>
                                     <div className="flex gap-4 text-[#5BA6BA] text-xsmall">
-                                        <p className="w-4">40</p>
+                                        <p className="w-4">{aboveHistoricMinDays}</p>
                                         <p className="font-medium ">days above historic minimum</p>
                                     </div>
                                 </div>
