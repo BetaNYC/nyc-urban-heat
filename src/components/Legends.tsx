@@ -23,6 +23,7 @@ const Legends = () => {
     }
 
     const openClickHandler = () => {
+        console.log('aaa')
         const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
         const newShown = { ...shown, [targetLegend]: true }
         setShown(newShown)
@@ -30,7 +31,7 @@ const Legends = () => {
 
     return (
         <>
-            <div className='absolute right-[0.5%] bottom-[15%] flex justify-center items-center w-10 h-10  bg-white rounded-full drop-shadow-xl' onClick={openClickHandler}>
+            <div className='absolute right-[0.5%] bottom-[15%] flex justify-center items-center w-10 h-10  bg-white rounded-full drop-shadow-xl cursor-pointer' onClick={openClickHandler}>
                 <ListBulletIcon width={18} height={18} />
             </div>
             <div className='absolute right-[4%] bottom-[4%] drop-shadow-xl'>
