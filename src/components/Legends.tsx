@@ -35,12 +35,12 @@ const Legends = () => {
     return (
         <div>
             <div
-                className='absolute right-[6%] bottom-[3%] flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer'
+                className='absolute right-[3%] bottom-[3%] flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer'
                 onClick={openClickHandler}
             >
                 <ListBulletIcon width={18} height={18} />
             </div>
-            <div className='absolute right-[6%] bottom-[3%] drop-shadow-xl'>
+            <div className='absolute right-[3%] bottom-[3%] drop-shadow-xl'>
 
                 {
                     //@ts-ignore
