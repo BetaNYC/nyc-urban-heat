@@ -22,7 +22,7 @@ const Legends = () => {
     }
 
     const openClickHandler = () => {
-        if (!layer) return; // Guard clause if layer is undefined
+        if (!layer) return; 
 
         const targetLegend = (layer.charAt(0).toLowerCase() + layer.slice(1)).replace(/\s+/g, '');
 
@@ -41,7 +41,6 @@ const Legends = () => {
                 <ListBulletIcon width={18} height={18} />
             </div>
             <div className='absolute right-[3%] bottom-[3%] drop-shadow-xl'>
-
                 {
                     //@ts-ignore
                     layer === "Weather Stations" && shown["weatherStations"] === true && <div className='p-5 bg-white rounded-[0.5rem]'>

@@ -12,13 +12,19 @@ interface AirHeatIndexData {
     ExcessiveHeat: "" | "Excessive_Heat_Event"
 }
 
-const AirHeatIndexLineChart = () => {
+
+const AirTemperatureLineChart = () => {
+
     const svgRef = useRef<SVGSVGElement | null>(null);
+
 
     const renderChart = () => {
 
 
         const parseDate = d3.timeParse('%Y-%m-%d');
+
+        // console.log(airHeatIndex)
+
 
         const data = (airHeatIndex as AirHeatIndexData[])
             .filter(d => d.stations === "['AV066']")
@@ -126,76 +132,18 @@ const AirHeatIndexLineChart = () => {
             .attr("stroke-width", 0);
 
 
-        let nycHeatEventDates = data
-            .filter(d => d.NYC_HeatEvent !== '')
-            .map(d => d.datetime)
-            .filter(date => date instanceof Date);
-        let heatAdvisoryDates = data
-            .filter(d => d.HeatAdvisory !== '')
-            .map(d => d.datetime)
-            .filter(date => date instanceof Date);
-        let excessiveHeatDates = data
-            .filter(d => d.ExcessiveHeat === "Excessive_Heat_Event")
-            .map(d => d.datetime)
-            .filter(date => date instanceof Date);
-
-        // Calculate the width of one date tick
-        // Calculate the width of one date tick
-        const calculateTickWidth = (date: Date) => {
-            const oneDay = d3.timeDay.offset(date, -1);
-            const nextDay = d3.timeDay.offset(date, 1);
-
-            const xPositionPrev = x(oneDay);
-            const xPositionNext = x(nextDay);
-
-            return xPositionNext - xPositionPrev;
-        };
-
-        // Width of one tick
-        const tickWidth = calculateTickWidth(new Date()); // Calculate based on any date
-        const rectangleHeight = height - margin.top - margin.bottom;
-
-        // Width of one part (third of tickWidth)
-        const partWidth = tickWidth / 3;
-
-        // Draw rectangles function with offset
-        const heatDaysRectsDrawer = (dates: Date[], color: string, partIndex: number) => {
-            dates.forEach(date => {
-                if (date) {
-                    const xPosition = x(date);
-
-                    // Calculate the offset position for the rectangle
-                    const xOffset = xPosition - (tickWidth / 2) + (partIndex * partWidth);
-
-                    svg.append("rect")
-                        .attr("x", xOffset)
-                        .attr("y", margin.top)
-                        .attr("width", partWidth)
-                        .attr("height", rectangleHeight)
-                        .attr("fill", color)
-                        .attr("stroke-width", 0);
-                }
-            });
-        };
-
-
-        // nycHeatEventDates = [parseDate('2022-08-09')]
-        // heatAdvisoryDates = [parseDate('2022-08-09')]
-        // excessiveHeatDates = [parseDate('2022-08-09')]
-
-        heatDaysRectsDrawer(nycHeatEventDates, "#AD844A", 0);
-        heatDaysRectsDrawer(heatAdvisoryDates, "#A46338", 1);
-        heatDaysRectsDrawer(excessiveHeatDates, "#823E35", 2);
-
-
-
         const lineMax = d3.line<{ datetime: Date, feelslikemax: number }>()
+            .x(d => x(d.datetime))
+            .y(d => y(d.feelslikemax));
+
+        const lineNormalMax = d3.line<{ datetime: Date, feelslikemax: number }>()
             .x(d => x(d.datetime))
             .y(d => y(d.feelslikemax));
 
         const lineMin = d3.line<{ datetime: Date, feelslikemin: number }>()
             .x(d => x(d.datetime))
             .y(d => y(d.feelslikemin));
+
 
         svg.append('path')
             .datum(data)
@@ -227,7 +175,6 @@ const AirHeatIndexLineChart = () => {
     );
 };
 
-export default AirHeatIndexLineChart;
 
-// jessicayang6768@gmail.com
-//8/19 上午十點
+
+export default AirTemperatureLineChart

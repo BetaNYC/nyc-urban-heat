@@ -26,6 +26,18 @@ const MapPage = () => {
   const [year, setYear] = useState<string>('2023')
   const [timeScale, setTimeScale] = useState<"date" | "year" | "default">('default')
 
+  // const [heatEventDays, setHeatEventDays] = useState(0)
+  // const [heatAdvisoryDays, setHeatAdvisoryDays] = useState(0)
+  // const [excessiveHeatDays, setExcessiveHeatDays] = useState(0)
+
+  const [heatEventDays, setHeatEventDays] = useState({
+    heatEventDays: 0,
+    heatAdvisoryDays: 0,
+    excessiveHeatDays: 0,
+    aboveHistoricMaxDays: 0,
+    aboveHistoricMinDays: 0
+  })
+
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -58,7 +70,7 @@ const MapPage = () => {
 
 
 
-      
+
 
 
     });
@@ -73,7 +85,7 @@ const MapPage = () => {
 
 
   useSurfaceTemperatureLayer(date, map)
-  useWeatherStationLayer(map, year)
+  useWeatherStationLayer(map, year, setHeatEventDays)
   useTreeCanopyLayer(map)
 
 
@@ -86,8 +98,8 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} />
-      <LayerSelections setTimeScale={setTimeScale}/>
+      <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} setYear={setYear} heatEventDays={heatEventDays} />
+      <LayerSelections setTimeScale={setTimeScale} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />
       <Legends />
     </div>

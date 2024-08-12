@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, Dispatch, SetStateAction } from "react"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 import { MapMouseEvent, EventData } from 'mapbox-gl'
 import { useQuery } from 'react-query';
@@ -7,7 +7,14 @@ import { useQuery } from 'react-query';
 import { fetchStationData } from "../api/api.js"
 
 
-const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
+
+const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatEventDays: Dispatch<SetStateAction<{
+    heatEventDays: number,
+    heatAdvisoryDays: number,
+    excessiveHeatDays: number,
+    aboveHistoricMaxDays: number,
+    aboveHistoricMinDays: number
+}>>) => {
     const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData });
 
     // console.log(weatherStationsQuery.data)
@@ -15,6 +22,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
     const { layer } = useContext(MapLayersContext) as MapLayersContextType;
 
     const [address, setAddress] = useState("")
+
 
     useEffect(() => {
         if (layer === "Weather Stations") {
@@ -54,7 +62,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]],1.08
+                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.08
                         ],
                         "circle-color": "#BA8E50",
                         "circle-opacity": .4
@@ -97,8 +105,15 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string) => {
 
                 map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
                     const properties = e.features[0].properties
-                    console.log(properties)
                     const address = properties.address
+                    console.log(properties)
+                    setHeatEventDays({
+                        heatEventDays: properties.Days_with_NYC_HeatEvent,
+                        heatAdvisoryDays: properties.Days_with_NWS_HeatAdvisory,
+                        excessiveHeatDays: properties.Days_with_NWS_Excessive_Heat_Event,
+                        aboveHistoricMaxDays: properties.Days_warmer_than_normal_max,
+                        aboveHistoricMinDays: properties.Days_warmer_than_normal_min
+                    })
                     setAddress(address)
                     // const excessiveEventDays = properties.Days_with_NWS_Excessive_Heat_Event
                     // const heatAdvisoryDays = properties.Days_with_NWS_HeatAdvisory
