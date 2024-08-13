@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useContext } from 'react'
 
 import mapboxgl from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
+import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
@@ -20,6 +21,7 @@ import Legends from '../components/Legends.js';
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const { map, setMap } = useContext(MapContext) as MapContextType;
+  const { layer } = useContext(MapLayersContext) as MapLayersContextType;
 
   const [profileExpanded, setProfileExpanded] = useState(false)
   const [date, setDate] = useState<string>("20230902")
@@ -63,16 +65,7 @@ const MapPage = () => {
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
 
     m.on('load', () => {
-
-
       setMap(m);
-
-
-
-
-
-
-
     });
 
     // return () => {
@@ -98,7 +91,9 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-      <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} setYear={setYear} heatEventDays={heatEventDays} />
+      {
+        layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} />
+      }
       <LayerSelections setTimeScale={setTimeScale} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />
       <Legends />

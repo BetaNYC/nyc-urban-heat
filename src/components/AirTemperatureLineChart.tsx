@@ -7,6 +7,8 @@ interface AirHeatIndexData {
     datetime: string;
     feelslikemax: number;
     feelslikemin: number;
+    Normal_Temp_Max: number;
+    Normal_Temp_Min: number;
     NYC_HeatEvent: "" | "NYC_Heat_Event"
     HeatAdvisory: "" | "HeatAdvisory"
     ExcessiveHeat: "" | "Excessive_Heat_Event"
@@ -23,8 +25,6 @@ const AirTemperatureLineChart = () => {
 
         const parseDate = d3.timeParse('%Y-%m-%d');
 
-        // console.log(airHeatIndex)
-
 
         const data = (airHeatIndex as AirHeatIndexData[])
             .filter(d => d.stations === "['AV066']")
@@ -33,6 +33,8 @@ const AirTemperatureLineChart = () => {
                 datetime: parseDate(d.datetime)!,
             }))
             .filter(d => d.datetime !== null);
+
+        console.log(data)
 
         const svgElement = svgRef.current;
         if (!svgElement) return;
@@ -131,19 +133,21 @@ const AirTemperatureLineChart = () => {
             .attr("fill", "#999")
             .attr("stroke-width", 0);
 
-
         const lineMax = d3.line<{ datetime: Date, feelslikemax: number }>()
             .x(d => x(d.datetime))
             .y(d => y(d.feelslikemax));
 
-        const lineNormalMax = d3.line<{ datetime: Date, feelslikemax: number }>()
+        const lineNormalMax = d3.line<{ datetime: Date, Normal_Temp_Max: number }>()
             .x(d => x(d.datetime))
-            .y(d => y(d.feelslikemax));
+            .y(d => y(d.Normal_Temp_Max));
 
         const lineMin = d3.line<{ datetime: Date, feelslikemin: number }>()
             .x(d => x(d.datetime))
             .y(d => y(d.feelslikemin));
 
+        const lineNormalMin = d3.line<{ datetime: Date, Normal_Temp_Min: number }>()
+            .x(d => x(d.datetime))
+            .y(d => y(d.Normal_Temp_Min));
 
         svg.append('path')
             .datum(data)
@@ -155,9 +159,68 @@ const AirTemperatureLineChart = () => {
         svg.append('path')
             .datum(data)
             .attr('fill', 'none')
+            .attr('stroke', '#E59E88')
+            .attr('stroke-width', 1.5)
+            .attr('stroke-dasharray', '2,2')
+            .attr('d', lineNormalMax as unknown as string);
+
+        svg.append('path')
+            .datum(data)
+            .attr('fill', 'none')
             .attr('stroke', '#49808D')
             .attr('stroke-width', 1.5)
             .attr('d', lineMin as unknown as string);
+
+        svg.append('path')
+            .datum(data)
+            .attr('fill', 'none')
+            .attr('stroke', '#7A8A94')
+            .attr('stroke-width', 1.5)
+            .attr('stroke-dasharray', '2,2')
+            .attr('d', lineNormalMin as unknown as string);
+
+        const verticalLine = svg.append('line')
+            .attr('stroke', '#F2F2F2')
+            .attr('stroke-width', 1)
+            .style('pointer-events', 'none');
+
+        const tooltipDiv = d3.select('#tooltip')
+            .style('position', 'absolute')
+            .style('background', '#fff')
+            .style('border', '1px solid #ddd')
+            .style('padding', '5px')
+            .style('border-radius', '3px')
+            .style('display', 'none');
+
+        svg.on('mousemove', (event) => {
+            const [xPos, yPos] = d3.pointer(event , svgRef.current);
+            const xDate = x.invert(xPos);
+            const closestDataPoint = data.reduce((prev, curr) =>
+                Math.abs(xDate.getTime() - curr.datetime.getTime()) < Math.abs(xDate.getTime() - prev.datetime.getTime())
+                    ? curr : prev);
+
+            verticalLine
+                .attr('x1', x(closestDataPoint.datetime))
+                .attr('x2', x(closestDataPoint.datetime))
+                .attr('y1', margin.top)
+                .attr('y2', height - margin.bottom)
+                .style('display', 'block');
+
+            tooltipDiv
+                .style('left', `${x(closestDataPoint.datetime) + margin.left}px`)
+                .style('top', `${y(closestDataPoint.feelslikemax) + margin.top}px`)
+                .style('display', 'block')
+                .html(`
+                    <strong>Date:</strong> ${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}<br>
+                    <strong>Max Heat Index:</strong> ${closestDataPoint.feelslikemax}<br>
+                    <strong>Min Heat Index:</strong> ${closestDataPoint.feelslikemin}
+                `);
+        })
+            .on('mouseout', () => {
+                verticalLine.style('display', 'none');
+                tooltipDiv.style('display', 'none');
+            });
+
     };
 
     useEffect(() => {
@@ -171,7 +234,9 @@ const AirTemperatureLineChart = () => {
     }, []);
 
     return (
-        <svg ref={svgRef} className='w-full h-[80%]'></svg>
+        <svg ref={svgRef} className='w-full h-[80%]'>
+            <div id='tooltip'></div>
+        </svg>
     );
 };
 

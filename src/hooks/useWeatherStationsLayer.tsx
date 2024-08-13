@@ -62,7 +62,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.08
+                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.05
                         ],
                         "circle-color": "#BA8E50",
                         "circle-opacity": .4
@@ -79,7 +79,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NWS_HeatAdvisory']]], 1.08
+                            ['-', 0, ['number', ['get', 'Days_with_NWS_HeatAdvisory']]], 1.05
                         ],
                         "circle-color": "#c9733A",
                         'circle-opacity': .4
@@ -96,7 +96,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                     paint: {
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NWS_Excessive_Heat_Event']]], 2
+                            ['-', 0, ['number', ['get', 'Days_with_NWS_Excessive_Heat_Event']]], 1.05
                         ],
                         "circle-color": "#823E35",
                         'circle-opacity': .4

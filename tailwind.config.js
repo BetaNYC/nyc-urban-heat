@@ -14,7 +14,8 @@ export default {
       colors: {
         gray_six: '#F2F2F2',
         
-      }
+      },
+      
     },
   },
   plugins: [],

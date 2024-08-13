@@ -15,6 +15,7 @@ import airHeatIndex from "../data/airHeatIndex2022.json";
 
 type Props = {
     profileExpanded: boolean
+    year: string
     setProfileExpanded: Dispatch<SetStateAction<boolean>>
     setYear: Dispatch<SetStateAction<string>>
     heatEventDays: {
@@ -39,7 +40,7 @@ interface AirHeatIndexData {
     Record_Min: number
 }
 
-const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, heatEventDays }: Props) => {
+const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setYear, heatEventDays }: Props) => {
 
     const parseDate = d3.timeParse('%Y-%m-%d');
 
@@ -52,12 +53,12 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
         .filter(d => d.datetime !== null);
 
 
-    const HeatEventDays = data.filter(d => d.NYC_HeatEvent !== '').length;
-    const HeatAdvisoryDays = data.filter(d => d.HeatAdvisory !== "").length;
-    const ExcessiveHeatDays = data.filter(d => d.ExcessiveHeat !== "").length;
+    // const HeatEventDays = data.filter(d => d.NYC_HeatEvent !== '').length;
+    // const HeatAdvisoryDays = data.filter(d => d.HeatAdvisory !== "").length;
+    // const ExcessiveHeatDays = data.filter(d => d.ExcessiveHeat !== "").length;
 
-    const aboveHistoricMaxDays = data.filter(d => d.feelslikemax > d.Record_Max).length
-    const aboveHistoricMinDays = data.filter(d => d.feelslikemin > d.Record_Min).length
+    // const aboveHistoricMaxDays = data.filter(d => d.feelslikemax > d.Record_Max).length
+    // const aboveHistoricMinDays = data.filter(d => d.feelslikemin > d.Record_Min).length
 
 
     const [clickedIndex, setClickedIndex] = useState<"air_heat_index" | "air_temperature">("air_heat_index")
@@ -72,6 +73,10 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
     const clickHandler = () => {
         setProfileExpanded(!profileExpanded)
     }
+
+    const heatEventDaysCircleRadius = `${+heatEventDays.heatEventDays / 45 * 6}rem`
+    const heatAdvisoryDaysCircleRadius = `${+heatEventDays.heatAdvisoryDays / 45 * 6}rem`
+    const excessiveHeatDaysRadius = `${+heatEventDays.excessiveHeatDays / 45 * 6}rem`
 
 
     return (
@@ -90,7 +95,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
                                 <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">Bedford Stuyvesant</h1>
                                 <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">Weather Station</h1>
                             </div>
-                            <select name="" id="" className="px-2 w-32 md:h-10 font-medium text-[#BDBDBD] bg-[#1B1B1B] border-2 border-[#333] rounded-[0.5rem]" onChange={(event) => setYear(event.target.value)}>
+                            <select name="" id="" className="px-2 w-32 md:h-10 font-medium text-[#BDBDBD] bg-[#1B1B1B] border-2 border-[#333] rounded-[0.5rem]" value={year} onChange={(event) => setYear(event.target.value)}>
                                 <option value="2023" className="">2023</option>
                                 <option value="2022" className="">2022</option>
                                 <option value="2021" className="">2021</option>
@@ -118,15 +123,20 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
                             }
                         </div>
                     </div>
-                    <div className="flex gap-4 md:gap-8 my-5 md:my-0 p-4  w-full md:w-[50%] md:h-full overflow-scroll bg-[#333] md:bg-transparent md:border-[1px]  md:border-[#333] rounded-[0.5rem]">
-                        <div className="relative w-12 md:w-[5.25rem] h-12 md:h-[5.25rem]">
-                            <div className="w-full h-full rounded-full bg-[#BA8E50]"></div>
-                            <div className="absolute top-[calc(50%_-_0.9375rem)] left-[calc(50%_-_0.9375rem)]  w-6 md:w-[1.875rem] h-6 md:h-[1.875rem] bg-[#c9733A] rounded-full"></div>
-                            <div className="absolute top-[calc(50%_-_0.25rem)] left-[calc(50%_-_0.25rem)] w-2 h-2 bg-[#823E35] rounded-full"></div>
+                    <div className="flex gap-4 md:gap-6 my-5 md:my-0 p-4  w-full md:w-[50%] md:h-full overflow-scroll bg-[#333] md:bg-transparent md:border-[1px]  md:border-[#333] rounded-[0.5rem]">
+                        <div className="flex justify-center max-w-40 min-w-10">
+                            <div className="relative aspect-square rounded-full bg-[#BA8E50]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className=" bg-[#c9733A] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
+                                </div>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <div className="w-2 h-2 bg-[#823E35] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
+                                </div>
+                            </div>
                         </div>
-                        <div >
-                            <div className="mb-4">
-                                <div className="flex items-center gap-2 ">
+                        <div>
+                            <div className="mb-4 ">
+                                <div className="flex items-center gap-2">
                                     <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
                                     <InformationCircleIcon width={18} height={18} className="text-[#828282]" />
                                 </div>
@@ -147,7 +157,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
                                 </div>
                             </div>
                             <div>
-                                <div className="flex items-center gap-2 ">
+                                <div className="flex items-center gap-2">
                                     <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
                                     <InformationCircleIcon width={18} height={18} className="text-[#828282]" />
                                 </div>
@@ -187,7 +197,10 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
                             <div className="flex justify-between">
                                 <div className="font-semibold text-large text-white">
                                     <p>Bedford Stuyvesant</p>
-                                    <p>Air Heat Index in 2022</p>
+                                    {
+                                        clickedIndex === "air_heat_index" ? <p>Air Heat Index in 2022</p> : <p>Daily Air Temperature in 2022</p>
+                                    }
+
                                 </div>
                                 <div className="flex gap-8">
                                     <div>
@@ -201,27 +214,66 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, setYear, h
                                             <p className="font-regular text-xsmall text-[#999]">Min Daily Temperature</p>
                                         </div>
                                     </div>
-                                    <div>
-                                        <p className="text-small text-[#CCC]">Extreme Heat Advisory</p>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-2 bg-[#823E35]"></div>
-                                            <p className="font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-2 bg-[#A46338]"></div>
-                                            <p className="font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
-                                        </div>
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-4 h-2 bg-[#AD844A]"></div>
-                                            <p className="font-regular text-xsmall text-[#999]">NYC Heat Event</p>
-                                        </div>
-                                    </div>
+                                    {
+                                        clickedIndex === "air_heat_index" ?
+                                            <div>
+                                                <p className="text-small text-[#CCC]">Extreme Heat Advisory</p>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-2 bg-[#823E35]"></div>
+                                                    <p className="font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-2 bg-[#A46338]"></div>
+                                                    <p className="font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-4 h-2 bg-[#AD844A]"></div>
+                                                    <p className="font-regular text-xsmall text-[#999]">NYC Heat Event</p>
+                                                </div>
+                                            </div> :
+                                            <div>
+                                                <p className="text-small text-[#CCC]">Historical Normal Daily Air Temperature (1991-2020)</p>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="">
+                                                        <svg width="24" height="2">
+                                                            <line
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="24"
+                                                                y2="0"
+                                                                stroke="#E59E88"
+                                                                strokeWidth="4"
+                                                                strokeDasharray="2, 2" // Adjust dash and gap lengths
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    <p className="font-regular text-xsmall text-[#999]">Historical Normal Maximum Daily Temperature</p>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <div className="">
+                                                        <svg width="24" height="2">
+                                                            <line
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="24"
+                                                                y2="0"
+                                                                stroke="#7A8A94"
+                                                                strokeWidth="4"
+                                                                strokeDasharray="2, 2" // Adjust dash and gap lengths
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                    <p className="font-regular text-xsmall text-[#999]">Historical Normal Minimum Daily Temperature</p>
+                                                </div>
+                                            </div>
+                                    }
+
                                 </div>
                             </div>
                             {
                                 clickedIndex === "air_heat_index" ?
-                                <AirHeatIndexLineChart /> :
-                                <AirTemperatureLineChart />
+                                    <AirHeatIndexLineChart /> :
+                                    <AirTemperatureLineChart />
                             }
 
                         </div>
