@@ -88,11 +88,15 @@ const DatasetDownloadRow = ({ title, options, hasTitle, hasStation, hasDistrict,
         if (!filename?.endsWith('.' + selectedFormat)) {
             filename = `${title?.toLocaleLowerCase().replace(' ', '_')}${selectedOption === '_' ? '' : selectedOption}.${selectedFormat}`
         }
-        //console.log(filename, url)
 
         const a = document.createElement('a');
         a.target = '_blank'
-        a.href = url;
+        if(selectedFormat === 'geojson'){
+            a.href = '';
+            a.download = url
+        }else{
+            a.href = url;
+        }
         a.download = filename ?? 'file.' + selectedFormat;
         document.body.appendChild(a);
         a.click();
