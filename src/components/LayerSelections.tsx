@@ -51,6 +51,10 @@ const LayerSelections = ({ setTimeScale }: Props) => {
   useEffect(() => {
     if (prevLayer && map) {
       switch (prevLayer) {
+        case "Outdoor Heat Exposure Index":
+          if (map?.getLayer('nta')) map.removeLayer('nta');
+          if (map?.getLayer('nta-outline')) map.removeLayer('nta-outline');
+          break;
         case "Weather Stations":
           // map.setLayoutProperty("weather_stations_heat_event", "visibility", "none");
           // map.setLayoutProperty("weather_stations_heat_advisory", "visibility", "none");
