@@ -4,11 +4,10 @@ import mapboxgl from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
-
+import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js' 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
-
 
 import Nav from "../components/Nav"
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
@@ -39,6 +38,8 @@ const MapPage = () => {
     aboveHistoricMaxDays: 0,
     aboveHistoricMinDays: 0
   })
+
+  const [ntaProfileData, setNtaProfileData] = useState({})
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -73,7 +74,7 @@ const MapPage = () => {
     // };
   }, []);
 
-
+  useOutdoorHeatExposureNTALayer(map, setNtaProfileData)
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year, setHeatEventDays)
   useTreeCanopyLayer(map)

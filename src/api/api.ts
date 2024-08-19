@@ -1,5 +1,4 @@
-import { Feature, GeoJsonProperties, Geometry } from "geojson";
-
+import {Feature, GeoJsonProperties, Geometry} from "geojson";
 
 const baseUrl = "https://vcadeeaimofyayyevakl.supabase.co/rest/v1/";
 const API_KEY =
@@ -10,54 +9,37 @@ const GeoJSONTransformHandler = (data: Feature[]): Feature<Geometry, GeoJsonProp
     // create a deep copy of coordinates
     const { geometry, ...properties } = d;
     let coordinates: any[] = [];
-    if ('coordinates' in geometry) {
+    if (geometry && 'coordinates' in geometry) {
       coordinates = JSON.parse(JSON.stringify((geometry as any).coordinates));
     }
-  
+
     return {
       type: "Feature",
       properties,
       geometry: {
         coordinates,
-        type: geometry.type ,
+        type: geometry.type,
       } as Geometry,
     };
   });
 };
 
-const fetchAll = (layer: string) => {
-
+const fetchAllFromLayer = async (layer: string) => {
+  const res = await fetch(`${baseUrl}${layer}?select=*&apikey=${API_KEY}`);
+  const data = await res.json();
+  const geoJSONObj = {
+    type: "FeatureCollection",
+    features: GeoJSONTransformHandler(data),
+  };
+  return geoJSONObj;
 }
 
-export const fetchCoolRoofs = async () => {
-  const res = await fetch(`${baseUrl}cd_coolroofs?select=*&apikey=${API_KEY}`);
-  const data = await res.json();
-  const geoJSONObj = {
-    type: "FeatureCollection",
-    features: GeoJSONTransformHandler(data),
-  };
-  return geoJSONObj;
-};
-
-export const fetchStationsPoint = async () => {
-  const res = await fetch(
-    `${baseUrl}stations_point?select=*&apikey=${API_KEY}`
-  );
-  const data = await res.json();
-  const geoJSONObj = {
-    type: "FeatureCollection",
-    features: GeoJSONTransformHandler(data),
-  };
-  return geoJSONObj;
-};
-
+export const fetchCoolRoofs = async () => fetchAllFromLayer('cd_coolroofs');
+export const fetchNTAHeatData = async () => fetchAllFromLayer('nta_heat_data');
+export const fetchStationsPoint = async () => fetchAllFromLayer('stations_point');
 export const fetchStationHeatStats = async () => {
-  const res = await fetch(
-    `${baseUrl}stations_summerstat?select=*&apikey=${API_KEY}`
-  );
-  const data = await res.json();
-
-  return data;
+  const res = await fetch(`${baseUrl}stations_summerstat?select=*&apikey=${API_KEY}`);
+  return res.json();
 };
 
 export const fetchStationData = async () => {
@@ -68,10 +50,12 @@ export const fetchStationData = async () => {
   ]);
 
   // Create a map of station points by address for quick lookup
-  const stationPointsMap = new Map();
-  stationPoints.features.forEach((feature) => {
+  const stationPointsMap = new Map<string, any[]>();
+  stationPoints.features.forEach((feature: Feature) => {
     const address = feature.properties?.address;
-    stationPointsMap.set(address, feature.geometry.coordinates);
+    if (feature.geometry && 'coordinates' in feature.geometry) {
+      stationPointsMap.set(address, feature.geometry.coordinates);
+    }
   });
 
   // Combine the data with coordinates
@@ -101,7 +85,5 @@ export const fetchStationData = async () => {
 
 export const fetchSurfaceTemp = async () => {
   const res = await fetch(`${baseUrl}pmtiles?select=*&apikey=${API_KEY}`);
-  const data = await res.json();
-
-  return data;
+  return res.json();
 };
