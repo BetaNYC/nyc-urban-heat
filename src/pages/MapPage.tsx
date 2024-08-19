@@ -74,18 +74,9 @@ const MapPage = () => {
   }, []);
 
 
-
-
-
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year, setHeatEventDays)
   useTreeCanopyLayer(map)
-
-
-
-
-
-
 
   return (
     <div className='relative w-full h-full'>

@@ -3,8 +3,7 @@ import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersCon
 import { MapMouseEvent, EventData } from 'mapbox-gl'
 import { useQuery } from 'react-query';
 
-//@ts-ignore
-import { fetchStationData } from "../api/api.js"
+import { fetchStationData } from "../api/api.ts"
 
 
 

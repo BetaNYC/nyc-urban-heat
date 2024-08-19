@@ -10,8 +10,8 @@ import GeoJSON from 'ol/format/GeoJSON';
 import { useGeographic } from 'ol/proj';
 import { Fill, Stroke, Style } from 'ol/style.js';
 import { MapboxVectorLayer } from 'ol-mapbox-style';
-//@ts-ignore
-import { fetchCoolRoofs } from "../api/api.js"
+
+import { fetchCoolRoofs } from "../api/api.ts"
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw'
 

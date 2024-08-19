@@ -3,8 +3,7 @@ import { useState, useContext, Dispatch, SetStateAction, } from "react"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 import { useQuery } from 'react-query';
 
-//@ts-ignore
-import { fetchSurfaceTemp } from "../api/api.js"
+import { fetchSurfaceTemp } from "../api/api.ts"
 
 
 import { useMediaQuery } from "react-responsive"
