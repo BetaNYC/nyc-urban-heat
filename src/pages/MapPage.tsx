@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 
-import mapboxgl from "mapbox-gl"
+import mapboxgl, { MapboxGeoJSONFeature } from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
@@ -15,7 +15,7 @@ import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
-
+import { NtaProfileData } from '../types.js'
 
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -39,7 +39,10 @@ const MapPage = () => {
     aboveHistoricMinDays: 0
   })
 
-  const [ntaProfileData, setNtaProfileData] = useState({})
+  const [ntaProfileData, setNtaProfileData] = useState<NtaProfileData>({
+    currentFeature: {} as MapboxGeoJSONFeature,
+    allFeatures: []
+  });
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -74,7 +77,7 @@ const MapPage = () => {
     // };
   }, []);
 
-  useOutdoorHeatExposureNTALayer(map, setNtaProfileData)
+  useOutdoorHeatExposureNTALayer(map, setNtaProfileData, setProfileExpanded)
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year, setHeatEventDays)
   useTreeCanopyLayer(map)
@@ -85,6 +88,9 @@ const MapPage = () => {
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
       {
         layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} />
+      }
+      {
+        layer === "Outdoor Heat Exposure Index" && <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} ntaProfileData={ntaProfileData}/>
       }
       <LayerSelections setTimeScale={setTimeScale} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />

@@ -6,15 +6,26 @@ import { useQuery } from 'react-query';
 import { fetchNTAHeatData } from '../api/api.ts'
 import { FeatureCollection, Geometry } from 'geojson';
 
-const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileData: Dispatch<SetStateAction<object>>) => {
+import { format } from 'd3-format';
+import { NtaProfileData } from '../types.ts';
+
+const boroughExpand = {
+    'MN': 'Manhattan',
+    'BX': 'The Bronx',
+    'BK': 'Brooklyn',
+    'QN': 'Queens',
+    'SI': 'Staten Island'
+}
+
+const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileData: Dispatch<SetStateAction<NtaProfileData>>, setProfileExpanded: Dispatch<SetStateAction<boolean>>) => {
     const ntaQuery = useQuery({ queryKey: ['nta'], queryFn: fetchNTAHeatData });
     const { layer } = useContext(MapLayersContext) as MapLayersContextType;
-    
+
     useEffect(() => {
         if (layer === 'Outdoor Heat Exposure Index') {
             if (ntaQuery.isSuccess && ntaQuery.data) {
                 const popup = new Popup({
-                    closeButton: false
+                    closeButton: true
                 });
                 let clickedNtacode: null | string = null
 
@@ -60,13 +71,45 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
 
                 map?.on('click', 'nta', (e: MapLayerMouseEvent) => {
                     if (e.features) {
-                        const properties = (e.features[0].properties as any)
-                        const { ntacode } = properties
+                        const coordinates = e.lngLat
+                        const currentFeature = e.features[0]
+                        const { ntaname, ntacode, Heat_Vulnerability, pct_trees, pct_Area_coolRoof } = (currentFeature.properties as any)
+                        const borough = boroughExpand[ntacode.slice(0, 2) as keyof typeof boroughExpand];
+                        currentFeature!['properties']!['borough'] = borough; // set borough for profile
+                        const title = `
+                            <div class="tooltip-top">
+                                <div>
+                                    <h5>${borough}</h5>
+                                    <h4>${ntaname}</h4>
+                                </div>
+                                <div class="text-center">
+                                    <span class="text-xxs leading-3">Heat Vulnerability Index</span><span class="text-xl font-mono font-bold">${Heat_Vulnerability ? Heat_Vulnerability + '.0' : ''}</span>
+                                </div>
+                            </div>
+                            
+                        `
+                        const details = `
+                        <div class="tooltip-bottom">
+                                <div class="flex flex-col">
+                                    <div class="flex flex-row justify-between"><span>Average Surface Temperature</span><span></span></div>
+                                    <div class="flex flex-row justify-between"><span>Average Air Temperature</span><span></span></div>
+                                    <div class="flex flex-row justify-between"><span>Area Covered By Trees</span><span>${format('.1f')(pct_trees)}%</span></div>
+                                    <div class="flex flex-row justify-between"><span>Cool Roofs</span><span>${format('.1f')(pct_Area_coolRoof)}%</span></div>
+                                    <div class="flex flex-row justify-between"><span>Number of Cooling Centers</span><span></span></div>
+                                </div>
+                            </div>
+                        `
+
+                        //todo - create dummy dom element and click eventListerner
+
+                        const content = title + (Heat_Vulnerability ? details : '')
+
+                        popup.setLngLat(coordinates).setHTML(content).addTo(map);
 
                         // unoutline previous, then outline
                         if (clickedNtacode !== null) {
                             map.setFeatureState(
-                                { source: 'nta', id: clickedNtacode},
+                                { source: 'nta', id: clickedNtacode },
                                 { selected: false }
                             );
                         }
@@ -78,48 +121,22 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                         );
 
                         //dispatch data to profile
-                        setNtaProfileData(properties)
+                        const data = {
+                            currentFeature,
+                            allFeatures: ntaQuery.data.features
+                        }
+
+                        setNtaProfileData(data)
+                        setProfileExpanded(true)
                     }
                 })
 
-                const boroExpand = {
-                    'MN': 'Manhattan',
-                    'BX': 'The Bronx',
-                    'BK': 'Brooklyn',
-                    'QN': 'Queens',
-                    'SI': 'Staten Island'
-                }
-
-                map?.on('mousemove', 'nta', (e: MapLayerMouseEvent) => {
+                map?.on('mouseover', 'nta', (e: MapLayerMouseEvent) => {
                     map.getCanvas().style.cursor = 'pointer';
-                    if (e.features) {
-                        const coordinates = e.lngLat
-                        const { ntaname, ntacode, Heat_Vulnerability } = (e.features[0].properties as any)
-                        const boro = boroExpand[ntacode.slice(0, 2) as keyof typeof boroExpand];
-                        const title = `
-                            <div class="tooltip-top">
-                                <h5>${boro}</h5>
-                                <h4>${ntaname}</h4>
-                            </div>
-                            
-                        `
-                        const details = `
-                        <div class="tooltip-bottom">
-                                <div>
-                                    <span>Heat Vulnerability Index</span><span>${Heat_Vulnerability}</span>
-                                </div>
-                            </div>
-                        `
-
-                        const content = title + (Heat_Vulnerability ? details : '')
-
-                        popup.setLngLat(coordinates).setHTML(content).addTo(map);
-                    }
                 });
 
                 map?.on('mouseleave', 'nta', () => {
                     map.getCanvas().style.cursor = '';
-                    //popup.remove();
                 });
             } else {
                 // todo: toast error message about layer

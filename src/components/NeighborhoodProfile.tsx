@@ -1,25 +1,24 @@
 import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
 import { useState, Dispatch, SetStateAction } from "react"
-
+import { NtaProfileData } from '../types'
 import { useMediaQuery } from "react-responsive"
-
-
-
 
 type Props = {
     profileExpanded: boolean
-    setProfileExpanded: Dispatch<SetStateAction<boolean>>
+    setProfileExpanded: Dispatch<SetStateAction<boolean>>,
+    ntaProfileData: NtaProfileData
 }
 
-
-
-
-const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
+const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileData }: Props) => {
 
     // const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isDesktop = useMediaQuery({
         query: '(min-width: 1024px)'
     })
+
+    const { currentFeature, allFeatures } = ntaProfileData
+    const {properties} = (currentFeature as any)
+    const { borough, ntaname } = properties
 
     const clickHandler = () => {
         setProfileExpanded(!profileExpanded)
@@ -32,10 +31,10 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                     {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
                 </div>
             }
-            <div className={`px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+            <div className={`printable-white-bg px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[56vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
                 <div className="lg:mr-6 lg:col-start-1 lg:col-end-4 lg:row-span-2 ">
-                    <h2 className="text-regular lg:text-subheadline text-gray_six">Brooklyn</h2>
-                    <h1 className="lg:mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">Neighrborhood Name</h1>
+                    <h2 className="text-regular lg:text-subheadline text-gray_six">{borough}</h2>
+                    <h1 className="lg:mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">{ntaname}</h1>
                     {
                         isDesktop &&
                         <p className="text-small text-[#D5D5D5]">
