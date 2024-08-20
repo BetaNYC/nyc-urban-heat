@@ -82,16 +82,36 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                     }
                 })
 
+                const boroExpand = {
+                    'MN': 'Manhattan',
+                    'BX': 'The Bronx',
+                    'BK': 'Brooklyn',
+                    'QN': 'Queens',
+                    'SI': 'Staten Island'
+                }
+
                 map?.on('mousemove', 'nta', (e: MapLayerMouseEvent) => {
                     map.getCanvas().style.cursor = 'pointer';
                     if (e.features) {
                         const coordinates = e.lngLat
                         const { ntaname, ntacode, Heat_Vulnerability } = (e.features[0].properties as any)
-                        // todo - move over css styles
-                        const content = `
-                            <h4>${ntaname} (${ntacode})</h4>
-                            <span>Heat Vulnerability Index: ${Heat_Vulnerability}</span>
+                        const boro = boroExpand[ntacode.slice(0, 2) as keyof typeof boroExpand];
+                        const title = `
+                            <div class="tooltip-top">
+                                <h5>${boro}</h5>
+                                <h4>${ntaname}</h4>
+                            </div>
+                            
                         `
+                        const details = `
+                        <div class="tooltip-bottom">
+                                <div>
+                                    <span>Heat Vulnerability Index</span><span>${Heat_Vulnerability}</span>
+                                </div>
+                            </div>
+                        `
+
+                        const content = title + (Heat_Vulnerability ? details : '')
 
                         popup.setLngLat(coordinates).setHTML(content).addTo(map);
                     }
@@ -99,7 +119,7 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
 
                 map?.on('mouseleave', 'nta', () => {
                     map.getCanvas().style.cursor = '';
-                    popup.remove();
+                    //popup.remove();
                 });
             } else {
                 // todo: toast error message about layer
