@@ -161,7 +161,7 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileDa
                             </div>
                         } */}
                     </div>
-                    <button onClick={printPage} className="flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
+                    <button onClick={printPage} className="print:hidden flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
                         Download profile
                     </button>
                 </div>

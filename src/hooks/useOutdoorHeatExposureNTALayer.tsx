@@ -28,6 +28,7 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                     closeButton: true
                 });
                 let clickedNtacode: null | string = null
+                let currentPopup: Popup | null = null;
 
                 if (!map?.getSource('nta')) {
                     map?.addSource('nta', {
@@ -100,24 +101,25 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                                 <button class="mt-2 underline cursor-pointer" id="view-profile-link">Click to view community district profile</button>
                             </div>
                         `
-
-                        //create a dom element with click eventListerner to open profile and update its data
-
                         const content = title + (Heat_Vulnerability ? details : '')
-                        const divElement = document.createElement('div');
-                        divElement.innerHTML = content
-                        divElement.querySelector('#view-profile-link')?.addEventListener('click', () => {
-                            //dispatch data to profile
-                            const data = {
-                                currentFeature,
-                                allFeatures: ntaQuery.data.features
-                            }
-                            setNtaProfileData(data)
-                            setProfileExpanded(true)
-                        })
+                        //create a dom element with click eventListerner to open profile and update its data
+                        if (currentPopup) currentPopup.remove();
 
+                        if (map && ntaQuery.data) {
+                            const divElement = document.createElement('div');
+                            divElement.innerHTML = content
+                            divElement.querySelector('#view-profile-link')?.addEventListener('click', () => {
+                                //dispatch data to profile
+                                const data = {
+                                    currentFeature,
+                                    allFeatures: ntaQuery.data.features
+                                }
+                                setNtaProfileData(data)
+                                setProfileExpanded(true)
+                            })
 
-                        popup.setLngLat(coordinates).setDOMContent(divElement).addTo(map);
+                            currentPopup = popup.setLngLat(coordinates).setDOMContent(divElement).addTo(map);
+                        }
 
                         // unoutline previous, then outline
                         if (clickedNtacode !== null) {
