@@ -1,14 +1,13 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 
-import mapboxgl from "mapbox-gl"
+import mapboxgl, { MapboxGeoJSONFeature } from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
-
+import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js' 
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
-
 
 import Nav from "../components/Nav"
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
@@ -16,8 +15,9 @@ import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
-
+import { NtaProfileData } from '../types.js'
 import "./Map.css"
+
 
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -42,6 +42,11 @@ const MapPage = () => {
     aboveHistoricMaxDays: 0,
     aboveHistoricMinDays: 0
   })
+
+  const [ntaProfileData, setNtaProfileData] = useState<NtaProfileData>({
+    currentFeature: {} as MapboxGeoJSONFeature,
+    allFeatures: []
+  });
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -79,19 +84,10 @@ const MapPage = () => {
     // };
   }, []);
 
-
-
-
-
+  useOutdoorHeatExposureNTALayer(map, setNtaProfileData, setProfileExpanded)
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year, setHeatEventDays, setAddress)
   useTreeCanopyLayer(map)
-
-
-
-
-
-
 
   return (
     <div className='relative w-full h-full'>
@@ -100,9 +96,14 @@ const MapPage = () => {
       {
         layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
       }
+
+      {
+        layer === "Outdoor Heat Exposure Index" && <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} ntaProfileData={ntaProfileData}/>
+      }
       <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
       <Legends profileExpanded={profileExpanded}/>
+
     </div>
   );
 };

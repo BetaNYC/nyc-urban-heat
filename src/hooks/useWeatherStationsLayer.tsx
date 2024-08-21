@@ -3,8 +3,7 @@ import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersCon
 import { MapMouseEvent, EventData } from 'mapbox-gl'
 import { useQuery } from 'react-query';
 
-//@ts-ignore
-import { fetchStationData } from "../api/api.js"
+import { fetchStationData } from "../api/api.ts"
 
 
 
@@ -100,6 +99,15 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                         'circle-opacity': 1
                     }
                 });
+
+                // pointer events for ux
+                map?.on('mouseenter', "weather_stations_heat_event", () => {
+                    map.getCanvas().style.cursor = 'pointer';
+                })
+
+                map?.on('mouseleave', "weather_stations_heat_event", () => {
+                    map.getCanvas().style.cursor = '';
+                })
 
                 map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
                     const properties = e.features[0].properties

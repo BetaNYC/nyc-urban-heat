@@ -1,29 +1,47 @@
 import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
 import { useState, Dispatch, SetStateAction } from "react"
-
+import { NtaProfileData } from '../types'
 import { useMediaQuery } from "react-responsive"
-
-
-
+import OverviewProfileChart from "./OverviewProfileChart"
 
 type Props = {
     profileExpanded: boolean
-    setProfileExpanded: Dispatch<SetStateAction<boolean>>
+    setProfileExpanded: Dispatch<SetStateAction<boolean>>,
+    ntaProfileData: NtaProfileData
 }
 
+const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileData }: Props) => {
 
-
-
-const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => {
-
-    // const [clickedIndex, setClickedIndex] = useState("cool_roofs")
+    const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isDesktop = useMediaQuery({
         query: '(min-width: 1024px)'
     })
-
-    const clickHandler = () => {
-        setProfileExpanded(!profileExpanded)
+    const printPage = () => {
+        // todo - force print canvas + update media print css styles
+        window.print();
     }
+
+    const clickHandler = () => setProfileExpanded(!profileExpanded);
+
+    const { currentFeature, allFeatures } = ntaProfileData
+    if (Object.keys(currentFeature).length === 0) {
+        // no feature is selected
+        return (
+            <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
+                {
+                    isDesktop && <div className="flex items-center justify-center w-12 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
+                        {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
+                    </div>
+                }
+                <div className={`printable-white-bg px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[56vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+                    <OverviewProfileChart allFeatures={allFeatures} clickedIndex={clickedIndex} />
+                </div>
+            </div>
+        )
+    }
+
+    const { properties } = (currentFeature as any)
+    const { borough, ntaname } = properties
 
     return (
         <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
@@ -32,10 +50,10 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                     {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
                 </div>
             }
-            <div className={`px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[70vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+            <div className={`printable-white-bg px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[56vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
                 <div className="lg:mr-6 lg:col-start-1 lg:col-end-4 lg:row-span-2 ">
-                    <h2 className="text-regular lg:text-subheadline text-gray_six">Brooklyn</h2>
-                    <h1 className="lg:mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">Neighrborhood Name</h1>
+                    <h2 className="text-regular lg:text-subheadline text-gray_six">{borough}</h2>
+                    <h1 className="lg:mb-4 font-semibold text-subheadline lg:text-headline text-gray_six">{ntaname}</h1>
                     {
                         isDesktop &&
                         <p className="text-small text-[#D5D5D5]">
@@ -143,7 +161,7 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded }: Props) => 
                             </div>
                         } */}
                     </div>
-                    <button className="flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
+                    <button onClick={printPage} className="print:hidden flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
                         Download profile
                     </button>
                 </div>
