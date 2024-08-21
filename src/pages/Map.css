@@ -1,0 +1,8 @@
+.mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group {
+    margin: 0 0px 0px 0 !important;
+    position: absolute !important;
+    right: 1.5rem !important;
+    bottom: 1.5rem !important;
+}
+
+

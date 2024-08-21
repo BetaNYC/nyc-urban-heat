@@ -17,6 +17,7 @@ import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
 
+import "./Map.css"
 
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
@@ -27,6 +28,8 @@ const MapPage = () => {
   const [date, setDate] = useState<string>("20230902")
   const [year, setYear] = useState<string>('2023')
   const [timeScale, setTimeScale] = useState<"date" | "year" | "default">('default')
+
+  const [address, setAddress] = useState("")
 
   // const [heatEventDays, setHeatEventDays] = useState(0)
   // const [heatAdvisoryDays, setHeatAdvisoryDays] = useState(0)
@@ -62,7 +65,10 @@ const MapPage = () => {
 
     m.dragRotate.disable();
     m.touchZoomRotate.disableRotation();
-    m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+    m.addControl(new mapboxgl.NavigationControl({
+      showCompass: false,
+      showZoom: true,
+    }), 'bottom-right');
 
     m.on('load', () => {
       setMap(m);
@@ -78,7 +84,7 @@ const MapPage = () => {
 
 
   useSurfaceTemperatureLayer(date, map)
-  useWeatherStationLayer(map, year, setHeatEventDays)
+  useWeatherStationLayer(map, year, setHeatEventDays, setAddress)
   useTreeCanopyLayer(map)
 
 
@@ -92,11 +98,11 @@ const MapPage = () => {
       <Nav />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
       {
-        layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} />
+        layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
       }
-      <LayerSelections setTimeScale={setTimeScale} />
-      <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} />
-      <Legends />
+      <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
+      <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
+      <Legends profileExpanded={profileExpanded}/>
     </div>
   );
 };

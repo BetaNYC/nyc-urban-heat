@@ -23,7 +23,7 @@ const LayerSelectionOption = ({ title, img }: Props) => {
                 </div>
                 <h3 className="text-regular">{title}</h3>
             </div>
-            <InformationCircleIcon width={24} height={24} className="" />
+            <InformationCircleIcon width={20} height={20} className="" />
         </div>
     )
 }

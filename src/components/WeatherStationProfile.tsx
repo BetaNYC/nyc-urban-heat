@@ -14,6 +14,7 @@ import airHeatIndex from "../data/airHeatIndex2022.json";
 
 
 type Props = {
+    address: string
     profileExpanded: boolean
     year: string
     setProfileExpanded: Dispatch<SetStateAction<boolean>>
@@ -40,7 +41,7 @@ interface AirHeatIndexData {
     Record_Min: number
 }
 
-const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setYear, heatEventDays }: Props) => {
+const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setYear, heatEventDays, address }: Props) => {
 
     const parseDate = d3.timeParse('%Y-%m-%d');
 
@@ -92,7 +93,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                         <div className="flex items-start justify-between mb-[3%] ">
                             <div>
                                 {/* <h2 className="text-regular lg:text-subheadline text-gray_six">Brooklyn</h2> */}
-                                <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">Bedford Stuyvesant</h1>
+                                <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">{address}</h1>
                                 <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">Weather Station</h1>
                             </div>
                             <select name="" id="" className="px-2 w-32 md:h-10 font-medium text-[#BDBDBD] bg-[#1B1B1B] border-2 border-[#333] rounded-[0.5rem]" value={year} onChange={(event) => setYear(event.target.value)}>
@@ -138,7 +139,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                             <div className="mb-4 ">
                                 <div className="flex items-center gap-2">
                                     <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
-                                    <InformationCircleIcon width={18} height={18} className="text-[#828282]" />
+                                    <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 </div>
                                 <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Extreme Heat days</h2>
                                 <div className="">
@@ -159,7 +160,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                             <div>
                                 <div className="flex items-center gap-2">
                                     <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
-                                    <InformationCircleIcon width={18} height={18} className="text-[#828282]" />
+                                    <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                 </div>
                                 <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Days Exceeding Historic Normal</h2>
                                 <div className="">
@@ -196,7 +197,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                         <div className="flex flex-col justify-center py-[1.25%] px-[2.5%]  w-full h-full bg-[#333] rounded-[0.75rem] rounded-t-[0]">
                             <div className="flex justify-between">
                                 <div className="font-semibold text-large text-white">
-                                    <p>Bedford Stuyvesant</p>
+                                    <p>{address}</p>
                                     {
                                         clickedIndex === "air_heat_index" ? <p>Air Heat Index in 2022</p> : <p>Daily Air Temperature in 2022</p>
                                     }
@@ -207,11 +208,13 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                                         <p className="text-small text-[#CCC]">Daily Air Heat Index</p>
                                         <div className="flex items-center gap-2">
                                             <div className="w-6 h-[2px] bg-[#EE745D] rounded-full"></div>
-                                            <p className="font-regular text-xsmall text-[#999]">Max Daily Temperature</p>
+                                            <p className="w-[7.5rem] font-regular text-xsmall text-[#828282]">Max Daily Temperature</p>
+                                            <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <div className="w-6 h-[2px] bg-[#49808D] rounded-full"></div>
-                                            <p className="font-regular text-xsmall text-[#999]">Min Daily Temperature</p>
+                                            <p className="w-[7.5rem] font-regular text-xsmall text-[#828282]">Min Daily Temperature</p>
+                                            <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                         </div>
                                     </div>
                                     {
@@ -220,15 +223,18 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                                                 <p className="text-small text-[#CCC]">Extreme Heat Advisory</p>
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-4 h-2 bg-[#823E35]"></div>
-                                                    <p className="font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
+                                                    <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
+                                                    <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-4 h-2 bg-[#A46338]"></div>
-                                                    <p className="font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
+                                                    <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
+                                                    <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-4 h-2 bg-[#AD844A]"></div>
-                                                    <p className="font-regular text-xsmall text-[#999]">NYC Heat Event</p>
+                                                    <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NYC Heat Event</p>
+                                                    <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                                 </div>
                                             </div> :
                                             <div>
@@ -247,7 +253,8 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                                                             />
                                                         </svg>
                                                     </div>
-                                                    <p className="font-regular text-xsmall text-[#999]">Historical Normal Maximum Daily Temperature</p>
+                                                    <p className="w-[14.5rem] font-regular text-xsmall text-[#999]">Historical Normal Maximum Daily Temperature</p>
+                                                    <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <div className="">
@@ -263,7 +270,8 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                                                             />
                                                         </svg>
                                                     </div>
-                                                    <p className="font-regular text-xsmall text-[#999]">Historical Normal Minimum Daily Temperature</p>
+                                                    <p className="w-[14.5rem] font-regular text-xsmall text-[#999]">Historical Normal Minimum Daily Temperature</p>
+                                                    <InformationCircleIcon width={12} height={12} className="text-[#828282]" />
                                                 </div>
                                             </div>
                                     }
