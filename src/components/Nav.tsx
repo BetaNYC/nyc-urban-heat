@@ -58,8 +58,8 @@ const Nav = () => {
 
 
   return (
-    <nav className='flex justify-center w-full h-[3.125rem] bg-[#333]'>
-      <div className="relative flex justify-between items-center px-5  container  h-full bg-[#333]">
+    <nav className='flex justify-center w-full h-[3.125rem] bg-[#333] '>
+      <div className="relative flex justify-between items-center px-5  container h-full bg-[#333]">
         <img src={ProjectLogo} alt="Urban Heat logo" className='cursor-pointer' onClick={() => clickHandler('map')} />
         {isMobile && <Bars3Icon className="text-white w-6 h-6 cursor-pointer" onClick={navBarClickHandler} />}
         {

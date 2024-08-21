@@ -5,8 +5,11 @@ import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersCon
 import { XMarkIcon, InformationCircleIcon, ListBulletIcon } from '@heroicons/react/24/outline'
 
 
+type Props = {
+    profileExpanded: boolean
+}
 
-const Legends = () => {
+const Legends = ({ profileExpanded }: Props) => {
 
     const { layer } = useContext(MapLayersContext) as MapLayersContextType
 
@@ -22,7 +25,7 @@ const Legends = () => {
     }
 
     const openClickHandler = () => {
-        if (!layer) return; 
+        if (!layer) return;
 
         const targetLegend = (layer.charAt(0).toLowerCase() + layer.slice(1)).replace(/\s+/g, '');
 
@@ -35,15 +38,15 @@ const Legends = () => {
     return (
         <div>
             <div
-                className='absolute right-[3%] bottom-[3%] flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer'
+                className={`absolute ${profileExpanded ? "left-6" : "right-[4.8rem]"} bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
                 onClick={openClickHandler}
             >
                 <ListBulletIcon width={18} height={18} />
             </div>
-            <div className='absolute right-[3%] bottom-[3%] drop-shadow-xl'>
+            <div className={`absolute ${profileExpanded ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
                 {
                     //@ts-ignore
-                    layer === "Weather Stations" && shown["weatherStations"] === true && <div className='p-5 bg-white rounded-[0.5rem]'>
+                    layer === "Weather Stations" && shown["weatherStations"] === true && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='mb-4'>
                             <div className='flex gap-4 mb-2 items-center font-medium'>
                                 <h3 className='text-[#2D2D2D]'>Extreme Heat Advisory Alert</h3>
@@ -85,29 +88,25 @@ const Legends = () => {
                                     <div className='absolute top-[calc(5rem_-_9px)] font-medium text-small text-[#4F4F4F]'>5 days</div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
-
                 }
                 {
-                    layer === "Tree Canopy" && shown["treeCanopy"] === true && <div className='p-[1rem] w-[15rem] text-white bg-[#4F4F4F] rounded-[1rem]'>
-                        <div className='flex justify-between text-regular text-gray_six'>
+                    layer === "Tree Canopy" && shown["treeCanopy"] === true && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
                         </div>
-                        <div className='my-[0.25rem] h-5 bg-gradient-to-r from-[#BDBCC3] to-[#345C67]'>
+                        <div className='my-[0.25rem] h-5 bg-[#345C67]'>
                         </div>
-                        <div className='flex justify-between text-xsmall text-gray_six'>
-                            <p>No tree cover</p>
+                        <div className='flex justify-between text-xsmall '>
                             <p>Covered by trees</p>
                         </div>
                     </div>
                 }
                 {
-                    layer === "Surface Temperature" && shown["surfaceTemperature"] === true && <div className='p-[1rem] w-[15rem] text-white bg-[#4F4F4F] rounded-[1rem]'>
-                        <div className='flex justify-between text-regular text-gray_six'>
+                    layer === "Surface Temperature" && shown["surfaceTemperature"] === true && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular'>
                             <p>Surface Temperature</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
                         </div>
@@ -115,7 +114,7 @@ const Legends = () => {
                             <div className='w-[50%] h-full bg-gradient-to-r from-[#202E41] via-[#BED0DD] to-[#BED0DD]'></div>
                             <div className='w-[50%] h-full bg-gradient-to-r from-[#FFE6A9] via-[#F2A18D] to-[#5E1A19]'></div>
                         </div>
-                        <div className='flex justify-between text-xsmall text-gray_six'>
+                        <div className='flex justify-between text-xsmall'>
                             <p>55.57℉</p>
                             <p>84.32℉</p>
                             <p>146.72℉</p>

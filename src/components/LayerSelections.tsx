@@ -36,10 +36,11 @@ const layerImgSource = {
 
 type Props = {
   setTimeScale: Dispatch<SetStateAction<"date" | "year" | "default">>
+  setProfileExpanded: Dispatch<SetStateAction<boolean>>
 }
 
 
-const LayerSelections = ({ setTimeScale }: Props) => {
+const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
 
   const [expand, setExpand] = useState<boolean>(false)
   const { map } = useContext(MapContext) as MapContextType
@@ -97,16 +98,17 @@ const LayerSelections = ({ setTimeScale }: Props) => {
       }
     }
     setPrevLayer(layer)
+    setProfileExpanded(false)
   }, [layer])
 
 
 
   return (
-    <div className={`absolute left-6 top-[4.625rem] pb-4  cursor-pointer ${!expand ? "h-[3rem] overflow-hidden" : "overflow-scroll"} bg-white rounded-lg drop-shadow-lg`} onClick={() => setExpand(!expand)} >
-      <div className='flex justify-between items-center mb-2  px-3 h-[3rem]'>
-        <div className="flex items-center  gap-3 ">
+    <div className={`absolute left-6 top-[4.625rem] pb-4  cursor-pointer ${!expand ? "h-[3rem] overflow-hidden" : "h-[75%] overflow-y-scroll"} bg-white rounded-lg drop-shadow-lg z-[999]`} onClick={() => setExpand(!expand)} >
+      <div className='flex justify-between items-center mb-2 px-3 h-[3rem]'>
+        <div className="flex items-center gap-3 ">
           {
-            layer && <div className="flex justify-center items-center w-6 h-6 bg-[#F2F2F2] rounded-full">
+            layer && <div className="flex justify-center items-center w-6 h-6 bg-[#F4F4F4] rounded-full">
               <img src={layerImgSource[layer]} alt="" className="w-4 h-4" />
             </div>
           }

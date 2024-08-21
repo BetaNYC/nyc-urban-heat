@@ -17,6 +17,7 @@ type Props = {
   timeScale: 'year' | 'date' | "default",
   setDate: Dispatch<SetStateAction<string>>
   setYear: Dispatch<SetStateAction<string>>
+  profileExpanded: boolean
 }
 
 const formatDateString = (dateString: string) => {
@@ -30,7 +31,7 @@ const formatDateString = (dateString: string) => {
 
 
 
-const MapDateSelections = ({ date, timeScale, setDate, setYear, year }: Props) => {
+const MapDateSelections = ({ date, timeScale, setDate, setYear, year, profileExpanded }: Props) => {
 
   const { layer } = useContext(MapLayersContext) as MapLayersContextType
   const [expand, setExpand] = useState(false)
@@ -46,7 +47,7 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year }: Props) =
 
 
   return (
-    <div className={`absolute left-[22rem] top-[4.625rem] bg-white rounded-[0.5rem] cursor-pointer overflow-hidden`} onClick={() => setExpand(!expand)}>
+    <div className={`absolute  ${profileExpanded ? "left-6 top-[9.25rem]" : "left-[22rem] top-[4.625rem]"} bg-white rounded-[0.5rem] cursor-pointer overflow-hidden z-10`} onClick={() => setExpand(!expand)}>
       <div className="flex justify-between items-center gap-3 px-3 h-[3rem] ">
         <CalendarDaysIcon width={24} height={24} className="" />
         {isTablet && <div className="mr-5 font-medium text-regular">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}

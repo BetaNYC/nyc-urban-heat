@@ -186,14 +186,13 @@ const AirTemperatureLineChart = () => {
 
         const tooltipDiv = d3.select('#tooltip')
             .style('position', 'absolute')
-            .style('background', '#fff')
-            .style('border', '1px solid #ddd')
-            .style('padding', '5px')
-            .style('border-radius', '3px')
+            .style('background', '#E2E2E2')
+            .style('border', '1px solid #F2F2F2') // Add border color
+            .style('border-radius', '12px')
             .style('display', 'none');
 
         svg.on('mousemove', (event) => {
-            const [xPos, yPos] = d3.pointer(event , svgRef.current);
+            const [xPos, yPos] = d3.pointer(event, svgRef.current);
             const xDate = x.invert(xPos);
             const closestDataPoint = data.reduce((prev, curr) =>
                 Math.abs(xDate.getTime() - curr.datetime.getTime()) < Math.abs(xDate.getTime() - prev.datetime.getTime())
@@ -207,21 +206,51 @@ const AirTemperatureLineChart = () => {
                 .style('display', 'block');
 
             tooltipDiv
-                .style('left', `${x(closestDataPoint.datetime) + margin.left}px`)
-                .style('top', `${y(closestDataPoint.feelslikemax) + margin.top}px`)
+                .style('left', `${xPos}px`) // Add some offset
+                .style('top', `${margin.bottom}px`) // Add some offset
                 .style('display', 'block')
                 .html(`
-                    <strong>Date:</strong> ${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}<br>
-                    <strong>Max Heat Index:</strong> ${closestDataPoint.feelslikemax}<br>
-                    <strong>Min Heat Index:</strong> ${closestDataPoint.feelslikemin}
-                `);
+                <div style="">
+                    <div style="padding: 8px; background: #828282; font-weight:bold; font-size:14px; color: #fff; border:1px solid; border:#828282; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}</div>
+                    <div style="margin: 8px; padding:0">
+                        <div style="display:flex; align-items: flex-start; gap: 15px; margin-bottom: 12px">
+                            <div style="font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.feelslikemax)} °F</div>
+                            <div style="">
+                                <h3 style="font-weight: 500; font-size:10px;">Maximum Air Temperature</h3>
+                                <div style="display: flex; gap:8px">
+                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px;">
+                                        ${Math.round(closestDataPoint.feelslikemax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0 ? "+" : "-"}
+                                        ${Math.abs(Math.round(closestDataPoint.feelslikemax) - Math.round(closestDataPoint.Normal_Temp_Max))}°
+                                    </p>
+                                    <p style="font-weight: 500; font-size: 8px">above Historic normal max</p>
+                                </div>
+                            </div>
+                        </div> 
+                        <div style="display:flex; gap: 15px; align-items: flex-start;">
+                            <div style="font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.feelslikemin)} °F</div>
+                            <div style="">
+                                <h3 style="font-weight: 500; font-size:10px;">Minimum Air Temperature</h3>
+                                <div style="display: flex; gap:8px">
+                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px;">
+                                        ${Math.round(closestDataPoint.feelslikemin) - Math.round(closestDataPoint.Normal_Temp_Min) > 0 ? "+" : "-"}
+                                        ${Math.abs(Math.round(closestDataPoint.feelslikemin) - Math.round(closestDataPoint.Normal_Temp_Min))}°
+                                    </p>
+                                    <p style="font-weight: 500; font-size: 8px">above Historic normal min</p>
+                                </div>
+                            </div>
+                        </div>       
+                    </div>
+                </div>
+            `);
         })
             .on('mouseout', () => {
                 verticalLine.style('display', 'none');
                 tooltipDiv.style('display', 'none');
             });
-
     };
+
+    // <strong>Max Heat Index:</strong> ${closestDataPoint.feelslikemax}<br>
+    // <strong>Min Heat Index:</strong> ${closestDataPoint.feelslikemin}
 
     useEffect(() => {
         renderChart();
@@ -234,9 +263,10 @@ const AirTemperatureLineChart = () => {
     }, []);
 
     return (
-        <svg ref={svgRef} className='w-full h-[80%]'>
-            <div id='tooltip'></div>
-        </svg>
+        <div className='relative w-full h-[80%]'>
+            <svg ref={svgRef} className='w-full h-full'></svg>
+            <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
+        </div>
     );
 };
 

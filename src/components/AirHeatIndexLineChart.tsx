@@ -173,7 +173,21 @@ const AirHeatIndexLineChart = () => {
                         .attr("width", partWidth)
                         .attr("height", rectangleHeight)
                         .attr("fill", color)
-                        .attr("stroke-width", 0);
+                        .attr("stroke-width", 0)
+                        .on('mousemove', () => {
+
+                            tooltipDiv.style('background', color)
+                            svg.select('#heat-event').append('text').text('heat')
+                            .attr('x', 50) // Example x position
+                            .attr('y', 50)
+                            .style('font-size', '12px')
+                            .style('fill', '#000'); // Example style
+                        })
+                        .on('mouseout', () => {
+
+                            tooltipDiv.style('background', '#4F4F4F')
+
+                        })
                 }
             });
         };
@@ -210,6 +224,45 @@ const AirHeatIndexLineChart = () => {
             .attr('stroke', '#49808D')
             .attr('stroke-width', 1.5)
             .attr('d', lineMin as unknown as string);
+
+        const tooltipDiv = d3.select('#tooltip')
+            .style('position', 'absolute')
+            .style('background', '#4F4F4F')
+            .style('border', '1px solid #4F4F4F') // Add border color
+            .style('border-radius', '12px')
+            .style('display', 'none');
+
+        svg.on('mousemove', (event) => {
+            const [xPos, yPos] = d3.pointer(event, svgRef.current);
+            const xDate = x.invert(xPos);
+            const closestDataPoint = data.reduce((prev, curr) =>
+                Math.abs(xDate.getTime() - curr.datetime.getTime()) < Math.abs(xDate.getTime() - prev.datetime.getTime())
+                    ? curr : prev);
+
+            tooltipDiv
+                .style('left', `${xPos}px`) // Add some offset
+                .style('top', `${margin.bottom}px`) // Add some offset
+                .style('display', 'block')
+                .html(`
+                <div style="">
+                    <div style="padding:4px 8px 4px 8px;  font-weight:medium; font-size:10px; color: #f2f2f2; border-bottom: 1px solid #F2F2F2; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}</div>
+                    <div id="heat-event"></div>
+                    <div style="padding: 4px 8px 4px 8px; background:#4F4F4F">
+                        <div style="display:flex; align-items:center; margin-bottom: 6px">
+                            <div style="width:60px;font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.feelslikemax)} °F</div>
+                            <h3 style="font-weight: 500; font-size:10px; color:#F2F2F2">Maximum Air Index</h3>
+                        </div> 
+                        <div style="display:flex; align-items: center;">
+                            <div style="width:60px;font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.feelslikemin)} °F</div>
+                             <h3 style="font-weight: 500; font-size:10px;color:#F2F2F2">Minimum Air Index</h3>
+                        </div>       
+                    </div>
+                </div>
+            `);
+        })
+            .on('mouseout', () => {
+                tooltipDiv.style('display', 'none');
+            });
     };
 
     useEffect(() => {
@@ -223,7 +276,10 @@ const AirHeatIndexLineChart = () => {
     }, []);
 
     return (
-        <svg ref={svgRef} className='w-full h-[80%]'></svg>
+        <div className='relative w-full h-[80%]'>
+            <svg ref={svgRef} className='w-full h-full'></svg>
+            <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
+        </div>
     );
 };
 

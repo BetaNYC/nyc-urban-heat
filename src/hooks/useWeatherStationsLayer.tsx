@@ -13,14 +13,13 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
     excessiveHeatDays: number,
     aboveHistoricMaxDays: number,
     aboveHistoricMinDays: number
-}>>) => {
+}>>, setAddress: Dispatch<SetStateAction<string>>) => {
     const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData });
 
     // console.log(weatherStationsQuery.data)
 
     const { layer } = useContext(MapLayersContext) as MapLayersContextType;
 
-    const [address, setAddress] = useState("")
 
 
     useEffect(() => {
@@ -49,7 +48,6 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                 if (map?.getLayer("weather_stations_heat_excessive")) map.removeLayer("weather_stations_heat_excessive");
                 if (map?.getLayer("weather_stations_heat_advisory")) map.removeLayer("weather_stations_heat_advisory");
 
-
                 // Add layers
                 map?.addLayer({
                     id: "weather_stations_heat_event",
@@ -63,8 +61,8 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                             "*",
                             ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.05
                         ],
-                        "circle-color": "#BA8E50",
-                        "circle-opacity": .4
+                        "circle-color": "#e19f3d",
+                        "circle-opacity": 1
                     }
                 });
 
@@ -81,7 +79,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                             ['-', 0, ['number', ['get', 'Days_with_NWS_HeatAdvisory']]], 1.05
                         ],
                         "circle-color": "#c9733A",
-                        'circle-opacity': .4
+                        'circle-opacity': 1
                     }
                 });
 
@@ -98,7 +96,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                             ['-', 0, ['number', ['get', 'Days_with_NWS_Excessive_Heat_Event']]], 1.05
                         ],
                         "circle-color": "#823E35",
-                        'circle-opacity': .4
+                        'circle-opacity': 1
                     }
                 });
 
@@ -114,7 +112,7 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                 map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
                     const properties = e.features[0].properties
                     const address = properties.address
-                    console.log(properties)
+                    console.log(address)
                     setHeatEventDays({
                         heatEventDays: properties.Days_with_NYC_HeatEvent,
                         heatAdvisoryDays: properties.Days_with_NWS_HeatAdvisory,
