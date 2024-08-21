@@ -30,8 +30,8 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                 let clickedNtacode: null | string = null
                 let currentPopup: Popup | null = null;
 
-                if (!map?.getSource('nta')) {
-                    map?.addSource('nta', {
+                if (!map?.getSource('heat_exposure_index')) {
+                    map?.addSource('heat_exposure_index', {
                         type: 'geojson',
                         data: ntaQuery.data as FeatureCollection,
                         promoteId: "ntacode"
@@ -39,39 +39,40 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                 }
 
                 // Reset layers
-                if (map?.getLayer('nta')) map.removeLayer('nta');
-                if (map?.getLayer('nta-outline')) map.removeLayer('nta-outline');
+                if (map?.getLayer('heat_exposure_index')) map.removeLayer('heat_exposure_index');
+                if (map?.getLayer('heat_exposure_index_outline')) map.removeLayer('heat_exposure_index_outline');
 
                 map?.addLayer({
-                    'id': 'nta',
+                    'id': 'heat_exposure_index',
                     'type': 'fill',
-                    'source': 'nta',
+                    'source': 'heat_exposure_index',
                     'layout': {},
                     'paint': {
-                        'fill-color': [
-                            "interpolate",
-                            ["linear"],
-                            ["get", "Heat_Vulnerability"],
-                            0,
-                            "#FFF3B0",
-                            3,
-                            "#D66852",
-                            5,
-                            "#511314"
-                        ],
+                        // 'fill-color': [
+                        //     "interpolate",
+                        //     ["linear"],
+                        //     ["get", "Heat_Vulnerability"],
+                        //     0,
+                        //     "#FFF3B0",
+                        //     3,
+                        //     "#D66852",
+                        //     5,
+                        //     "#511314"
+                        // ],
+                        'fill-color': '#FFF',
                         'fill-opacity': [
                             "case",
-                            ["==", ["get", "Heat_Vulnerability"], null],  // Check if 'Heat_Vulnerability' is null
-                            0,   
-                            1  
+                            ["==", ["get", "Heat_Vulnerability"], null],
+                            0,
+                            1
                         ]
                     }
                 });
 
                 map?.addLayer({
-                    'id': 'nta-outline',
+                    'id': 'heat_exposure_index_outline',
                     'type': 'line',
-                    'source': 'nta',
+                    'source': 'heat_exposure_index',
                     'layout': {},
                     'paint': {
                         'line-color': 'rgba(0,0,0,0.6)',
@@ -84,7 +85,7 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                     }
                 });
 
-                map?.on('click', 'nta', (e: MapLayerMouseEvent) => {
+                map?.on('click', 'heat_exposure_index', (e: MapLayerMouseEvent) => {
                     if (e.features) {
                         const coordinates = e.lngLat
                         const currentFeature = e.features[0]
@@ -152,11 +153,11 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                     }
                 })
 
-                map?.on('mouseover', 'nta', (e: MapLayerMouseEvent) => {
+                map?.on('mouseover', 'heat_exposure_index', () => {
                     map.getCanvas().style.cursor = 'pointer';
                 });
 
-                map?.on('mouseleave', 'nta', () => {
+                map?.on('mouseleave', 'heat_exposure_index', () => {
                     map.getCanvas().style.cursor = '';
                 });
             } else {

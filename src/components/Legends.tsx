@@ -121,6 +121,9 @@ const Legends = ({ profileExpanded }: Props) => {
                         </div>
                     </div>
                 }
+                {
+                    layer === 'Outdoor Heat Exposure Index'
+                }
             </div>
         </div>
 

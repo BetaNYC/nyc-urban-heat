@@ -8,6 +8,7 @@ import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALa
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
+import useNTALayer from '../hooks/useNTALayer.js'
 
 import Nav from "../components/Nav"
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
@@ -88,6 +89,7 @@ const MapPage = () => {
   useSurfaceTemperatureLayer(date, map)
   useWeatherStationLayer(map, year, setHeatEventDays, setAddress)
   useTreeCanopyLayer(map)
+  useNTALayer(map)
 
   return (
     <div className='relative w-full h-full'>
@@ -97,9 +99,9 @@ const MapPage = () => {
         layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
       }
 
-      {
+      {/* {
         layer === "Outdoor Heat Exposure Index" && <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} ntaProfileData={ntaProfileData}/>
-      }
+      } */}
       <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
       <Legends profileExpanded={profileExpanded}/>

@@ -20,7 +20,7 @@ type Props = {
     date?: string
 }
 
-const DatasetDownloadRow = ({ title, options, hasTitle, hasStation, hasDistrict, source, content }: Props) => {
+const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props) => {
 
     // const isDesktop = useMediaQuery({
     //     query: '(min-width: 1280px)'
