@@ -48,9 +48,23 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                     'source': 'nta',
                     'layout': {},
                     'paint': {
-                        // todo - color by 'Heat_Vulnerability' index
-                        'fill-color': '#0080ff',
-                        'fill-opacity': 0.4
+                        'fill-color': [
+                            "interpolate",
+                            ["linear"],
+                            ["get", "Heat_Vulnerability"],
+                            0,
+                            "#FFF3B0",
+                            3,
+                            "#D66852",
+                            5,
+                            "#511314"
+                        ],
+                        'fill-opacity': [
+                            "case",
+                            ["==", ["get", "Heat_Vulnerability"], null],  // Check if 'Heat_Vulnerability' is null
+                            0,   
+                            1  
+                        ]
                     }
                 });
 

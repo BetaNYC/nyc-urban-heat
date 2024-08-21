@@ -59,7 +59,7 @@ const Nav = () => {
 
   return (
     <nav className='flex justify-center w-full h-[3.125rem] bg-[#333] '>
-      <div className="relative flex justify-between items-center px-5  container h-full bg-[#333]">
+      <div className={`relative flex justify-between items-center px-5 ${clicked !== 'map' ? "container" : "px-6 w-full"}   h-full bg-[#333]`}>
         <img src={ProjectLogo} alt="Urban Heat logo" className='cursor-pointer' onClick={() => clickHandler('map')} />
         {isMobile && <Bars3Icon className="text-white w-6 h-6 cursor-pointer" onClick={navBarClickHandler} />}
         {
@@ -72,7 +72,7 @@ const Nav = () => {
           </div>
         }
         {
-          isTablet && <div className={`flex text-regular ${isDesktop ? "gap-[6rem]" :  "gap-[2rem]"}`}>
+          isTablet && <div className={`flex text-regular ${isDesktop ? "gap-[6rem]" : "gap-[2rem]"}`}>
             <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'map' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("map")}>Map</button>
             <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === 'resources' && "text-[#FF7E6C]"}`} onClick={() => clickHandler("resources")}>Resources</button>
             <button className={`font-bold text-[#7E7E7E] hover:text-[#FF7E6C] ${clicked === "download" && "text-[#FF7E6C]"}`} onClick={() => clickHandler("download")}>Download</button>
