@@ -89,7 +89,7 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                             
                         `
                         const details = `
-                        <div class="tooltip-bottom">
+                            <div class="tooltip-bottom">
                                 <div class="flex flex-col">
                                     <div class="flex flex-row justify-between"><span>Average Surface Temperature</span><span></span></div>
                                     <div class="flex flex-row justify-between"><span>Average Air Temperature</span><span></span></div>
@@ -97,14 +97,27 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                                     <div class="flex flex-row justify-between"><span>Cool Roofs</span><span>${format('.1f')(pct_Area_coolRoof)}%</span></div>
                                     <div class="flex flex-row justify-between"><span>Number of Cooling Centers</span><span></span></div>
                                 </div>
+                                <button class="mt-2 underline cursor-pointer" id="view-profile-link">Click to view community district profile</button>
                             </div>
                         `
 
-                        //todo - create dummy dom element and click eventListerner
+                        //create a dom element with click eventListerner to open profile and update its data
 
                         const content = title + (Heat_Vulnerability ? details : '')
+                        const divElement = document.createElement('div');
+                        divElement.innerHTML = content
+                        divElement.querySelector('#view-profile-link')?.addEventListener('click', () => {
+                            //dispatch data to profile
+                            const data = {
+                                currentFeature,
+                                allFeatures: ntaQuery.data.features
+                            }
+                            setNtaProfileData(data)
+                            setProfileExpanded(true)
+                        })
 
-                        popup.setLngLat(coordinates).setHTML(content).addTo(map);
+
+                        popup.setLngLat(coordinates).setDOMContent(divElement).addTo(map);
 
                         // unoutline previous, then outline
                         if (clickedNtacode !== null) {
@@ -120,14 +133,6 @@ const useOutdoorHeatExposureNTALayer = (map: mapboxgl.Map | null, setNtaProfileD
                             { selected: true }
                         );
 
-                        //dispatch data to profile
-                        const data = {
-                            currentFeature,
-                            allFeatures: ntaQuery.data.features
-                        }
-
-                        setNtaProfileData(data)
-                        setProfileExpanded(true)
                     }
                 })
 

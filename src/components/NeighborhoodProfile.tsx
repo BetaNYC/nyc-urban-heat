@@ -2,6 +2,7 @@ import { ArrowRightIcon, ArrowLeftIcon, InformationCircleIcon } from "@heroicons
 import { useState, Dispatch, SetStateAction } from "react"
 import { NtaProfileData } from '../types'
 import { useMediaQuery } from "react-responsive"
+import OverviewProfileChart from "./OverviewProfileChart"
 
 type Props = {
     profileExpanded: boolean
@@ -11,18 +12,36 @@ type Props = {
 
 const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileData }: Props) => {
 
-    // const [clickedIndex, setClickedIndex] = useState("cool_roofs")
+    const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isDesktop = useMediaQuery({
         query: '(min-width: 1024px)'
     })
+    const printPage = () => {
+        // todo - force print canvas + update media print css styles
+        window.print();
+    }
+
+    const clickHandler = () => setProfileExpanded(!profileExpanded);
 
     const { currentFeature, allFeatures } = ntaProfileData
-    const {properties} = (currentFeature as any)
-    const { borough, ntaname } = properties
-
-    const clickHandler = () => {
-        setProfileExpanded(!profileExpanded)
+    if (Object.keys(currentFeature).length === 0) {
+        // no feature is selected
+        return (
+            <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
+                {
+                    isDesktop && <div className="flex items-center justify-center w-12 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
+                        {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
+                    </div>
+                }
+                <div className={`printable-white-bg px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[56vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+                    <OverviewProfileChart allFeatures={allFeatures} clickedIndex={clickedIndex} />
+                </div>
+            </div>
+        )
     }
+
+    const { properties } = (currentFeature as any)
+    const { borough, ntaname } = properties
 
     return (
         <div className={`transition-all duration-[1500ms] ${!profileExpanded && "translate-y-[70vh] lg:translate-y-0 lg:translate-x-[calc(75vw)] xl:translate-x-[calc(65vw)]"} absolute bottom-0 lg:top-[3.125rem] lg:right-0 flex items-center  z-20`}>
@@ -142,7 +161,7 @@ const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileDa
                             </div>
                         } */}
                     </div>
-                    <button className="flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
+                    <button onClick={printPage} className="flex items-center justify-center py-2 w-[8.625rem] font-medium text-small text-black bg-[#E0E0E0] rounded-[0.375rem]">
                         Download profile
                     </button>
                 </div>
