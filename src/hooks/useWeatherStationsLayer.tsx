@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, Dispatch, SetStateAction } from "react"
+import { useEffect, useContext, Dispatch, SetStateAction } from "react"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 import { MapMouseEvent, EventData } from 'mapbox-gl'
 import { useQuery } from 'react-query';
@@ -13,7 +13,15 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
     excessiveHeatDays: number,
     aboveHistoricMaxDays: number,
     aboveHistoricMinDays: number
-}>>, setAddress: Dispatch<SetStateAction<string>>) => {
+}>>, setAddress: Dispatch<SetStateAction<string>>,
+    setProfileExpanded: Dispatch<SetStateAction<boolean>>,
+    setLegendShown: Dispatch<SetStateAction<{
+        weatherStations: boolean,
+        treeCanopy: boolean,
+        surfaceTemperature: boolean,
+        coolRoofs: boolean,
+    }>>
+) => {
     const weatherStationsQuery = useQuery({ queryKey: ['stations'], queryFn: fetchStationData });
 
     // console.log(weatherStationsQuery.data)
@@ -57,12 +65,15 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                         visibility: 'visible'
                     },
                     paint: {
+                        "circle-stroke-width": 0,
+                        "circle-stroke-color": '#1B1B1B',
                         "circle-radius": [
                             "*",
-                            ['-', 0, ['number', ['get', 'Days_with_NYC_HeatEvent']]], 1.05
+                            ['number', ['get', 'Days_with_NYC_HeatEvent']], 1.05
                         ],
                         "circle-color": "#e19f3d",
-                        "circle-opacity": 1
+                        "circle-opacity": 1,
+
                     }
                 });
 
@@ -110,23 +121,43 @@ const useWeatherStationLayer = (map: mapboxgl.Map | null, year: string, setHeatE
                 })
 
                 map?.on('click', "weather_stations_heat_event", (e: MapMouseEvent & EventData) => {
-                    const properties = e.features[0].properties
-                    const address = properties.address
-                    console.log(address)
+                    const properties = e.features[0].properties;
+                    const address = properties.address;
+
                     setHeatEventDays({
                         heatEventDays: properties.Days_with_NYC_HeatEvent,
                         heatAdvisoryDays: properties.Days_with_NWS_HeatAdvisory,
                         excessiveHeatDays: properties.Days_with_NWS_Excessive_Heat_Event,
                         aboveHistoricMaxDays: properties.Days_warmer_than_normal_max,
                         aboveHistoricMinDays: properties.Days_warmer_than_normal_min
-                    })
-                    setAddress(address)
-                    // const excessiveEventDays = properties.Days_with_NWS_Excessive_Heat_Event
-                    // const heatAdvisoryDays = properties.Days_with_NWS_HeatAdvisory
-                    // const heatEventDays = properties.HeatEvent
+                    });
+                    setAddress(address);
 
+                    map?.setPaintProperty("weather_stations_heat_event", "circle-stroke-width", [
+                        'case',
+                        ['==', ['get', 'address'], address], 2,
+                        0
+                    ]);
 
-                })
+                    const clickedLngLat = e.lngLat;
+                    const targetLngLat = map.project(clickedLngLat);
+
+                    // console.log(properties)
+
+                    const offsetX = map.getContainer().clientWidth * 0.325; // Move the map by 37.5% of its width to the left
+                    const newCenter = map.unproject([targetLngLat.x + offsetX, targetLngLat.y]);
+
+                    map.easeTo({
+                        center: newCenter,
+                        duration: 1500
+                    });
+
+                    setProfileExpanded(true)
+
+                    const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
+                    setLegendShown(prevLegendShown => ({ ...prevLegendShown, [targetLegend]: false }));
+                });
+
             }
         }
     }, [map, year, weatherStationsQuery.isSuccess, weatherStationsQuery.data, layer]);

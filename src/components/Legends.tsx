@@ -7,31 +7,38 @@ import { XMarkIcon, InformationCircleIcon, ListBulletIcon } from '@heroicons/rea
 
 type Props = {
     profileExpanded: boolean
+    legendShown: {
+        weatherStations: boolean,
+        treeCanopy: boolean,
+        surfaceTemperature: boolean,
+        coolRoofs: boolean,
+    }
+    setLegendShown:Dispatch<SetStateAction<{
+        weatherStations: boolean,
+        treeCanopy: boolean,
+        surfaceTemperature: boolean,
+        coolRoofs: boolean,
+    }>>
 }
 
-const Legends = ({ profileExpanded }: Props) => {
+const Legends = ({ profileExpanded, legendShown, setLegendShown }: Props) => {
 
     const { layer } = useContext(MapLayersContext) as MapLayersContextType
 
-    const [shown, setShown] = useState({
-        weatherStations: true,
-        treeCanopy: true,
-        surfaceTemperature: true,
-    })
-
     const closeClickHandler = () => {
         const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
-        setShown(prevShown => ({ ...prevShown, [targetLegend]: false }));
+        setLegendShown(prevLegendShown => ({ ...prevLegendShown, [targetLegend]: false }));
     }
 
     const openClickHandler = () => {
         if (!layer) return;
+        console.log('aa')
 
         const targetLegend = (layer.charAt(0).toLowerCase() + layer.slice(1)).replace(/\s+/g, '');
 
         //@ts-ignore
-        if (shown[targetLegend] === false) {
-            setShown(prevShown => ({ ...prevShown, [targetLegend]: true }));
+        if (legendShown[targetLegend] === false) {
+            setLegendShown(prevLegendShown => ({ ...prevLegendShown, [targetLegend]: true }));
         }
     };
 
@@ -46,7 +53,7 @@ const Legends = ({ profileExpanded }: Props) => {
             <div className={`absolute ${profileExpanded ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
                 {
                     //@ts-ignore
-                    layer === "Weather Stations" && shown["weatherStations"] === true && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                    layer === "Weather Stations" && legendShown["weatherStations"] === true && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='mb-4'>
                             <div className='flex gap-4 mb-2 items-center font-medium'>
                                 <h3 className='text-[#2D2D2D]'>Extreme Heat Advisory Alert</h3>
@@ -92,7 +99,7 @@ const Legends = ({ profileExpanded }: Props) => {
                     </div>
                 }
                 {
-                    layer === "Tree Canopy" && shown["treeCanopy"] === true && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    layer === "Tree Canopy" && legendShown["treeCanopy"] === true && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
@@ -105,7 +112,7 @@ const Legends = ({ profileExpanded }: Props) => {
                     </div>
                 }
                 {
-                    layer === "Surface Temperature" && shown["surfaceTemperature"] === true && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    layer === "Surface Temperature" && legendShown["surfaceTemperature"] === true && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular'>
                             <p>Surface Temperature</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
@@ -121,9 +128,9 @@ const Legends = ({ profileExpanded }: Props) => {
                         </div>
                     </div>
                 }
-                {
-                    layer === 'Outdoor Heat Exposure Index'
-                }
+                {/* {
+                    layer === 'Cool Roofs' && shown['']
+                } */}
             </div>
         </div>
 

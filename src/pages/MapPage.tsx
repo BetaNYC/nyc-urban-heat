@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef, useContext } from 'react'
 
-import mapboxgl, { MapboxGeoJSONFeature } from "mapbox-gl"
+import mapboxgl, { MapboxGeoJSONFeature, LngLatLike } from "mapbox-gl"
 import { MapContext, MapContextType } from "../contexts/mapContext.js"
 import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
-import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js' 
+import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js'
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
 import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
@@ -32,9 +32,12 @@ const MapPage = () => {
 
   const [address, setAddress] = useState("")
 
-  // const [heatEventDays, setHeatEventDays] = useState(0)
-  // const [heatAdvisoryDays, setHeatAdvisoryDays] = useState(0)
-  // const [excessiveHeatDays, setExcessiveHeatDays] = useState(0)
+  const [legendShown, setLegendShown] = useState({
+    weatherStations: true,
+    treeCanopy: true,
+    surfaceTemperature: true,
+    coolRoofs: true,
+})
 
   const [heatEventDays, setHeatEventDays] = useState({
     heatEventDays: 0,
@@ -49,20 +52,23 @@ const MapPage = () => {
     allFeatures: []
   });
 
+  const defaultCoordinates: LngLatLike | undefined = [-73.913, 40.763]
+  const defaultZoom = 11
+
   useEffect(() => {
     if (!mapContainer.current) return;
 
     mapboxgl.accessToken = "pk.eyJ1IjoiY2xvdWRsdW4iLCJhIjoiY2s3ZWl4b3V1MDlkejNkb2JpZmtmbHp4ZiJ9.MbJU7PCa2LWBk9mENFkgxw";
 
-    const lng = -73.913;
-    const lat = 40.763;
-    const zoom = 11;
+    // const lng = -73.913;
+    // const lat = 40.763;
+    // const zoom = 11;
 
     const m = new mapboxgl.Map({
       container: mapContainer.current,
       style: "mapbox://styles/cloudlun/clle3783901j201p43864c07n",
-      center: [lng, lat],
-      zoom: zoom,
+      center: defaultCoordinates,
+      zoom: defaultZoom,
       minZoom: 10,
       maxZoom: 15,
       interactive: true,
@@ -85,9 +91,19 @@ const MapPage = () => {
     // };
   }, []);
 
+  useEffect(() => {
+    if (map && !profileExpanded) {
+      map.easeTo({
+        center: defaultCoordinates,
+        zoom: defaultZoom,
+        duration: 1000
+      });
+    }
+  }, [map, profileExpanded])
+
   useOutdoorHeatExposureNTALayer(map, setNtaProfileData, setProfileExpanded)
   useSurfaceTemperatureLayer(date, map)
-  useWeatherStationLayer(map, year, setHeatEventDays, setAddress)
+  useWeatherStationLayer(map, year, setHeatEventDays, setAddress, setProfileExpanded, setLegendShown)
   useTreeCanopyLayer(map)
   useNTALayer(map)
 
@@ -104,7 +120,7 @@ const MapPage = () => {
       } */}
       <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
-      <Legends profileExpanded={profileExpanded}/>
+      <Legends profileExpanded={profileExpanded} legendShown={legendShown} setLegendShown={setLegendShown} />
 
     </div>
   );

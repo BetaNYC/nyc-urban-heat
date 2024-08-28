@@ -74,6 +74,21 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
           map.removeSource('tree_canopy');
 
           break;
+        case "Cool Roofs":
+          map.removeLayer('nta')
+          map.removeLayer('nta_outline')
+          map.removeSource('nta')
+          break;
+        case 'Premeable Surfaces':
+          map.removeLayer('nta')
+          map.removeLayer('nta_outline')
+          map.removeSource('nta')
+          break;
+        case "Parks":
+          map.removeLayer('nta')
+          map.removeLayer('nta_outline')
+          map.removeSource('nta')
+          break;
         default:
           // const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
           // map.setLayoutProperty(prevLayerName, "visibility", "none");
@@ -97,6 +112,7 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
           break;
       }
     }
+    console.log(prevLayer)
     setPrevLayer(layer)
     setProfileExpanded(false)
   }, [layer])
