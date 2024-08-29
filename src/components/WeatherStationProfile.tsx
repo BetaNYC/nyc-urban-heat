@@ -87,21 +87,24 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                     {profileExpanded ? <ArrowRightIcon width={24} height={24} className="text-white" /> : <ArrowLeftIcon width={24} height={24} className="text-white" />}
                 </div>
             }
-            <div className={`md:flex md:flex-col md:justify-center md:gap-6 px-6 lg:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
-                <div className="md:flex md:items-center md:gap-6  overflow-y-scroll">
-                    <div className="md:flex md:flex-col md:justify-center md:gap-3 px-4 md:py-2 w-full h-full md:w-[70%] border-[1px] border-[#333] rounded-[0.5rem]">
+            <div className={`md:flex md:flex-col md:justify-center md:gap-6 px-6 lg:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
+                <div className="md:flex md:items-center md:gap-6  md:h-[25%] overflow-y-scroll">
+                    <div className="md:flex md:flex-col md:justify-center md:gap-3 md:px-4 md:py-2 w-full h-full md:w-[70%] md:border-[1px] md:border-[#333] rounded-[0.5rem]">
                         <div className="flex justify-between items-start w-full">
                             <div className="flex items-center gap-5">
-                                <div className="flex justify-center max-w-40 min-w-10">
-                                    <div className="relative aspect-square rounded-full bg-[#BA8E50]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className=" bg-[#c9733A] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
-                                        </div>
-                                        <div className="absolute inset-0 flex items-center justify-center">
-                                            <div className="w-2 h-2 bg-[#823E35] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
+                                {
+                                    isTablet &&
+                                    <div className="flex justify-center max-w-40 min-w-10">
+                                        <div className="relative aspect-square rounded-full bg-[#BA8E50]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className=" bg-[#c9733A] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
+                                            </div>
+                                            <div className="absolute inset-0 flex items-center justify-center">
+                                                <div className="w-2 h-2 bg-[#823E35] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                                 <div className="">
                                     {/* <h2 className="text-regular lg:text-subheadline text-gray_six">Brooklyn</h2> */}
                                     <h1 className="font-semibold text-subheadline lg:text-headline text-gray_six">{address}</h1>
@@ -122,42 +125,57 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                                 <option value="2013" className="">2013</option>
                             </select>
                         </div>
-                        <div className="flex gap-4 md:gap-6 md:my-0 w-full overflow-scroll bg-[#333] md:bg-transparent">
-                            <div className="">
-                                <div className="flex items-center gap-2">
-                                    <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
-                                    <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
+                        <div className="flex items-start gap-4 my-6 md:my-0 py-2 md:p-0 w-full bg-[#333] md:bg-transparent rounded-[0.5rem] overflow-scroll">
+                            {
+                                !isTablet &&
+                                <div className="flex justify-center pt-1 pl-4 max-w-40 min-w-10">
+                                    <div className="relative aspect-square rounded-full bg-[#BA8E50]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className=" bg-[#c9733A] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
+                                        </div>
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-2 h-2 bg-[#823E35] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Extreme Heat days</h2>
+                            }
+                            <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                                 <div className="">
-                                    <div className="flex gap-4 text-[#D36051] text-xsmall">
-                                        <p className="w-4">{heatEventDays.excessiveHeatDays}</p>
-                                        <p className="font-medium ">NWS Excessive Heat</p>
+                                    <div className="flex items-center gap-2">
+                                        <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
+                                        <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                     </div>
-                                    <div className="flex gap-4 text-[#C9733A] text-xsmall">
-                                        <p className="w-4">{heatEventDays.heatAdvisoryDays}</p>
-                                        <p className="font-medium ">NWS Heat Advisory</p>
-                                    </div>
-                                    <div className="flex gap-4 text-[#BA8E50] text-xsmall">
-                                        <p className="w-4">{heatEventDays.heatEventDays}</p>
-                                        <p className="font-medium ">NYC Heat Event</p>
+                                    <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Extreme Heat days</h2>
+                                    <div className="">
+                                        <div className="flex gap-4 text-[#D36051] text-xsmall">
+                                            <p className="w-4">{heatEventDays.excessiveHeatDays}</p>
+                                            <p className="font-medium ">NWS Excessive Heat</p>
+                                        </div>
+                                        <div className="flex gap-4 text-[#C9733A] text-xsmall">
+                                            <p className="w-4">{heatEventDays.heatAdvisoryDays}</p>
+                                            <p className="font-medium ">NWS Heat Advisory</p>
+                                        </div>
+                                        <div className="flex gap-4 text-[#BA8E50] text-xsmall">
+                                            <p className="w-4">{heatEventDays.heatEventDays}</p>
+                                            <p className="font-medium ">NYC Heat Event</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div>
-                                <div className="flex items-center gap-2">
-                                    <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
-                                    <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
-                                </div>
-                                <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Days Exceeding Historic Normal</h2>
-                                <div className="">
-                                    <div className="flex gap-4 text-[#E97159] text-xsmall">
-                                        <p className="w-4">{heatEventDays.aboveHistoricMaxDays}</p>
-                                        <p className="font-medium ">days above historic maximum</p>
+                                <div>
+                                    <div className="flex items-center gap-2">
+                                        <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
+                                        <InformationCircleIcon width={14} height={14} className="text-[#828282]" />
                                     </div>
-                                    <div className="flex gap-4 text-[#5BA6BA] text-xsmall">
-                                        <p className="w-4">{heatEventDays.aboveHistoricMinDays}</p>
-                                        <p className="font-medium ">days above historic minimum</p>
+                                    <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Number of Days Exceeding Historic Normal</h2>
+                                    <div className="">
+                                        <div className="flex gap-4 text-[#E97159] text-xsmall">
+                                            <p className="w-4">{heatEventDays.aboveHistoricMaxDays}</p>
+                                            <p className="font-medium ">days above historic maximum</p>
+                                        </div>
+                                        <div className="flex gap-4 text-[#5BA6BA] text-xsmall">
+                                            <p className="w-4">{heatEventDays.aboveHistoricMinDays}</p>
+                                            <p className="font-medium ">days above historic minimum</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -178,17 +196,17 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                     </div>
                 </div>
                 {!isTablet && (<>
-                    <div className="mb-5 ">
+                    <div className="my-6">
                         <h2 className="mb-2 font-medium text-[#F2F2F2]">Air Heat Index </h2>
                         <div className="p-4 w-full h-24 bg-[#333] rounded-[0.5rem]"></div>
                     </div>
-                    <div className="mb-4">
+                    <div className="mb-6">
                         <h2 className="mb-2 font-medium text-[#F2F2F2]">Air Temperature </h2>
                         <div className="p-4 w-full h-24 bg-[#333] rounded-[0.5rem]"></div>
                     </div>
                 </>)}
                 {isTablet && (
-                    <div className="flex flex-col  gap-4 w-full h-[65%] overflow-y-scroll">
+                    <div className="flex flex-col gap-6 w-full h-[65%] overflow-y-scroll">
                         <div className="flex flex-col w-full h-[90%]">
                             <div className="flex">
                                 <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "air_heat_index" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"} `} onClick={() => setClickedIndex("air_heat_index")}>Air Heat Index</button>
@@ -286,7 +304,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                             </div>
                         </div>
                         <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
-                            <button className="px-2 h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download Profile</button>
+                            <button className=" min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download Profile</button>
                             {isTablet ?
                                 <div className="flex items-center">
                                     <button className="p-[0.625rem] text-regular text-[#E0E0E0] ">View the Outdoor Heat Exposure Index for this neighborhood</button> :
