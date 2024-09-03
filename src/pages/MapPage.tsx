@@ -115,9 +115,9 @@ const MapPage = () => {
         layer === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
       }
 
-      {/* {
+      {
         layer === "Outdoor Heat Exposure Index" && <NeighborhoodProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} ntaProfileData={ntaProfileData}/>
-      } */}
+      }
       <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
       <Legends profileExpanded={profileExpanded} legendShown={legendShown} setLegendShown={setLegendShown} />

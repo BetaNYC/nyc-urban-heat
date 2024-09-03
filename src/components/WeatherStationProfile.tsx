@@ -304,7 +304,7 @@ const WeatherStationProfile = ({ profileExpanded, setProfileExpanded, year, setY
                             </div>
                         </div>
                         <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
-                            <button className=" min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download Profile</button>
+                            <button className="min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Download Profile</button>
                             {isTablet ?
                                 <div className="flex items-center">
                                     <button className="p-[0.625rem] text-regular text-[#E0E0E0] ">View the Outdoor Heat Exposure Index for this neighborhood</button> :
