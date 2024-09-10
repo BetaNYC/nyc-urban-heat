@@ -11,8 +11,8 @@ type Props = {
     setProfileExpanded: Dispatch<SetStateAction<boolean>>,
     ntaProfileData: NtaProfileData
 }
-
-const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, ntaProfileData }: Props) => {
+// ntaProfileData 
+const NeighborhoodProfile = ({ profileExpanded, setProfileExpanded, }: Props) => {
 
     const [clickedIndex, setClickedIndex] = useState("cool_roofs")
     const isDesktop = useMediaQuery({
