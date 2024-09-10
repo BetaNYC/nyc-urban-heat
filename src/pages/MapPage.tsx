@@ -10,7 +10,9 @@ import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
 import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
 import useNTALayer from '../hooks/useNTALayer.js'
 
+
 import Nav from "../components/Nav"
+import DatasetDownloadPopup from '../components/DatasetDownloadPopup.js'
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
 import LayerSelections from '../components/LayerSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
@@ -121,7 +123,7 @@ const MapPage = () => {
       <LayerSelections setTimeScale={setTimeScale} setProfileExpanded={setProfileExpanded} />
       <MapDateSelections date={date!} setDate={setDate} year={year!} setYear={setYear} timeScale={timeScale} profileExpanded={profileExpanded} />
       <Legends profileExpanded={profileExpanded} legendShown={legendShown} setLegendShown={setLegendShown} />
-
+      {/* <DatasetDownloadPopup /> */}
     </div>
   );
 };
