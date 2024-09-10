@@ -190,7 +190,7 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
 
 
   return (
-    <div className={`absolute left-6 top-[4.625rem] w-[20rem] ${!expand ? "h-[3.5rem] overflow-hidden" : "pb-4 h-[75%]"} bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
+    <div className={`absolute left-6 top-[4.625rem] w-[20rem] ${!expand ? "h-[3.5rem] overflow-hidden" : "pb-4 h-[70%]"} bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
       <div className='flex justify-between items-center px-5 h-[3.5rem]' onClick={() => setExpand(!expand)}>
         <div className="flex items-center gap-3 ">
           {
@@ -210,14 +210,14 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Weather Stations" img={layerImgSource["Weather Stations"]} />
               </div>
               <div>
-              <h3 className="px-6 pt-3 text-regular text-[#BDBDBD]">Outdoor Heat Exposure</h3>
+              <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">Outdoor Heat Exposure</h3>
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Air Temperature" img={layerImgSource["Air Temperature"]} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Air Heat Index" img={layerImgSource["Air Heat Index"]} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Mean Radiant Temperature" img={layerImgSource["Mean Radiant Temperature"]} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Surface Temperature" img={layerImgSource["Surface Temperature"]} />
               </div>
               <div>
-                <h3 className="px-6 pt-3 text-regular text-[#BDBDBD]">Heat Mitigation</h3>
+                <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">Heat Mitigation</h3>
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Tree Canopy" img={layerImgSource["Tree Canopy"]} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Cool Roofs" img={layerImgSource["Cool Roofs"]} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Premeable Surfaces" img={layerImgSource["Premeable Surfaces"]} />
