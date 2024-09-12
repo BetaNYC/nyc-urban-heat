@@ -47,12 +47,12 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year, profileExp
 
 
   return (
-    <div className={`absolute  ${profileExpanded ? "left-6 top-[9.25rem]" : "left-[22rem] top-[4.625rem]"} bg-white rounded-[0.5rem] cursor-pointer overflow-hidden z-10`} onClick={() => setExpand(!expand)}>
-      <div className="flex justify-between items-center gap-3 px-3 h-[3rem] ">
-        <CalendarDaysIcon width={24} height={24} className="" />
-        {isTablet && <div className="mr-5 font-medium text-regular">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}
-        {expand && layer ? <ChevronUpIcon width={24} height={24} />
-          : <ChevronDownIcon width={24} height={24} />}
+    <div className={`absolute  ${profileExpanded ? "left-6 top-[9.25rem]" : "left-[22rem] top-[4.625rem]"} bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`} onClick={() => setExpand(!expand)}>
+      <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
+        <CalendarDaysIcon width={24} height={24} className="text-[#BDBDBD]" />
+        {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}
+        {expand && layer ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]"/>
+          : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]"/>}
       </div>
       <div className={`flex flex-col ${timeScale === 'year' ? "gap-0" : "gap-4"} my-3 w-full ${expand && timeScale === 'date' ? "h-[60vh] overflow-scroll" : expand && timeScale === 'year' ? "overflow-scroll" : "hidden"}`}>
         {
@@ -60,13 +60,13 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year, profileExp
             years.map((y) => {
               return (
                 <div className="" key={y}>
-                  <h3 className="px-5 font-medium text-regular text-[#4F4F4F]">{y}</h3>
+                  <h3 className="px-5 font-medium text-regular text-[#BDBDBD]">{y}</h3>
                   <div className='my-2 h-[1px] bg-[#828282]'></div>
                   <div className="flex flex-col items-start ">
                     {
                       //@ts-ignore
                       clippedPMTiles.filter(d => d.date.includes(y)).map((d) => (
-                        <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => {
+                        <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular text-[#F2F2F2] hover:bg-[#6A6A6A]" onClick={() => {
                           setDate(d.date)
                         }}>
                           {formatDateString(d.date)}
@@ -83,7 +83,7 @@ const MapDateSelections = ({ date, timeScale, setDate, setYear, year, profileExp
           timeScale === 'year' && (
             years.map((y) => {
               return (
-                <div className="hover:bg-[#828282] text-[#4F4F4F] hover:text-white" key={y} onClick={() => setYear(y)}>
+                <div className=" text-[#F2F2F2] hover:bg-[#6A6A6A]" key={y} onClick={() => setYear(y)}>
                   <h3 className="my-2 px-5 font-medium text-regular ">{y}</h3>
                   <div className=' h-[1px] bg-[#828282]'></div>
                 </div>

@@ -2,9 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
-.mapboxgl-popup-tip{
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
 
+  .scrollbar::-webkit-scrollbar-track {
+    background: #1B1B1B;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #4F4F4F;
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #D9D9D9;
+  }
 }
+
+/* .mapboxgl-popup-tip{
+
+} */
 
 .mapboxgl-popup-content{
   padding: 0 !important;

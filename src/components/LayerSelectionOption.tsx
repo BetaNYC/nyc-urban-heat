@@ -124,8 +124,8 @@ const LayerSelectionOption = ({ title, img, toggle, setToggle, infoExpand, setIn
         <div className={`px-5 py-3 w-[20rem] text-[#F2F2F2] ${toggleExpand[title] ? 'bg-[#D9D9D9]': "hover:bg-[#6A6A6A] "} cursor-pointer`} onClick={() => layerOptionClickHandler(title)}>
             <div className="flex justify-between items-center gap-3 ">
                 <div className="flex items-center gap-3">
-                    <img src={img} alt="" className="w-6 h-6 text-[#828282]" />
-                    <h3 className={`text-regular ${toggleExpand[title] ? "text-[#4F4F4F]" : 'text-[#F2F2F2]'}`}>{title}</h3>
+                    <img src={img} alt="" className="w-6 h-6 text-[#BDBDBD]" />
+                    <h3 className={`text-regular ${toggleExpand[title] ? "font-semibold text-[#4F4F4F]" : 'text-[#F2F2F2]'}`}>{title}</h3>
                 </div>
                 <InformationCircleIcon width={20} height={20} className={`${toggleExpand[title] ? "text-[#4F4F4F]" : 'text-[#F2F2F2]'} `} onClick={(e) => infoClickHandler(e, title)} />
             </div>

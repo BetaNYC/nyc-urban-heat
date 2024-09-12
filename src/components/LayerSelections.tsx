@@ -194,7 +194,7 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
       <div className='flex justify-between items-center px-5 h-[3.5rem]' onClick={() => setExpand(!expand)}>
         <div className="flex items-center gap-3 ">
           {
-            layer && <img src={layerImgSource[layer]} alt="" className="w-6 h-6" />
+            layer && <img src={layerImgSource[layer]} alt="" className="w-6 h-6 text-[#BDBDBD]" />
           }
           <h2 className={`font-medium text-regular text-[#F2F2F2]`}>{!layer ? "Urban Heat Data Layers" : layer}</h2>
         </div>
@@ -204,7 +204,7 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
       {
         expand && (
           <>
-            <div className='h-[calc(100%_-_7.25rem)] overflow-scroll'>
+            <div className='h-[calc(100%_-_7.25rem)] overflow-y-scroll overflow-hidden scrollbar'>
               <div className=''>
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Outdoor Heat Exposure Index" img={layerImgSource['Outdoor Heat Exposure Index']} />
                 <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Weather Stations" img={layerImgSource["Weather Stations"]} />
