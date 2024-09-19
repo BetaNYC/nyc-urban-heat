@@ -6,7 +6,7 @@ type Props = {
   url: string
 }
 
-const AdvocacyGroupsCard = ({ title, content, url }: Props) => {
+const AdvocacyGroupsCard = ({ title, content }: Props) => {
   return (
     <div className='flex flex-col p-6 h-[26.5rem] bg-[#EFEFEF] rounded-[0.75rem]'>
       <div className='w-full h-[10rem] bg-white'></div>

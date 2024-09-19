@@ -3,94 +3,25 @@ import { MapLayersContext, MapLayersContextType, LayersType } from '../contexts/
 
 import { InformationCircleIcon } from "@heroicons/react/24/outline"
 
+import { layerExpand } from './LayerSelections'
 
 type Props = {
     title: LayersType
     img?: string
-    toggle: {
-        "Outdoor Heat Exposure Index": 'nta' | 'raw',
-        "Weather Stations": 'nta' | 'raw',
-        "Air Temperature": 'nta' | 'raw',
-        "Air Heat Index": 'nta' | 'raw',
-        "Mean Radiant Temperature": 'nta' | 'raw',
-        "Surface Temperature": 'nta' | 'raw',
-        "Tree Canopy": 'nta' | 'raw',
-        "Cool Roofs": 'nta' | 'raw',
-        "Premeable Surfaces": 'nta' | 'raw',
-        "Parks": 'nta' | 'raw'
-    },
-    setToggle: Dispatch<SetStateAction<{
-        "Outdoor Heat Exposure Index": 'nta' | 'raw',
-        "Weather Stations": 'nta' | 'raw',
-        "Air Temperature": 'nta' | 'raw',
-        "Air Heat Index": 'nta' | 'raw',
-        "Mean Radiant Temperature": 'nta' | 'raw',
-        "Surface Temperature": 'nta' | 'raw',
-        "Tree Canopy": 'nta' | 'raw',
-        "Cool Roofs": 'nta' | 'raw',
-        "Premeable Surfaces": 'nta' | 'raw',
-        "Parks": 'nta' | 'raw'
-    }>>,
-    toggleExpand: {
-        "Outdoor Heat Exposure Index": boolean,
-        "Weather Stations": boolean,
-        "Air Temperature": boolean,
-        "Air Heat Index": boolean,
-        "Mean Radiant Temperature": boolean,
-        "Surface Temperature": boolean,
-        "Tree Canopy": boolean,
-        "Cool Roofs": boolean,
-        "Premeable Surfaces": boolean,
-        "Parks": boolean,
-    },
-    setToggleExpand: Dispatch<SetStateAction<{
-        "Outdoor Heat Exposure Index": boolean,
-        "Weather Stations": boolean,
-        "Air Temperature": boolean,
-        "Air Heat Index": boolean,
-        "Mean Radiant Temperature": boolean,
-        "Surface Temperature": boolean,
-        "Tree Canopy": boolean,
-        "Cool Roofs": boolean,
-        "Premeable Surfaces": boolean,
-        "Parks": boolean,
-    }>>
-    infoExpand: {
-        "Outdoor Heat Exposure Index": boolean,
-        "Weather Stations": boolean,
-        "Air Temperature": boolean,
-        "Air Heat Index": boolean,
-        "Mean Radiant Temperature": boolean,
-        "Surface Temperature": boolean,
-        "Tree Canopy": boolean,
-        "Cool Roofs": boolean,
-        "Premeable Surfaces": boolean,
-        "Parks": boolean,
-    },
-    setInfoExpand: Dispatch<SetStateAction<{
-        "Outdoor Heat Exposure Index": boolean,
-        "Weather Stations": boolean,
-        "Air Temperature": boolean,
-        "Air Heat Index": boolean,
-        "Mean Radiant Temperature": boolean,
-        "Surface Temperature": boolean,
-        "Tree Canopy": boolean,
-        "Cool Roofs": boolean,
-        "Premeable Surfaces": boolean,
-        "Parks": boolean,
-    }>>
+    toggleExpand: layerExpand,
+    setToggleExpand: Dispatch<SetStateAction<layerExpand>>
+    infoExpand: layerExpand,
+    setInfoExpand: Dispatch<SetStateAction<layerExpand>>
 }
 
-const LayerSelectionOption = ({ title, img, toggle, setToggle, infoExpand, setInfoExpand, toggleExpand, setToggleExpand }: Props) => {
+const LayerSelectionOption = ({ title, img,infoExpand, setInfoExpand, toggleExpand, setToggleExpand }: Props) => {
 
-    const { layer, setLayer } = useContext(MapLayersContext) as MapLayersContextType
-
-
+    const { setLayer, layerData, setLayerData } = useContext(MapLayersContext) as MapLayersContextType
 
     const toggleChangeHandler = (e: React.MouseEvent<HTMLDivElement>, l: LayersType) => {
         e.stopPropagation()
-        const newToggle = { ...toggle, [l]: toggle[l] === 'nta' ? 'raw' : 'nta' }
-        setToggle(newToggle)
+        const newLayerData = { ...layerData, [l]: layerData[l] === 'nta' ? 'raw' : 'nta' }
+        setLayerData(newLayerData)
     }
     const infoClickHandler = (e: React.MouseEvent<SVGSVGElement>, l: LayersType) => {
         e.stopPropagation()
@@ -137,7 +68,7 @@ const LayerSelectionOption = ({ title, img, toggle, setToggle, infoExpand, setIn
             {
                 toggleExpand[title] === true && <div className='flex items-center gap-3 mt-4 ml-8'>
                     <div className='font-semibold text-[#4F4F4F] text-small'>NTA Aggregated</div>
-                    <div className={`flex items-center ${toggle[title] === 'nta' ? "justify-start" : "justify-end"} px-[2px] w-8 h-4 bg-[#A8A8A8] rounded-[20px]`} onClick={(e) => toggleChangeHandler(e, title)}>
+                    <div className={`flex items-center ${layerData[title] === 'nta' ? "justify-start" : "justify-end"} px-[2px] w-8 h-4 bg-[#A8A8A8] rounded-[20px]`} onClick={(e) => toggleChangeHandler(e, title)}>
                         <div className='w-3 h-3 bg-[#4F4F4F] rounded-full'></div>
                     </div>
                     <div className='font-semibold text-[#4F4F4F] text-small'>Raw Data</div>

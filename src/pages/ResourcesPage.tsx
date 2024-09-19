@@ -83,7 +83,6 @@ const ResourcesPage = () => {
                 url="https://www.weact.org/"
               />
             </div>
-
           </div>
         </div>
       </div>

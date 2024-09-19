@@ -38,50 +38,28 @@ type Props = {
   setProfileExpanded: Dispatch<SetStateAction<boolean>>
 }
 
+export type layerExpand = {
+  "Outdoor Heat Exposure Index": boolean,
+  "Weather Stations": boolean,
+  "Air Temperature": boolean,
+  "Air Heat Index": boolean,
+  "Mean Radiant Temperature": boolean,
+  "Surface Temperature": boolean,
+  "Tree Canopy": boolean,
+  "Cool Roofs": boolean,
+  "Premeable Surfaces": boolean,
+  "Parks": boolean,
+}
+
 const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
 
   const [expand, setExpand] = useState<boolean>(true)
   const { map } = useContext(MapContext) as MapContextType
-  const { layer } = useContext(MapLayersContext) as MapLayersContextType
+  const { layer, layerData } = useContext(MapLayersContext) as MapLayersContextType
 
   const [prevLayer, setPrevLayer] = useState<LayersType | null>(null)
 
-  const [toggle, setToggle] = useState<{
-    "Outdoor Heat Exposure Index": 'nta' | 'raw',
-    "Weather Stations": 'nta' | 'raw',
-    "Air Temperature": 'nta' | 'raw',
-    "Air Heat Index": 'nta' | 'raw',
-    "Mean Radiant Temperature": 'nta' | 'raw',
-    "Surface Temperature": 'nta' | 'raw',
-    "Tree Canopy": 'nta' | 'raw',
-    "Cool Roofs": 'nta' | 'raw',
-    "Premeable Surfaces": 'nta' | 'raw',
-    "Parks": 'nta' | 'raw'
-  }>({
-    "Outdoor Heat Exposure Index": 'nta',
-    "Weather Stations": 'nta',
-    "Air Temperature": 'nta',
-    "Air Heat Index": 'nta',
-    "Mean Radiant Temperature": 'nta',
-    "Surface Temperature": 'nta',
-    "Tree Canopy": 'nta',
-    "Cool Roofs": 'nta',
-    "Premeable Surfaces": 'nta',
-    "Parks": 'nta'
-  })
-
-  const [toggleExpand, setToggleExpand] = useState<{
-    "Outdoor Heat Exposure Index": boolean,
-    "Weather Stations": boolean,
-    "Air Temperature": boolean,
-    "Air Heat Index": boolean,
-    "Mean Radiant Temperature": boolean,
-    "Surface Temperature": boolean,
-    "Tree Canopy": boolean,
-    "Cool Roofs": boolean,
-    "Premeable Surfaces": boolean,
-    "Parks": boolean,
-  }>({
+  const [toggleExpand, setToggleExpand] = useState<layerExpand>({
     "Outdoor Heat Exposure Index": false,
     "Weather Stations": false,
     "Air Temperature": false,
@@ -94,18 +72,7 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
     "Parks": false
   })
 
-  const [infoExpand, setInfoExpand] = useState<{
-    "Outdoor Heat Exposure Index": boolean,
-    "Weather Stations": boolean,
-    "Air Temperature": boolean,
-    "Air Heat Index": boolean,
-    "Mean Radiant Temperature": boolean,
-    "Surface Temperature": boolean,
-    "Tree Canopy": boolean,
-    "Cool Roofs": boolean,
-    "Premeable Surfaces": boolean,
-    "Parks": boolean,
-  }>({
+  const [infoExpand, setInfoExpand] = useState<layerExpand>({
     "Outdoor Heat Exposure Index": false,
     "Weather Stations": false,
     "Air Temperature": false,
@@ -136,27 +103,38 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
           map.removeSource('weather_stations');
           break;
         case "Surface Temperature":
-          map.removeLayer('surface_temperature');
-          map.removeSource('surface_temperature');
+          if (map.getSource('surface_temperature')) {
+            map.removeLayer('surface_temperature');
+            map.removeSource('surface_temperature');
+          }
           break;
         case "Tree Canopy":
-          map.removeLayer('tree_canopy');
-          map.removeSource('tree_canopy');
+          if (map.getSource('tree_canopy')) {
+            map.removeLayer('tree_canopy');
+            map.removeSource('tree_canopy');
+          }
           break;
         case "Cool Roofs":
-          map.removeLayer('nta')
-          map.removeLayer('nta_outline')
-          map.removeSource('nta')
+          if (layerData['Cool Roofs'] === 'nta') {
+            map.removeLayer('nta')
+            map.removeLayer('nta_outline')
+            map.removeSource('nta')
+          }
+
           break;
         case 'Premeable Surfaces':
-          map.removeLayer('nta')
-          map.removeLayer('nta_outline')
-          map.removeSource('nta')
+          if (layerData['Premeable Surfaces'] === 'nta') {
+            map.removeLayer('nta')
+            map.removeLayer('nta_outline')
+            map.removeSource('nta')
+          }
           break;
         case "Parks":
-          map.removeLayer('nta')
-          map.removeLayer('nta_outline')
-          map.removeSource('nta')
+          if (layerData['Parks'] === 'nta') {
+            map.removeLayer('nta')
+            map.removeLayer('nta_outline')
+            map.removeSource('nta')
+          }
           break;
         default:
           // const prevLayerName = prevLayer?.toLocaleLowerCase().replace(" ", "_")
@@ -206,22 +184,22 @@ const LayerSelections = ({ setTimeScale, setProfileExpanded }: Props) => {
           <>
             <div className='h-[calc(100%_-_7.25rem)] overflow-y-scroll overflow-hidden scrollbar'>
               <div className=''>
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Outdoor Heat Exposure Index" img={layerImgSource['Outdoor Heat Exposure Index']} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Weather Stations" img={layerImgSource["Weather Stations"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Outdoor Heat Exposure Index" img={layerImgSource['Outdoor Heat Exposure Index']} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Weather Stations" img={layerImgSource["Weather Stations"]} />
               </div>
               <div>
-              <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">Outdoor Heat Exposure</h3>
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Air Temperature" img={layerImgSource["Air Temperature"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Air Heat Index" img={layerImgSource["Air Heat Index"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Mean Radiant Temperature" img={layerImgSource["Mean Radiant Temperature"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Surface Temperature" img={layerImgSource["Surface Temperature"]} />
+                <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">Outdoor Heat Exposure</h3>
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Air Temperature" img={layerImgSource["Air Temperature"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Air Heat Index" img={layerImgSource["Air Heat Index"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Mean Radiant Temperature" img={layerImgSource["Mean Radiant Temperature"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Surface Temperature" img={layerImgSource["Surface Temperature"]} />
               </div>
               <div>
                 <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">Heat Mitigation</h3>
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Tree Canopy" img={layerImgSource["Tree Canopy"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Cool Roofs" img={layerImgSource["Cool Roofs"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Premeable Surfaces" img={layerImgSource["Premeable Surfaces"]} />
-                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} toggle={toggle} setToggle={setToggle} title="Parks" img={layerImgSource["Parks"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Tree Canopy" img={layerImgSource["Tree Canopy"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Cool Roofs" img={layerImgSource["Cool Roofs"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Premeable Surfaces" img={layerImgSource["Premeable Surfaces"]} />
+                <LayerSelectionOption infoExpand={infoExpand} setInfoExpand={setInfoExpand} toggleExpand={toggleExpand} setToggleExpand={setToggleExpand} title="Parks" img={layerImgSource["Parks"]} />
               </div>
             </div>
             <div className='flex justify-between items-center mt-3 px-2 py-6 m-auto w-[calc(100%_-_40px)] h-8 bg-[#4F4F4F] rounded-[0.25rem] cursor-pointer' onClick={() => setExpand(true)}>

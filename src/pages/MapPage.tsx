@@ -54,6 +54,7 @@ const MapPage = () => {
     allFeatures: []
   });
 
+
   const defaultCoordinates: LngLatLike | undefined = [-73.913, 40.763]
   const defaultZoom = 11
 
