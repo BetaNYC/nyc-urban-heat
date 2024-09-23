@@ -12,8 +12,33 @@ import parks from "/icons/parks.svg"
 import ntaFeatureCollection from '../data/nta.geo.json'
 import { Map, Popup, MapLayerMouseEvent } from "mapbox-gl"
 
-import { FeatureCollection, Geometry } from 'geojson';
+import { FeatureCollection, Geometry, Feature, GeoJsonProperties, } from 'geojson';
+
 import { format } from 'd3-format';
+
+const BASE_URL = "https://vcadeeaimofyayyevakl.supabase.co/rest/v1/";
+const API_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo";
+
+const GeoJSONTransformHandler = (data: Feature[]): Feature<Geometry, GeoJsonProperties>[] => {
+  return data.map((d: Feature): Feature<Geometry, GeoJsonProperties> => {
+    // create a deep copy of coordinates
+    const { geometry, properties } = d;
+    let coordinates: any[] = [];
+    if (geometry && 'coordinates' in geometry) {
+      coordinates = JSON.parse(JSON.stringify((geometry as any).coordinates));
+    }
+
+    return {
+      type: "Feature",
+      properties: properties as GeoJsonProperties,
+      geometry: {
+        coordinates,
+        type: geometry.type,
+      } as Geometry,
+    };
+  });
+};
 
 
 const boroughExpand = {
@@ -55,37 +80,55 @@ function createNtaLayer(map: mapboxgl.Map, metric: string, fill_paint_styles: an
     closeButton: true
   });
 
-  map.addSource(sourceId, {
-    type: 'geojson',
-    data: ntaFeatureCollection as FeatureCollection,
-    promoteId: "ntacode"
-  })
+  const url =
 
-  map.addLayer({
-    'id': layerFillId,
-    'type': 'fill',
-    'source': sourceId,
-    'layout': {},
-    'paint': {
-      'fill-color': 'black',
-    }
-  });
+    fetch(`${BASE_URL}nta_metrics?metric=eq.${metric}&apikey=${API_KEY}`).then(async (res) => {
+      const data = await res.json()
+      console.log(data[0])
 
-  map?.addLayer({
-    'id': layerOutlineId,
-    'type': 'line',
-    'source': sourceId,
-    'layout': {},
-    'paint': {
-        'line-color': 'rgba(0,0,0,0.6)',
-        'line-width': [
+      // merge in data with nta
+      const features = GeoJSONTransformHandler((ntaFeatureCollection as FeatureCollection).features).map(feature => {
+        if (feature.properties) {
+          const { ntacode } = feature.properties
+          feature.properties[metric] = +data[0][ntacode]
+        }
+        return feature
+      })
+      
+      // create layers
+      map.addSource(sourceId, {
+        type: 'geojson',
+        data: {
+          type: "FeatureCollection",
+          features
+        } as FeatureCollection,
+        promoteId: "ntacode"
+      })
+
+      map.addLayer({
+        'id': layerFillId,
+        'type': 'fill',
+        'source': sourceId,
+        'layout': {},
+        'paint': fill_paint_styles
+      });
+
+      map?.addLayer({
+        'id': layerOutlineId,
+        'type': 'line',
+        'source': sourceId,
+        'layout': {},
+        'paint': {
+          'line-color': 'rgba(0,0,0,0.6)',
+          'line-width': [
             'case',
             ['boolean', ['feature-state', 'selected'], false],
             2,
             0
-        ]
-    }
-});
+          ]
+        }
+      });
+    })
 
 
 
@@ -110,7 +153,7 @@ export const datasets: Dataset[] = [
           'fill-color': [
             "interpolate",
             ["linear"],
-            ["get", "Heat_Vulnerability"],
+            ["get", "HEAT_VULNERABILITY"],
             0,
             "#FFF3B0",
             3,
@@ -120,8 +163,7 @@ export const datasets: Dataset[] = [
           ],
 
         })
-      },
-      'raw': { name: 'Raw Data' }
+      }
     }
   },
   {
