@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
 import mapboxgl, { MapboxGeoJSONFeature, LngLatLike } from "mapbox-gl"
-import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
 
 import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js'
 import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
@@ -59,6 +58,13 @@ const MapPage = () => {
 
     // set map signal
     m.on('load', () => map.value = m);
+
+    return () => {
+      if (m) {
+        m.remove();
+        map.value = null;
+      }
+    };
   }, []);
 
   
@@ -66,6 +72,7 @@ const MapPage = () => {
     <div className='relative w-full h-full'>
       <Nav />
       <DatasetSelections />
+      <MapDateSelections />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
     </div>
   );

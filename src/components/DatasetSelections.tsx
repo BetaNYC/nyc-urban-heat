@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { map, selectedDataset, isProfileExpanded } from '../pages/MapPage'
 import DatasetSelectionOption from './DatasetSelectionOption'
 
-import { Dataset, datasets } from '../utils/datasets'
+import { Dataset, ViewOptions, datasets, initializeView } from '../utils/datasets'
 import { group } from 'd3-array';
 import { ChevronUpIcon, ChevronDownIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid'
 
@@ -12,24 +12,6 @@ const DatasetSelections = () => {
   const [isExpanded, setExpanded] = useState(true)
   const destroyCallbackRef = useRef<any>(null);
  
-  function initializeView(dataset: Dataset) {
-    // fail states
-    if (!dataset.currentView) return
-    if (!map.value) return
-
-    // remove the previous view
-    if(destroyCallbackRef.current) destroyCallbackRef.current()
-
-    const view = dataset.views[dataset.currentView]
-    if (view.init) {
-      console.log(`init ${dataset.name}, ${dataset.currentView}`)
-      destroyCallbackRef.current = view.init(map.value);
-    } else {
-      console.error(`${dataset.name}, ${dataset.currentView} doesn't have an init func`)
-      destroyCallbackRef.current = null
-    }
-  }
-
   const handleDatasetChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
     e.stopPropagation()
     // set current view to be the first one, if it is null
@@ -41,7 +23,9 @@ const DatasetSelections = () => {
     // toggle off profile
     isProfileExpanded.value = false
 
-    initializeView(dataset)
+    initializeView(dataset, map.value).then(dataset => {
+      selectedDataset.value = { ...dataset }
+    })
   }
 
   const handleViewChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
@@ -55,9 +39,10 @@ const DatasetSelections = () => {
       } else {
         dataset.currentView = views[0]
       }
-      selectedDataset.value = { ...dataset }
 
-      initializeView(dataset)
+      initializeView(dataset, map.value).then(dataset => {
+        selectedDataset.value = { ...dataset }
+      })
     }
   }
 
@@ -79,11 +64,11 @@ const DatasetSelections = () => {
             <div className='h-[calc(100%_-_7.25rem)] overflow-y-scroll overflow-hidden scrollbar'>
 
               {Array.from(groupedDataset).map(([category, values]) => (
-                <div key={category}>
+                <div key={`ds-cat-${category}`}>
                   {category !== '' ? <h3 className="px-6 pt-3 pb-1 text-regular text-[#BDBDBD]">{category}</h3> : ''}
                   <>
                     {values.map((dataset: Dataset) => <DatasetSelectionOption
-                      key={dataset.name}
+                      key={`ds-${dataset.name}`}
                       dataset={dataset}
                       handleDatasetChange={handleDatasetChange}
                       handleViewChange={handleViewChange}

@@ -1,115 +1,96 @@
-import { useState, useContext, Dispatch, SetStateAction, } from "react"
-
-import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
-import { useQuery } from 'react-query';
-
-import { fetchSurfaceTemp } from "../utils/api.ts"
-
-
+import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import { CalendarDaysIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
+import { formatDateString } from "../utils/format"
+import { map, selectedDataset, isProfileExpanded } from '../pages/MapPage'
+import { computed } from "@preact/signals-react"
+import { group } from 'd3-array';
+import { initializeView } from "../utils/datasets"
 
 
-type Props = {
-  date: string,
-  year: string
-  timeScale: 'year' | 'date' | "default",
-  setDate: Dispatch<SetStateAction<string>>
-  setYear: Dispatch<SetStateAction<string>>
-  profileExpanded: boolean
-}
-
-const formatDateString = (dateString: string) => {
-  const year = dateString.slice(0, 4);
-  const month = dateString.slice(4, 6);
-  const day = dateString.slice(6, 8);
-
-
-  return `${month}/${day}/${year}`;
-};
-
-
-
-const MapDateSelections = ({ date, timeScale, setDate, setYear, year, profileExpanded }: Props) => {
-
-  const { layer } = useContext(MapLayersContext) as MapLayersContextType
-  const [expand, setExpand] = useState(false)
+const MapDateSelections = () => {
+  const [isExpanded, setIsExpanded] = useState(false)
   const isTablet = useMediaQuery({
     query: '(min-width: 768px)'
   })
 
+  function formatDate(date: string) {
+    if (date.startsWith('20') && date.length == 8) return formatDateString(date)
+    return date
+  }
 
-  const surfaceTemperatureQuery = useQuery({ queryKey: ['temperature'], queryFn: fetchSurfaceTemp })
-  //@ts-ignore
-  const clippedPMTiles = surfaceTemperatureQuery.data?.filter(d => d.filename.includes("ST_Clipped_")) || [];
-  const years = ["2023", "2022", "2021", "2020", "2019", "2017", "2016", "2014", "2013"]
+  const dates = computed(() => {
+    const dates = selectedDataset.value?.dates ?? []
+    // sort dates and create an new object that can be grouped
+    const datesObj = dates.sort((a, b) => b.localeCompare(a)).map(date => {
+      let formattedDate = date
+      let group = ''
+      // check if the date contains a year/month/date
+      if (date.startsWith('20') && date.length == 8) {
+        formattedDate = formatDateString(date)
+        group = date.slice(0, 4)
+      }
 
+      return {
+        date,
+        formattedDate,
+        group,
+      }
+    })
 
-  return (
-    <div className={`absolute  ${profileExpanded ? "left-6 top-[9.25rem]" : "left-[22rem] top-[4.625rem]"} bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`} onClick={() => setExpand(!expand)}>
-      <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
-        <CalendarDaysIcon width={24} height={24} className="text-[#BDBDBD]" />
-        {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">{timeScale === 'date' ? formatDateString(date) : timeScale === 'year' ? year : "Available Datasets"}</div>}
-        {expand && layer ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]"/>
-          : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]"/>}
-      </div>
-      <div className={`flex flex-col ${timeScale === 'year' ? "gap-0" : "gap-4"} my-3 w-full ${expand && timeScale === 'date' ? "h-[60vh] overflow-scroll" : expand && timeScale === 'year' ? "overflow-scroll" : "hidden"}`}>
-        {
-          timeScale === "date" && (
-            years.map((y) => {
-              return (
-                <div className="" key={y}>
-                  <h3 className="px-5 font-medium text-regular text-[#BDBDBD]">{y}</h3>
+    return group(datesObj, d => d.group)
+  })
+
+  function handleDateChange(date: string) {
+    if (selectedDataset.value) {
+      selectedDataset.value.currentDate = date
+
+      initializeView(selectedDataset.value, map.value).then(dataset => {
+        selectedDataset.value = { ...dataset }
+      })
+    }
+  }
+
+  if (selectedDataset.value?.dates) {
+    return (
+      <div className={`absolute ${isProfileExpanded ? "left-[22rem] top-[4.625rem]" : "left-6 top-[9.25rem]"}
+           bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`}
+        onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
+          <CalendarDaysIcon width={24} height={24} className="text-[#BDBDBD]" />
+          {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">
+            {selectedDataset.value?.currentDate ? formatDate(selectedDataset.value?.currentDate) : 'Available Datasets'}
+          </div>}
+          {isExpanded ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]" />
+            : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]" />}
+        </div>
+        <div className={`flex flex-col gap-0 my-3 w-full ${isExpanded ? "h-[60vh] overflow-scroll" : "hidden"}`}>
+          {Array.from(dates.value).map(([category, values]) => (
+            <div key={`date-cat-${category}`}>
+              {category !== '' ? (
+                // divider
+                <>
+                  <h3 className="px-5 pt-2 font-medium text-regular text-[#BDBDBD]">{category}</h3>
                   <div className='my-2 h-[1px] bg-[#828282]'></div>
-                  <div className="flex flex-col items-start ">
-                    {
-                      //@ts-ignore
-                      clippedPMTiles.filter(d => d.date.includes(y)).map((d) => (
-                        <div key={d.date} className="pl-12 py-2 w-full font-medium text-regular text-[#F2F2F2] hover:bg-[#6A6A6A]" onClick={() => {
-                          setDate(d.date)
-                        }}>
-                          {formatDateString(d.date)}
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-              )
-            })
-          )
-        }
-        {
-          timeScale === 'year' && (
-            years.map((y) => {
-              return (
-                <div className=" text-[#F2F2F2] hover:bg-[#6A6A6A]" key={y} onClick={() => setYear(y)}>
-                  <h3 className="my-2 px-5 font-medium text-regular ">{y}</h3>
-                  <div className=' h-[1px] bg-[#828282]'></div>
-                </div>
-              )
-            })
-          )
-        }
+                </>
+              ) : ''}
+              <>
+                {values.map((date: any) => <div className=" text-[#F2F2F2] hover:bg-[#6A6A6A]" key={`date-${date}`} onClick={() => handleDateChange(date.date)}>
+                  <h3 className="my-2 px-5 font-medium text-regular ">{date.formattedDate}</h3>
+                  <div className='h-[1px] bg-[#828282]'></div>
+                </div>)}
+              </>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
+
+  return (<></>)
 }
 
-export default MapDateSelections
+export default MapDateSelections;
 
 
-{/* <div className="">
-<h3 className="px-5 font-medium text-regular text-[#4F4F4F]">2022</h3>
-<div className='my-2  h-[1px] bg-[#828282]'></div>
-<div className="flex flex-col items-start">
-  {
-    //@ts-ignore
-    clippedPMTiles.filter(d => d.date.includes("2022")).map((d) => (
-      <div key={d.date} className="px-12 py-2 w-full font-medium text-regular hover:bg-[#E0E0E0]" onClick={() => setDate(d.date)}>
-        {formatDateString(d.date)}
-      </div>
-    ))
-  }
-</div>
-</div> */}

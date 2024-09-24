@@ -2,13 +2,13 @@ import * as mapboxPmTiles from 'mapbox-pmtiles';
 import mapboxgl from "mapbox-gl"
 
 
-export function viewSurfaceTemperature(map: mapboxgl.Map) {
+export function viewSurfaceTemperature(map: mapboxgl.Map, date: string = '20230902') {
     const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
     //@ts-ignore
     mapboxgl.Style.setSourceType(SOURCE_TYPE, PmTilesSource);
 
-    const PMTILES_URL = `https://urban-heat-portal-tiles.s3.amazonaws.com/ST_Clipped_20230902.pmtiles`;
+    const PMTILES_URL = `https://urban-heat-portal-tiles.s3.amazonaws.com/ST_Clipped_${date}.pmtiles`;
     PmTilesSource.getHeader(PMTILES_URL).then(header => {
         const bounds = [
             header.minLon,
