@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { map, selectedDataset, isProfileExpanded } from '../pages/MapPage'
 import DatasetSelectionOption from './DatasetSelectionOption'
 
@@ -10,19 +10,23 @@ const groupedDataset = group(datasets, d => d.group)
 
 const DatasetSelections = () => {
   const [isExpanded, setExpanded] = useState(true)
-  const [destoryView, setDestoryView] = useState<any>(null)
-
+  const destroyCallbackRef = useRef<any>(null);
+ 
   function initializeView(dataset: Dataset) {
     // fail states
     if (!dataset.currentView) return
     if (!map.value) return
 
+    // remove the previous view
+    if(destroyCallbackRef.current) destroyCallbackRef.current()
+
     const view = dataset.views[dataset.currentView]
     if (view.init) {
       console.log(`init ${dataset.name}, ${dataset.currentView}`)
-      view.init(map.value)
+      destroyCallbackRef.current = view.init(map.value);
     } else {
       console.error(`${dataset.name}, ${dataset.currentView} doesn't have an init func`)
+      destroyCallbackRef.current = null
     }
   }
 

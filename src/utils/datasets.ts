@@ -15,6 +15,8 @@ import { Map, Popup, MapLayerMouseEvent } from "mapbox-gl"
 import { FeatureCollection, Geometry, Feature, GeoJsonProperties, } from 'geojson';
 
 import { format } from 'd3-format';
+import { cachedFetch } from "./cache"
+import { viewSurfaceTemperature } from "./viewSurfaceTemperature"
 
 const BASE_URL = "https://vcadeeaimofyayyevakl.supabase.co/rest/v1/";
 const API_KEY =
@@ -54,7 +56,7 @@ type IconType = typeof outdoorHeatExposureIndex;
 export interface View {
   name: string;
   legend?: any;
-  init?: (map: Map) => void;
+  init?: (map: Map) => () => void;
 }
 
 interface CollectionOfViews {
@@ -81,10 +83,7 @@ function createNtaLayer(map: mapboxgl.Map, metric: string, fill_paint_styles: an
   });
 
   const url =
-
-    fetch(`${BASE_URL}nta_metrics?metric=eq.${metric}&apikey=${API_KEY}`).then(async (res) => {
-      const data = await res.json()
-      console.log(data[0])
+    cachedFetch(`${BASE_URL}nta_metrics?metric=eq.${metric}&apikey=${API_KEY}`).then(async (data) => {
 
       // merge in data with nta
       const features = GeoJSONTransformHandler((ntaFeatureCollection as FeatureCollection).features).map(feature => {
@@ -130,11 +129,10 @@ function createNtaLayer(map: mapboxgl.Map, metric: string, fill_paint_styles: an
       });
     })
 
-
-
-
-  return () => {
-    console.log('remove layer')
+  return function onDestory() {
+    map.removeLayer(layerFillId)
+    map.removeLayer(layerOutlineId)
+    map.removeSource(sourceId)
   }
 }
 
@@ -212,7 +210,7 @@ export const datasets: Dataset[] = [
     currentView: null,
     views: {
       'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
+      'raw': { name: 'Raw Data', init: (map) => viewSurfaceTemperature(map)}
     }
   },
   {
