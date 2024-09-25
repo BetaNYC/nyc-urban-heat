@@ -11,11 +11,12 @@ import Legends from '../components/Legends.js';
 import "./Map.css"
 import { signal } from '@preact/signals-react'
 import { Dataset, View } from '../utils/datasets.js';
+import { NtaProfileData } from '../types.js';
 
 
 export const map = signal<mapboxgl.Map | null>(null)
 export const selectedDataset = signal<Dataset | null>(null)
-export const profileData = signal<any>(null)
+export const profileData = signal<NtaProfileData | null>(null)
 export const isProfileExpanded = signal(false)
 
 
@@ -64,6 +65,12 @@ const MapPage = () => {
   return (
     <div className='relative w-full h-full'>
       <Nav />
+      {/* {
+        selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
+      } */}
+      {
+        selectedDataset.value?.name === "Outdoor Heat Exposure Index" && <NeighborhoodProfile />
+      }
       <DatasetSelections />
       <MapDateSelections />
       <Legends />

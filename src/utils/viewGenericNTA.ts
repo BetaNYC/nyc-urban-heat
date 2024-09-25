@@ -108,6 +108,7 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
                             //dispatch data to profile
                             const data = {
                                 metrics,
+                                currentMetric: metric,
                                 ntacode,
                                 boroname,
                                 ntaname
