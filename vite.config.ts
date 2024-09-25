@@ -6,7 +6,13 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: "/nyc-urban-heat",
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: [
+          ['module:@preact/signals-react-transform']
+        ]
+      }
+    }),
     viteCommonjs()
   ],
 })

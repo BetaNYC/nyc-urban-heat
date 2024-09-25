@@ -1,63 +1,49 @@
-import { useState, useContext, useEffect, Dispatch, SetStateAction } from 'react'
-import { MapLayersContext, MapLayersContextType } from '../contexts/mapLayersContext'
-
-
+import { useState } from 'react'
 import { XMarkIcon, InformationCircleIcon, ListBulletIcon } from '@heroicons/react/24/outline'
+import { selectedDataset, isProfileExpanded } from '../pages/MapPage'
+import { computed } from '@preact/signals-react'
 
+const Legends = () => {
+    const [isLegendExpanded, setIsLegendExpanded] = useState(true)
 
-type Props = {
-    profileExpanded: boolean
-    legendShown: {
-        weatherStations: boolean,
-        treeCanopy: boolean,
-        surfaceTemperature: boolean,
-        coolRoofs: boolean,
-    }
-    setLegendShown:Dispatch<SetStateAction<{
-        weatherStations: boolean,
-        treeCanopy: boolean,
-        surfaceTemperature: boolean,
-        coolRoofs: boolean,
-    }>>
-}
-
-const Legends = ({ profileExpanded, legendShown, setLegendShown }: Props) => {
-
-    const { layer } = useContext(MapLayersContext) as MapLayersContextType
-
-    const closeClickHandler = () => {
-        const targetLegend = (layer!.charAt(0).toLowerCase() + layer!.slice(1)).replace(/\s+/g, '')
-        setLegendShown(prevLegendShown => ({ ...prevLegendShown, [targetLegend]: false }));
-    }
-
-    const openClickHandler = () => {
-        if (!layer) return;
-        console.log('aa')
-
-        const targetLegend = (layer.charAt(0).toLowerCase() + layer.slice(1)).replace(/\s+/g, '');
-
-        //@ts-ignore
-        if (legendShown[targetLegend] === false) {
-            setLegendShown(prevLegendShown => ({ ...prevLegendShown, [targetLegend]: true }));
+    const handleClick = () => setIsLegendExpanded(!isLegendExpanded)
+    const name = computed(() => selectedDataset.value?.name)
+    const legend = computed(() => {
+        if (selectedDataset.value?.currentView) {
+            return selectedDataset.value?.views[selectedDataset.value.currentView].legend
         }
-    };
-
+    })
     return (
         <div>
             <div
-                className={`absolute ${profileExpanded ? "left-6" : "right-[4.8rem]"} bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
-                onClick={openClickHandler}
+                className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
+                onClick={handleClick}
             >
                 <ListBulletIcon width={18} height={18} />
             </div>
-            <div className={`absolute ${profileExpanded ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
+            <div className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
                 {
-                    //@ts-ignore
-                    layer === "Weather Stations" && legendShown["weatherStations"] === true && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                    name.value === "Outdoor Heat Exposure Index" && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                        <div className='flex gap-2 mb-2 items-center font-medium'>
+                            <h3 className='text-[#2D2D2D]'>Outdoor Heat Exposure Index</h3>
+                            <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={handleClick} />
+                        </div>
+                        <div className='flex items-center'>
+                            {legend.value?.map((item: any) => (
+                                <div key={`legend-${item.label}`} className='flex flex-col items-center gap-1'>
+                                    <span className="w-10 h-4 block" style={{ backgroundColor: item.value }} />
+                                    {item.label}
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                }
+                {
+                    name.value === "Weather Stations" && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='mb-4'>
                             <div className='flex gap-4 mb-2 items-center font-medium'>
                                 <h3 className='text-[#2D2D2D]'>Extreme Heat Advisory Alert</h3>
-                                <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={closeClickHandler} />
+                                <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={handleClick} />
                             </div>
                             <div className='flex items-center gap-3'>
                                 <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
@@ -99,10 +85,10 @@ const Legends = ({ profileExpanded, legendShown, setLegendShown }: Props) => {
                     </div>
                 }
                 {
-                    layer === "Tree Canopy" && legendShown["treeCanopy"] === true && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    name.value === "Tree Canopy" && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
-                            <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
+                            <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='my-[0.25rem] h-5 bg-[#345C67]'>
                         </div>
@@ -112,10 +98,10 @@ const Legends = ({ profileExpanded, legendShown, setLegendShown }: Props) => {
                     </div>
                 }
                 {
-                    layer === "Surface Temperature" && legendShown["surfaceTemperature"] === true && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    name.value === "Surface Temperature" && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular'>
                             <p>Surface Temperature</p>
-                            <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={closeClickHandler} />
+                            <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
                             <div className='w-[50%] h-full bg-gradient-to-r from-[#202E41] via-[#BED0DD] to-[#BED0DD]'></div>

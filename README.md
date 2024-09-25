@@ -1,30 +1,41 @@
-# React + TypeScript + Vite
+# NYC Urban Heat Map
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Setup
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+```bash
+npm install
+npm run dev
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Signal-based State Management
+
+We utilize [signals](https://preactjs.com/blog/introducing-signals/) for efficient state management across components.
+
+### Key Concepts
+
+1. **Accessing state**: Use `STATE_VAR.value`
+2. **Setting state**: Assign with `STATE_VAR.value = ...`
+3. **Reacting to changes**: Use `effect(() => { ... })` to perform actions when a signal changes
+
+## Important Signals
+
+| Signal Name | Location | Description |
+|-------------|----------|-------------|
+| `map` | MapPage.tsx | `mapboxgl.Map` object for managing sources and layers |
+| `selectedDataset` | MapPage.tsx | Currently selected dataset |
+| `profileSettings` | MapPage.tsx | Settings and data for the profile |
+| `isProfileExpanded` | MapPage.tsx | Boolean indicating if the profile should be shown |
+
+### Datasets (./utils/datasets.ts)
+
+A dataset object contains many attributes:
+
+1. **Views**:
+   - An array of `View` objects
+   - Each `View` contains:
+     - `name`: Identifier for the view
+     - `init`: Function that sets up sources and layers
+       - Returns a cleanup function to remove sources and layers when no longer needed
+
+2. **CurrentView**:
+   - String referencing the currently selected view for the dataset
