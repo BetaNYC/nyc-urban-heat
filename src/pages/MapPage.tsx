@@ -1,13 +1,6 @@
 import { useEffect, useRef } from 'react'
 import mapboxgl, { MapboxGeoJSONFeature, LngLatLike } from "mapbox-gl"
 
-import useOutdoorHeatExposureNTALayer from '../hooks/useOutdoorHeatExposureNTALayer.js'
-import useSurfaceTemperatureLayer from '../hooks/useSurfaceTemperatureLayer.js';
-import useWeatherStationLayer from '../hooks/useWeatherStationsLayer.js';
-import useTreeCanopyLayer from '../hooks/useTreeCanopyLayer.js';
-import useNTALayer from '../hooks/useNTALayer.js'
-
-
 import Nav from "../components/Nav"
 import DatasetDownloadPopup from '../components/DatasetDownloadPopup.js'
 import NeighborhoodProfile from '../components/NeighborhoodProfile.js';
@@ -15,7 +8,6 @@ import DatasetSelections from '../components/DatasetSelections.js';
 import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
-import { NtaProfileData } from '../types.js'
 import "./Map.css"
 import { signal } from '@preact/signals-react'
 import { Dataset, View } from '../utils/datasets.js';
@@ -23,12 +15,13 @@ import { Dataset, View } from '../utils/datasets.js';
 
 export const map = signal<mapboxgl.Map | null>(null)
 export const selectedDataset = signal<Dataset | null>(null)
+export const profileData = signal<any>(null)
 export const isProfileExpanded = signal(false)
 
 
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  
+
   const defaultCoordinates: LngLatLike | undefined = [-73.913, 40.763]
   const defaultZoom = 11
 
@@ -67,12 +60,13 @@ const MapPage = () => {
     };
   }, []);
 
-  
+
   return (
     <div className='relative w-full h-full'>
       <Nav />
       <DatasetSelections />
       <MapDateSelections />
+      <Legends />
       <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
     </div>
   );

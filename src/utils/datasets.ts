@@ -21,9 +21,14 @@ export interface ViewOptions {
   date?: string
 }
 
+export interface LegendItem {
+  label: string | number,
+  value: string
+}
+
 export interface View {
   name: string;
-  legend?: any;
+  legend?: LegendItem[];
   init?: (map: Map, options?: ViewOptions) => () => void;
 }
 
@@ -37,7 +42,7 @@ export interface Dataset {
   icon: IconType;
   info?: string;
   currentView: null | string;
-  dates?: string[]; 
+  dates?: string[];
   currentDate?: null | string;
   getDates?: () => Promise<string[]>;
   views: CollectionOfViews;
@@ -53,21 +58,28 @@ export const datasets: Dataset[] = [
     views: {
       'nta': {
         name: 'NTA Aggregated',
-        legend: [],
-        init: (map) => createNtaLayer(map, 'HEAT_VULNERABILITY', {
-          'fill-color': [
-            "interpolate",
-            ["linear"],
-            ["get", "HEAT_VULNERABILITY"],
-            0,
-            "#FFF3B0",
-            3,
-            "#D66852",
-            5,
-            "#511314"
-          ],
+        legend: [
+          { label: 1, value: '#f1c490' }, 
+          { label: 2, value: '#e39671' }, 
+          { label: 3, value: '#d66852' }, 
+          { label: 4, value: '#933d33' },
+          { label: 5, value: '#511314' }],
+        init: function (map) {
+          return createNtaLayer(map, 'HEAT_VULNERABILITY', this.name, {
+            'fill-color': [
+              "interpolate",
+              ["linear"],
+              ["get", "HEAT_VULNERABILITY"],
+              0,
+              "#FFF3B0",
+              3,
+              "#D66852",
+              5,
+              "#511314"
+            ],
 
-        })
+          })
+        }
       }
     }
   },
@@ -175,7 +187,7 @@ export async function initializeView(dataset: Dataset, map: mapboxgl.Map | null)
 
   // remove the previous view
   try {
-    if(destroyCallback) destroyCallback()
+    if (destroyCallback) destroyCallback()
   } catch (error) {
     destroyCallback = null
   }
@@ -184,12 +196,12 @@ export async function initializeView(dataset: Dataset, map: mapboxgl.Map | null)
   if (view.init) {
     console.log(`init ${dataset.name}, ${dataset.currentView}`)
     const options: ViewOptions = {}
-    
+
     // set up dates for the dataset
-    if(dataset.getDates){
+    if (dataset.getDates) {
       dataset.dates = await dataset.getDates()
       // set the first option, if there is no currentDate
-      if(!dataset.currentDate){
+      if (!dataset.currentDate) {
         dataset.currentDate = dataset.dates.at(-1)
       }
       options.date = dataset.currentDate

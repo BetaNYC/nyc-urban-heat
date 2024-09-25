@@ -1,5 +1,3 @@
-import { format } from 'd3-format';
-
 export const formatDateString = (dateString: string) => {
     const year = dateString.slice(0, 4);
     const month = dateString.slice(4, 6);
