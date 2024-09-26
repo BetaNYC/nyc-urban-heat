@@ -70,13 +70,19 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
             map.on('click', layerFillId, (e: MapLayerMouseEvent) => {
                 if (e.features) {
                     const coordinates = e.lngLat
-                    const {ntacode, boroname, ntaname} = e.features[0].properties as any
-                    
+                    const { ntacode, boroname, ntaname } = e.features[0].properties as any
+
                     getNTAInfo(ntacode).then(data => {
                         // convert data to map 
                         const metrics = new Map<string, string>(data.map((d: any) => [d.metric, d[ntacode]]))
-                        const PCT_TREES = format('.1f')(+(metrics.get('PCT_TREES') ?? '' ))
-                        const PCT_BUILDINGS_COOLROOF = format('.1f')(+(metrics.get('PCT_BUILDINGS_COOLROOF') ?? '' ))
+                        let current_metric = metrics.has(metric) ? format('.1f')(+(metrics.get(metric) ?? '')) : 'N/A'
+                        
+                        if(metric.startsWith('PCT')){
+                            current_metric += '%'
+                        }
+                        
+                        const PCT_TREES = format('.1f')(+(metrics.get('PCT_TREES') ?? ''))
+                        const PCT_BUILDINGS_COOLROOF = format('.1f')(+(metrics.get('PCT_BUILDINGS_COOLROOF') ?? ''))
 
                         const title = `
                             <div class="tooltip-top">
@@ -86,7 +92,7 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
                                 </div>
                                 <div class="text-center">
                                     <span class="text-xxs leading-3">${layerName}</span>
-                                    <span class="text-xl font-mono font-bold">${metrics.get(metric)}</span>
+                                    <span class="text-xl font-mono font-bold">${current_metric}</span>
                                 </div>
                             </div>
                         `
@@ -118,14 +124,14 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
                         })
 
                         if (popup) popup.remove();
-                        
+
 
                         popup = new Popup({
                             closeButton: true
                         }).setLngLat(coordinates).setDOMContent(divElement).addTo(map);
 
-                         // unoutline previous, then outline
-                         if (clickedNtacode !== null) {
+                        // unoutline previous, then outline
+                        if (clickedNtacode !== null) {
                             map.setFeatureState(
                                 { source: sourceId, id: clickedNtacode },
                                 { selected: false }

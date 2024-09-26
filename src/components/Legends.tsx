@@ -7,25 +7,29 @@ const Legends = () => {
     const [isLegendExpanded, setIsLegendExpanded] = useState(true)
 
     const handleClick = () => setIsLegendExpanded(!isLegendExpanded)
-    const name = computed(() => selectedDataset.value?.name)
+    const datasetName = computed(() => selectedDataset.value?.name)
+    const viewName = computed(() => selectedDataset.value?.currentView)
     const legend = computed(() => {
         if (selectedDataset.value?.currentView) {
             return selectedDataset.value?.views[selectedDataset.value.currentView].legend
         }
     })
-    return (
-        <div>
-            <div
-                className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
-                onClick={handleClick}
-            >
-                <ListBulletIcon width={18} height={18} />
-            </div>
+
+    if (!isLegendExpanded) {
+        return (<div
+            className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
+            onClick={handleClick}
+        >
+            <ListBulletIcon width={18} height={18} />
+        </div>)
+    } else {
+        return (
+
             <div className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
                 {
-                    name.value === "Outdoor Heat Exposure Index" && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                    ["Outdoor Heat Exposure Index", "Tree Canopy"].includes(datasetName.value ?? '') && viewName.value == 'nta' && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='flex gap-2 mb-2 items-center font-medium'>
-                            <h3 className='text-[#2D2D2D]'>Outdoor Heat Exposure Index</h3>
+                            <h3 className='text-[#2D2D2D]'>{datasetName.value}</h3>
                             <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex items-center'>
@@ -39,7 +43,7 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    name.value === "Weather Stations" && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                    datasetName.value === "Weather Stations" && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='mb-4'>
                             <div className='flex gap-4 mb-2 items-center font-medium'>
                                 <h3 className='text-[#2D2D2D]'>Extreme Heat Advisory Alert</h3>
@@ -85,7 +89,7 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    name.value === "Tree Canopy" && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[12rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={handleClick} />
@@ -98,7 +102,7 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    name.value === "Surface Temperature" && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
+                    datasetName.value === "Surface Temperature" && <div className='p-[1rem] w-[15rem] text-[#4F4F4F] bg-[#F4F4F4] rounded-[1rem]'>
                         <div className='flex justify-between text-regular'>
                             <p>Surface Temperature</p>
                             <XMarkIcon width={24} height={24} className='cursor-pointer' onClick={handleClick} />
@@ -118,9 +122,8 @@ const Legends = () => {
                     layer === 'Cool Roofs' && shown['']
                 } */}
             </div>
-        </div>
-
-    )
+        )
+    }
 }
 
 export default Legends
