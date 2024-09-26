@@ -14,6 +14,7 @@ import { cachedFetch } from "./cache"
 import { viewSurfaceTemperature } from "./viewSurfaceTemperature"
 import { createNtaLayer } from "./viewGenericNTA"
 import { API_KEY, BASE_URL } from "./api"
+import { viewTreeCanopy } from "./viewTreeCanopy"
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -143,8 +144,36 @@ export const datasets: Dataset[] = [
     icon: treeCanopy,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
+      'nta': {
+        name: 'NTA Aggregated',
+        legend: [
+          { label: '10%', value: '#edf8e9' }, 
+          { label: '20%', value: '#bae4b3' }, 
+          { label: '30%', value: '#74c476' }, 
+          { label: '40%', value: '#31a354' },
+          { label: '50%', value: '#006d2c' }],
+        init: function (map) {
+          return createNtaLayer(map, 'PCT_TREES', this.name, {
+            'fill-color': [
+              "interpolate",
+              ["linear"],
+              ["get", "PCT_TREES"],
+              10,
+              "#edf8e9",
+              20,
+              "#bae4b3",
+              30,
+              "#74c476",
+              40,
+              "#31a354",
+              50,
+              "#006d2c",
+            ],
+
+          })
+        }
+      },
+      'raw': { name: 'Raw Data', init: (map) => viewTreeCanopy(map) }
     }
   },
   {
