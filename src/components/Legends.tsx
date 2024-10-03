@@ -27,7 +27,13 @@ const Legends = () => {
 
             <div className={`absolute ${isProfileExpanded.value ? "left-6" : "right-[4.8rem]"} bottom-6 drop-shadow-xl z-20`}>
                 {
-                    ["Outdoor Heat Exposure Index", "Tree Canopy"].includes(datasetName.value ?? '') && viewName.value == 'nta' && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
+                    (
+                        Array.isArray(legend.value) && 
+                        legend.value.length && 
+                        legend.value[0] && 
+                        legend.value[0].hasOwnProperty('label') &&
+                        legend.value[0].hasOwnProperty('value')
+                    ) && viewName.value == 'nta' && <div className='p-5 bg-[#FFF] rounded-[0.5rem]'>
                         <div className='flex gap-2 mb-2 items-center font-medium'>
                             <h3 className='text-[#2D2D2D]'>{datasetName.value}</h3>
                             <XMarkIcon width={20} height={20} className='text-[#2D2D2D] cursor-pointer' onClick={handleClick} />

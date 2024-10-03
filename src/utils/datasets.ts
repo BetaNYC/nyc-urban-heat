@@ -15,6 +15,7 @@ import { viewSurfaceTemperature } from "./viewSurfaceTemperature"
 import { createNtaLayer } from "./viewGenericNTA"
 import { API_KEY, BASE_URL } from "./api"
 import { viewTreeCanopy } from "./viewTreeCanopy"
+import { nta_dataset_info } from "../App"
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -131,10 +132,10 @@ export const datasets: Dataset[] = [
     dates: [],
     currentDate: null,
     getDates: async () => {
-      return (await cachedFetch(`${BASE_URL}nta_metrics?select=date&type=eq.surface_temp&apikey=${API_KEY}`)).map((d: any) => d.date).sort()
+      return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
     },
     views: {
-      'nta': { name: 'NTA Aggregated' },
+      // 'nta': { name: 'NTA Aggregated' },
       'raw': { name: 'Raw Data', init: (map, options) => viewSurfaceTemperature(map, options?.date) }
     }
   },
@@ -182,7 +183,35 @@ export const datasets: Dataset[] = [
     icon: coolRoofs,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
+      'nta': {
+        name: 'NTA Aggregated',
+        legend: [
+          { label: '0%', value: '#f1eef6' }, 
+          { label: '20%', value: '#bdc9e1' }, 
+          { label: '40%', value: '#74a9cf' }, 
+          { label: '60%', value: '#2b8cbe' },
+          { label: '80%', value: '#045a8d' }],
+        init: function (map) {
+          return createNtaLayer(map, 'PCT_AREA_COOLROOF', this.name, {
+            'fill-color': [
+              "interpolate",
+              ["linear"],
+              ["get", "PCT_AREA_COOLROOF"],
+              0,
+              "#f1eef6",
+              20,
+              "#bdc9e1",
+              40,
+              "#74a9cf",
+              60,
+              "#2b8cbe",
+              80,
+              "#045a8d",
+            ],
+
+          })
+        }
+      },
       'raw': { name: 'Raw Data' }
     }
   },

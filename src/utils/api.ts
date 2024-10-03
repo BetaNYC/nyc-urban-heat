@@ -6,10 +6,6 @@ export const API_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjYWRlZWFpbW9meWF5eWV2YWtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTcwNzQzNzgsImV4cCI6MjAzMjY1MDM3OH0.clu7Zh0jdJWJVxbwyoyeILH33pew1QSpxeYHzAq4Auo";
 
 
-export function getNTAInfo(nta: string){
-  return cachedFetch(`${BASE_URL}nta_metrics?select=metric,${nta}&apikey=${API_KEY}`)
-}
-
 export const fetchStationHeatStats = async () => {
   const res = await fetch(`${BASE_URL}stations_summerstat?select=*&apikey=${API_KEY}`);
   return res.json();
