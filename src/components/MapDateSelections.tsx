@@ -19,7 +19,6 @@ const MapDateSelections = () => {
     if (date.startsWith('20') && date.length == 8) return formatDateString(date)
     return date
   }
-
   const dates = computed(() => {
     const dates = selectedDataset.value?.dates ?? []
     // sort dates and create an new object that can be grouped
@@ -41,6 +40,9 @@ const MapDateSelections = () => {
 
     return group(datesObj, d => d.group)
   })
+
+  const years = computed(() => selectedDataset.value?.years ?? [])
+  console.log(years)
 
   function handleDateChange(date: string) {
     if (selectedDataset.value) {
@@ -83,6 +85,36 @@ const MapDateSelections = () => {
               </>
             </div>
           ))}
+        </div>
+      </div>
+    )
+  }
+
+  if (selectedDataset.value?.years) {
+    return (
+      <div className={`absolute ${isProfileExpanded ? "left-[22rem] top-[4.625rem]" : "left-6 top-[9.25rem]"}
+      bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`}
+        onClick={() => setIsExpanded(!isExpanded)}>
+        <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
+          <CalendarDaysIcon width={24} height={24} className="text-[#BDBDBD]" />
+          {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">
+            {selectedDataset.value?.currentYear ? selectedDataset.value?.currentYear : 'Available Datasets'}
+          </div>}
+          {isExpanded ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]" />
+            : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]" />}
+        </div>
+        <div className={`flex flex-col gap-0 my-3 w-full ${isExpanded ? "overflow-scroll" : "hidden"}`}>
+          {
+
+            Array.from(years.value).map((y: any) => {
+              return (
+                <div className="hover:bg-[#828282] text-[#4F4F4F] hover:text-white" key={y} >
+                  <h3 className="my-2 px-5 font-medium text-regular ">{y}</h3>
+                  <div className=' h-[1px] bg-[#828282]'></div>
+                </div>
+              )
+            })
+          }
         </div>
       </div>
     )

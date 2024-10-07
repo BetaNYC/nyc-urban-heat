@@ -1,30 +1,32 @@
-import outdoorHeatExposureIndex from "/icons/outdoor_heat_exposure_index.svg"
-import weatherStations from "/icons/weather_stations.svg"
-import airTemperature from "/icons/air_temperature.svg"
-import airHeatIndex from "/icons/air_heat_index.svg"
-import meanRadiantTemperature from "/icons/mean_radiant_temperature.svg"
-import surfaceTemperature from "/icons/surface_temperature.svg"
-import treeCanopy from "/icons/tree_canopy.svg"
-import coolRoofs from "/icons/cool_roofs.svg"
-import premeableSurface from "/icons/permeable_surface.svg"
-import parks from "/icons/parks.svg"
+import outdoorHeatExposureIndex from "/icons/outdoor_heat_exposure_index.svg";
+import weatherStations from "/icons/weather_stations.svg";
+import airTemperature from "/icons/air_temperature.svg";
+import airHeatIndex from "/icons/air_heat_index.svg";
+import meanRadiantTemperature from "/icons/mean_radiant_temperature.svg";
+import surfaceTemperature from "/icons/surface_temperature.svg";
+import treeCanopy from "/icons/tree_canopy.svg";
+import coolRoofs from "/icons/cool_roofs.svg";
+import premeableSurface from "/icons/permeable_surface.svg";
+import parks from "/icons/parks.svg";
 
-import mapboxgl, { Map } from "mapbox-gl"
-import { cachedFetch } from "./cache"
-import { viewSurfaceTemperature } from "./viewSurfaceTemperature"
-import { createNtaLayer } from "./viewGenericNTA"
-import { API_KEY, BASE_URL } from "./api"
-import { viewTreeCanopy } from "./viewTreeCanopy"
+import mapboxgl, { Map } from "mapbox-gl";
+import { cachedFetch } from "./cache";
+import { viewSurfaceTemperature } from "./viewSurfaceTemperature";
+import { createNtaLayer } from "./viewGenericNTA";
+import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
+import { viewTreeCanopy } from "./viewTreeCanopy";
+import { viewWeatherStations } from "./viewWeatherStations";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
 export interface ViewOptions {
-  date?: string
+  date?: string;
+  year?: number;
 }
 
 export interface LegendItem {
-  label: string | number,
-  value: string
+  label: string | number;
+  value: string;
 }
 
 export interface View {
@@ -46,6 +48,9 @@ export interface Dataset {
   dates?: string[];
   currentDate?: null | string;
   getDates?: () => Promise<string[]>;
+  years?: number[];
+  currentYear?: null | number;
+  getYears?: () => Promise<number[]>;
   views: CollectionOfViews;
 }
 
@@ -57,17 +62,18 @@ export const datasets: Dataset[] = [
     info: "The Outdoor Heat Exposure Index is a measure of the risk of heat-related illnesses for people spending time outdoors.",
     currentView: null,
     views: {
-      'nta': {
-        name: 'NTA Aggregated',
+      nta: {
+        name: "NTA Aggregated",
         legend: [
-          { label: 1, value: '#f1c490' }, 
-          { label: 2, value: '#e39671' }, 
-          { label: 3, value: '#d66852' }, 
-          { label: 4, value: '#933d33' },
-          { label: 5, value: '#511314' }],
+          { label: 1, value: "#f1c490" },
+          { label: 2, value: "#e39671" },
+          { label: 3, value: "#d66852" },
+          { label: 4, value: "#933d33" },
+          { label: 5, value: "#511314" },
+        ],
         init: function (map) {
-          return createNtaLayer(map, 'HEAT_VULNERABILITY', this.name, {
-            'fill-color': [
+          return createNtaLayer(map, "HEAT_VULNERABILITY", this.name, {
+            "fill-color": [
               "interpolate",
               ["linear"],
               ["get", "HEAT_VULNERABILITY"],
@@ -76,22 +82,32 @@ export const datasets: Dataset[] = [
               3,
               "#D66852",
               5,
-              "#511314"
+              "#511314",
             ],
-
-          })
-        }
-      }
-    }
+          });
+        },
+      },
+    },
   },
   {
     name: "Weather Stations",
     group: "",
     icon: weatherStations,
     currentView: null,
+    getYears: async (): Promise<number[]> => {
+      const data = await fetchStationHeatStats();
+      const years = data.features.map((d: any) => d.properties.year);
+      const uniqueYears = [...new Set(years)];
+      return uniqueYears as number[];
+    },
+    years: [],
+    currentYear: null,
     views: {
-      'points': { name: 'Stations' }
-    }
+      points: {
+        name: "Raw Data",
+        init: (map, options) => viewWeatherStations(map, options?.year),
+      },
+    },
   },
   {
     name: "Air Temperature",
@@ -99,9 +115,9 @@ export const datasets: Dataset[] = [
     icon: airTemperature,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
+      nta: { name: "NTA Aggregated" },
+      raw: { name: "Raw Data" },
+    },
   },
   {
     name: "Air Heat Index",
@@ -109,9 +125,9 @@ export const datasets: Dataset[] = [
     icon: airHeatIndex,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
+      nta: { name: "NTA Aggregated" },
+      raw: { name: "Raw Data" },
+    },
   },
   {
     name: "Mean Radiant Temperature",
@@ -119,9 +135,9 @@ export const datasets: Dataset[] = [
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
+      nta: { name: "NTA Aggregated" },
+      raw: { name: "Raw Data" },
+    },
   },
   {
     name: "Surface Temperature",
@@ -131,12 +147,21 @@ export const datasets: Dataset[] = [
     dates: [],
     currentDate: null,
     getDates: async () => {
-      return (await cachedFetch(`${BASE_URL}nta_metrics?select=date&type=eq.surface_temp&apikey=${API_KEY}`)).map((d: any) => d.date).sort()
+      return (
+        await cachedFetch(
+          `${BASE_URL}nta_metrics?select=date&type=eq.surface_temp&apikey=${API_KEY}`
+        )
+      )
+        .map((d: any) => d.date)
+        .sort();
     },
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data', init: (map, options) => viewSurfaceTemperature(map, options?.date) }
-    }
+      nta: { name: "NTA Aggregated" },
+      raw: {
+        name: "Raw Data",
+        init: (map, options) => viewSurfaceTemperature(map, options?.date),
+      },
+    },
   },
   {
     name: "Tree Canopy",
@@ -144,17 +169,18 @@ export const datasets: Dataset[] = [
     icon: treeCanopy,
     currentView: null,
     views: {
-      'nta': {
-        name: 'NTA Aggregated',
+      nta: {
+        name: "NTA Aggregated",
         legend: [
-          { label: '10%', value: '#edf8e9' }, 
-          { label: '20%', value: '#bae4b3' }, 
-          { label: '30%', value: '#74c476' }, 
-          { label: '40%', value: '#31a354' },
-          { label: '50%', value: '#006d2c' }],
+          { label: "10%", value: "#edf8e9" },
+          { label: "20%", value: "#bae4b3" },
+          { label: "30%", value: "#74c476" },
+          { label: "40%", value: "#31a354" },
+          { label: "50%", value: "#006d2c" },
+        ],
         init: function (map) {
-          return createNtaLayer(map, 'PCT_TREES', this.name, {
-            'fill-color': [
+          return createNtaLayer(map, "PCT_TREES", this.name, {
+            "fill-color": [
               "interpolate",
               ["linear"],
               ["get", "PCT_TREES"],
@@ -169,12 +195,11 @@ export const datasets: Dataset[] = [
               50,
               "#006d2c",
             ],
-
-          })
-        }
+          });
+        },
       },
-      'raw': { name: 'Raw Data', init: (map) => viewTreeCanopy(map) }
-    }
+      raw: { name: "Raw Data", init: (map) => viewTreeCanopy(map) },
+    },
   },
   {
     name: "Cool Roofs",
@@ -182,9 +207,24 @@ export const datasets: Dataset[] = [
     icon: coolRoofs,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
+      nta: {
+        name: "NTA Aggregated",
+        init: function (map) {
+          return createNtaLayer(map, "PCT_AREA_COOLROOF", this.name, {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "PCT_AREA_COOLROOF"],
+              3,
+              "#b3cde0",
+              76.5,
+              "#03396c",
+            ],
+          });
+        },
+      },
+      raw: { name: "Raw Data" },
+    },
   },
   {
     name: "Premeable Surfaces",
@@ -192,9 +232,26 @@ export const datasets: Dataset[] = [
     icon: premeableSurface,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
+      nta: {
+        name: "NTA Aggregated",
+        init: function (map) {
+          return createNtaLayer(map, "PCT_PERMEABLE", this.name, {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "PCT_PERMEABLE"],
+              0.74,
+              "#c68642",
+              70.4,
+              "#ffdbac",
+            ],
+          });
+        },
+      },
+      raw: {
+        name: "Raw Data",
+      },
+    },
   },
   {
     name: "Parks",
@@ -202,45 +259,74 @@ export const datasets: Dataset[] = [
     icon: parks,
     currentView: null,
     views: {
-      'nta': { name: 'NTA Aggregated' },
-      'raw': { name: 'Raw Data' }
-    }
-  }
+      nta: {
+        name: "NTA Aggregated",
+        init: function (map) {
+          return createNtaLayer(map, "AVG_DIST_TO_PARKS_FT", this.name, {
+            "fill-color": [
+              "interpolate",
+              ["linear"],
+              ["get", "AVG_DIST_TO_PARKS_FT"],
+              222,
+              "#295f48",
+              6144,
+              "#b3d5c7",
+            ],
+          });
+        },
+      },
+      raw: { name: "Raw Data" },
+    },
+  },
 ];
 
-let destroyCallback: (() => void) | null = null
+let destroyCallback: (() => void) | null = null;
 
-export async function initializeView(dataset: Dataset, map: mapboxgl.Map | null) {
+export async function initializeView(
+  dataset: Dataset,
+  map: mapboxgl.Map | null
+) {
   // fail states
-  if (!dataset.currentView || !map) return dataset
+  if (!dataset.currentView || !map) return dataset;
 
   // remove the previous view
   try {
-    if (destroyCallback) destroyCallback()
+    if (destroyCallback) destroyCallback();
   } catch (error) {
-    destroyCallback = null
+    destroyCallback = null;
   }
 
-  const view = dataset.views[dataset.currentView]
+  const view = dataset.views[dataset.currentView];
+  console.log(view);
   if (view.init) {
-    console.log(`init ${dataset.name}, ${dataset.currentView}`)
-    const options: ViewOptions = {}
+    console.log(`init ${dataset.name}, ${dataset.currentView}`);
+    const options: ViewOptions = {};
 
     // set up dates for the dataset
     if (dataset.getDates) {
-      dataset.dates = await dataset.getDates()
+      dataset.dates = await dataset.getDates();
       // set the first option, if there is no currentDate
       if (!dataset.currentDate) {
-        dataset.currentDate = dataset.dates.at(-1)
+        dataset.currentDate = dataset.dates.at(-1);
       }
-      options.date = dataset.currentDate
+      options.date = dataset.currentDate;
+    }
+
+    if (dataset.getYears) {
+      dataset.years = await dataset.getYears()
+      if(!dataset.currentYear) {
+        dataset.currentYear = dataset.years.at(-1)
+      }
+      options.year = dataset.currentYear
     }
 
     destroyCallback = view.init(map, options);
   } else {
-    console.error(`${dataset.name}, ${dataset.currentView} doesn't have an init func`)
-    destroyCallback = null
+    console.error(
+      `${dataset.name}, ${dataset.currentView} doesn't have an init func`
+    );
+    destroyCallback = null;
   }
 
-  return dataset
+  return dataset;
 }
