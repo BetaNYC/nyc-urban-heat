@@ -48,7 +48,7 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
                 <div className='flex items-center gap-3 mt-4 ml-8 font-semibold text-small'>
                     <div>{dataset.views[viewNames[0]].name}</div>
                     <div
-                        className={`flex items-center ${currentViewSelected.value === viewNames[0] ? "justify-start bg-[#ed7b63]" : "justify-end bg-[#f6d59c] outline outline-1 outline-gray-300"}
+                        className={`flex items-center ${currentViewSelected.value === viewNames[0] ? "justify-start bg-[#BDBDBD]" : "justify-end bg-[#BDBDBD] outline outline-1 outline-gray-300"}
                         transition-colors ease-in-out px-[2px] w-8 h-4 rounded-[20px]`}
                         onClick={e => handleViewChange(e, dataset)}
                     >

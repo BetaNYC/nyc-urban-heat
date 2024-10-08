@@ -54,6 +54,17 @@ const MapDateSelections = () => {
     }
   }
 
+  function handleYearChange(year: number) {
+    if (selectedDataset.value) {
+      selectedDataset.value.currentYear = year
+      console.log('aa')
+
+      initializeView(selectedDataset.value, map.value).then(dataset => {
+        selectedDataset.value = {...dataset}
+      })
+    }
+  }
+
   if (selectedDataset.value?.dates) {
     return (
       <div className={`absolute ${isProfileExpanded ? "left-[22rem] top-[4.625rem]" : "left-6 top-[9.25rem]"}
@@ -108,7 +119,7 @@ const MapDateSelections = () => {
 
             Array.from(years.value).map((y: any) => {
               return (
-                <div className="hover:bg-[#828282] text-[#4F4F4F] hover:text-white" key={y} >
+                <div className="hover:bg-[#828282] text-[#828282] hover:text-white" key={y} onClick={() => handleYearChange(y)}>
                   <h3 className="my-2 px-5 font-medium text-regular ">{y}</h3>
                   <div className=' h-[1px] bg-[#828282]'></div>
                 </div>
