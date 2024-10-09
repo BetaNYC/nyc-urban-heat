@@ -44,7 +44,7 @@ const NeighborhoodProfile = () => {
     // const { properties } = (currentFeature as any)
     // const { borough, ntaname } = properties
 
-    if (profileData.value) {
+    // if (profileData.value) {
 
         return (
             <div className={`transition-all duration-[1500ms] ${!isProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
@@ -183,7 +183,7 @@ const NeighborhoodProfile = () => {
         )
     }
 
-    return (<></>)
-}
+//     return (<></>)
+// }
 
 export default NeighborhoodProfile

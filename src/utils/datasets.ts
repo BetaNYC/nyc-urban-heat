@@ -320,7 +320,6 @@ export async function initializeView(
   const view = dataset.views[dataset.currentView];
   console.log(view);
   if (view.init) {
-    console.log(`init ${dataset.name}, ${dataset.currentView}`);
     const options: ViewOptions = {};
 
     // set up dates for the dataset

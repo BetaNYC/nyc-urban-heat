@@ -69,7 +69,7 @@ const MapPage = () => {
         selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
       } */}
       {
-        selectedDataset.value?.name === "Outdoor Heat Exposure Index" && <NeighborhoodProfile />
+        selectedDataset.value?.name !== "Weather Stations" && selectedDataset.value?.currentView === 'nta' && <NeighborhoodProfile />
       }
       <DatasetSelections />
       <MapDateSelections />
