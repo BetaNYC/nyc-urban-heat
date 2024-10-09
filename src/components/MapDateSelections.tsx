@@ -42,7 +42,6 @@ const MapDateSelections = () => {
   })
 
   const years = computed(() => selectedDataset.value?.years ?? [])
-  console.log(years)
 
   function handleDateChange(date: string) {
     if (selectedDataset.value) {
@@ -57,7 +56,7 @@ const MapDateSelections = () => {
   function handleYearChange(year: number) {
     if (selectedDataset.value) {
       selectedDataset.value.currentYear = year
-      console.log('aa')
+
 
       initializeView(selectedDataset.value, map.value).then(dataset => {
         selectedDataset.value = {...dataset}

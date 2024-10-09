@@ -20,7 +20,6 @@ export const fetchStationHeatStats = async () => {
 
   const stationPointsMap = new Map<string, any[]>();
   stationPoints.forEach((feature: Feature) => {
-    console.log(feature)
     // @ts-ignore
     const address = feature.address;
     if (feature.geometry && "coordinates" in feature.geometry) {

@@ -209,6 +209,13 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
+        legend: [
+          { label:  3, value: "#ccd7e1" },
+          { label: 21.37, value: "#9aafc4" },
+          { label: 39.74, value: "#6788a6" },
+          { label: 58.11, value: "#356089" },
+          { label: 76.5, value: "#03396c" }
+        ],
         init: function (map) {
           return createNtaLayer(map, "PCT_AREA_COOLROOF", this.name, {
             "fill-color": [
@@ -234,6 +241,13 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
+        legend: [
+          { label: 70.4, value: '#e8ceb3' },
+          { label: 52.97, value: "#dcb68d" },
+          { label: 35.56, value: "#d19e67" },
+          { label: 18.15, value: "#c68642" },
+          { label: 0.74, value: "#9e6b34" },
+        ],
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, {
             "fill-color": [
@@ -261,6 +275,13 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
+        legend: [
+          { label: 6144, value: "#d4dfda" },
+          { label: 4662, value: "#a9bfb5" },
+          { label: 3182, value: "#7e9f91" },
+          { label: 1702, value: "#537e6c" },
+          { label: 222, value: "#295f48" },
+        ],
         init: function (map) {
           return createNtaLayer(map, "AVG_DIST_TO_PARKS_FT", this.name, {
             "fill-color": [
@@ -270,7 +291,7 @@ export const datasets: Dataset[] = [
               222,
               "#295f48",
               6144,
-              "#b3d5c7",
+              "#d4dfda",
             ],
           });
         },
@@ -313,11 +334,11 @@ export async function initializeView(
     }
 
     if (dataset.getYears) {
-      dataset.years = await dataset.getYears()
-      if(!dataset.currentYear) {
-        dataset.currentYear = dataset.years.at(-1)
+      dataset.years = await dataset.getYears();
+      if (!dataset.currentYear) {
+        dataset.currentYear = dataset.years.at(-1);
       }
-      options.year = dataset.currentYear
+      options.year = dataset.currentYear;
     }
 
     destroyCallback = view.init(map, options);

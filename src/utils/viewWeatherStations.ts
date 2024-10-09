@@ -97,7 +97,9 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
   });
 
   return function onDestory() {
-    map.removeLayer("weather_stations");
+    map.removeLayer("weather_stations_heat_event");
+    map.removeLayer("weather_stations_heat_advisory");
+    map.removeLayer("weather_stations_heat_excessive");
     map.removeSource("weather_stations");
   };
 }
