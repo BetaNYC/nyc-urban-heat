@@ -76,7 +76,8 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
     },
   });
 
-  map.on('mouseenter', layerFillId, (e: MapLayerMouseEvent) => {
+  map.on('mousemove', layerFillId, (e: MapLayerMouseEvent) => {
+    map.getCanvas().style.cursor = 'pointer';
     if (e.features) {
       const coordinates = e.lngLat
       const { ntacode, boroname, ntaname } = e.features[0].properties as any
@@ -155,12 +156,15 @@ export function createNtaLayer(map: mapboxgl.Map, metric: string, layerName: str
     }
   })
 
-  map?.on('mouseover', layerFillId, () => {
-    map.getCanvas().style.cursor = 'pointer';
-  });
-
   map?.on('mouseleave', layerFillId, () => {
     map.getCanvas().style.cursor = '';
+    if (popup) popup.remove();
+    if (clickedNtacode !== null) {
+      map.setFeatureState(
+        { source: sourceId, id: clickedNtacode },
+        { selected: false }
+      );
+    }
   });
 
   map?.on('click', layerFillId, (e: MapLayerMouseEvent) => {
