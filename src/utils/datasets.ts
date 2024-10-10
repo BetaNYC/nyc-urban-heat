@@ -16,6 +16,7 @@ import { createNtaLayer } from "./viewGenericNTA";
 import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
 import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
+import { nta_dataset_info } from "../App"
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -32,7 +33,7 @@ export interface LegendItem {
 export interface View {
   name: string;
   legend?: LegendItem[];
-  init?: (map: Map, options?: ViewOptions) => () => void;
+  init?: (map: Map, options?: ViewOptions) => () => void
 }
 
 interface CollectionOfViews {
@@ -147,11 +148,7 @@ export const datasets: Dataset[] = [
     dates: [],
     currentDate: null,
     getDates: async () => {
-      return (
-        await cachedFetch(
-          `${BASE_URL}nta_metrics?select=date&type=eq.surface_temp&apikey=${API_KEY}`
-        )
-      )
+      return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
         .map((d: any) => d.date)
         .sort();
     },
@@ -210,11 +207,11 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label:  3, value: "#ccd7e1" },
-          { label: 21.37, value: "#9aafc4" },
-          { label: 39.74, value: "#6788a6" },
-          { label: 58.11, value: "#356089" },
-          { label: 76.5, value: "#03396c" }
+          { label: '3%', value: "#ccd7e1" },
+          { label: '21.37%', value: "#9aafc4" },
+          { label: '39.74%', value: "#6788a6" },
+          { label: '58.11%', value: "#356089" },
+          { label: '76.5%', value: "#03396c" }
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_AREA_COOLROOF", this.name, {
