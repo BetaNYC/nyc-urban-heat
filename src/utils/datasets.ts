@@ -16,7 +16,7 @@ import { createNtaLayer } from "./viewGenericNTA";
 import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
 import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
-import { nta_dataset_info } from "../App"
+import { nta_dataset_info } from "../App";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -33,7 +33,7 @@ export interface LegendItem {
 export interface View {
   name: string;
   legend?: LegendItem[];
-  init?: (map: Map, options?: ViewOptions) => () => void
+  init?: (map: Map, options?: ViewOptions) => () => void;
 }
 
 interface CollectionOfViews {
@@ -148,12 +148,25 @@ export const datasets: Dataset[] = [
     dates: [],
     currentDate: null,
     getDates: async () => {
-      return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
+      const filteredData = nta_dataset_info.value
+        .filter((dataset) => dataset.type === "surface_temp");
+    
+      const sortedDates = filteredData
         .map((d: any) => d.date)
-        .sort();
+        .sort((a: string, b: string) => b.localeCompare(a));
+    
+      console.log(sortedDates);
+      return sortedDates;
     },
     views: {
-      nta: { name: "NTA Aggregated" },
+      nta: {
+        name: "NTA Aggregated",
+        init: function (map) {
+          return createNtaLayer(map, "ST_20230902", this.name, {
+            "fill-color": "orange",
+          });
+        },
+      },
       raw: {
         name: "Raw Data",
         init: (map, options) => viewSurfaceTemperature(map, options?.date),
@@ -207,11 +220,11 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: '3%', value: "#ccd7e1" },
-          { label: '21.37%', value: "#9aafc4" },
-          { label: '39.74%', value: "#6788a6" },
-          { label: '58.11%', value: "#356089" },
-          { label: '76.5%', value: "#03396c" }
+          { label: "3%", value: "#ccd7e1" },
+          { label: "21.37%", value: "#9aafc4" },
+          { label: "39.74%", value: "#6788a6" },
+          { label: "58.11%", value: "#356089" },
+          { label: "76.5%", value: "#03396c" },
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_AREA_COOLROOF", this.name, {
@@ -239,7 +252,7 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: 70.4, value: '#e8ceb3' },
+          { label: 70.4, value: "#e8ceb3" },
           { label: 52.97, value: "#dcb68d" },
           { label: 35.56, value: "#d19e67" },
           { label: 18.15, value: "#c68642" },
@@ -315,13 +328,14 @@ export async function initializeView(
   }
 
   const view = dataset.views[dataset.currentView];
-  console.log(view);
+
   if (view.init) {
     const options: ViewOptions = {};
 
     // set up dates for the dataset
     if (dataset.getDates) {
       dataset.dates = await dataset.getDates();
+      console.log(dataset.dates)
       // set the first option, if there is no currentDate
       if (!dataset.currentDate) {
         dataset.currentDate = dataset.dates.at(-1);

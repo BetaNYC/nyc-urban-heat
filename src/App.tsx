@@ -15,10 +15,12 @@ function App() {
     
     // load datasets from csv file
     csv(`${import.meta.env.BASE_URL}/datasets.csv`).then(rows => {
-      console.log(rows)
+      // console.log(rows)
       nta_dataset_info.value = rows
     })
   }, [])
+
+
 
   return (
     <main className='w-[100vw] h-[100vh] overflow-x-hidden overflow-y-scroll'>

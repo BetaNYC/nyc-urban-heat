@@ -21,6 +21,7 @@ const MapDateSelections = () => {
   }
   const dates = computed(() => {
     const dates = selectedDataset.value?.dates ?? []
+    console.log(dates)
     // sort dates and create an new object that can be grouped
     const datesObj = dates.sort((a, b) => b.localeCompare(a)).map(date => {
       let formattedDate = date
