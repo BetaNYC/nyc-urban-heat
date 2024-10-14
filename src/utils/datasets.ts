@@ -17,6 +17,7 @@ import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
 import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
 import { nta_dataset_info } from "../App"
+import { viewMRT } from "./viewMRT";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -136,8 +137,7 @@ export const datasets: Dataset[] = [
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
-      nta: { name: "NTA Aggregated" },
-      raw: { name: "Raw Data" },
+      raw: { name: "Raw Data", init: (map) => viewMRT(map) },
     },
   },
   {
@@ -149,8 +149,6 @@ export const datasets: Dataset[] = [
     currentDate: null,
     getDates: async () => {
       return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
-        .map((d: any) => d.date)
-        .sort();
     },
     views: {
       nta: { name: "NTA Aggregated" },
