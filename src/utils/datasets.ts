@@ -18,6 +18,7 @@ import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
 import { nta_dataset_info } from "../App"
 import { viewMRT } from "./viewMRT";
+import { viewCoolRoofs } from "./viewCoolRoofs";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -225,7 +226,7 @@ export const datasets: Dataset[] = [
           });
         },
       },
-      raw: { name: "Raw Data" },
+      raw: { name: "Raw Data", init: (map) => viewCoolRoofs(map) },
     },
   },
   {
