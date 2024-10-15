@@ -16,7 +16,7 @@ import { createNtaLayer } from "./viewGenericNTA";
 import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
 import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
-import { nta_dataset_info } from "../App"
+import { nta_dataset_info } from "../App";
 import { viewMRT } from "./viewMRT";
 import { viewCoolRoofs } from "./viewCoolRoofs";
 
@@ -57,7 +57,7 @@ export interface Dataset {
   externalSource?: string;
   externalUrl?: string; // direct to the landing page of the external resource we don't own
   // in some cases we need to look up the csv, generate a custom urls to the supabase, or call an api to get the links
-  getDownloadUrls?: (options?: any) => Promise<DownloadUrl[]>; 
+  getDownloadUrls?: (options?: any) => Promise<DownloadUrl[]>;
 
   currentView: null | string;
   dates?: string[];
@@ -152,7 +152,22 @@ export const datasets: Dataset[] = [
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
-      raw: { name: "Raw Data", init: (map) => viewMRT(map) },
+      raw: {
+        name: "Raw Data",
+        init: function (map) {
+
+          const MRTCleanup = viewMRT(map);
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            "PCT_AREA_COOLROOF",
+            this.name
+          );
+          return function onDestory() {
+            ntaLayerCleanup();
+            MRTCleanup();
+          };
+        },
+      },
     },
   },
   {
@@ -163,19 +178,32 @@ export const datasets: Dataset[] = [
     currentView: null,
     dates: [],
     currentDate: null,
-    getDownloadUrls: async() => {
-        const urls = nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').reduce((urls: DownloadUrl[], dataset: any) => {
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.type === "surface_temp")
+        .reduce((urls: DownloadUrl[], dataset: any) => {
           // todo: setup csv in a better format
-          const raw_url = dataset.downloads
-          const relative_url = dataset.downloads_2
-          return [...urls, {name: 'Raw', url: raw_url, date: dataset.date, format: 'raw'}, {name: 'Relative', url: relative_url, date: dataset.date, format: 'relative'}]
-        },[])
+          const raw_url = dataset.downloads;
+          const relative_url = dataset.downloads_2;
+          return [
+            ...urls,
+            { name: "Raw", url: raw_url, date: dataset.date, format: "raw" },
+            {
+              name: "Relative",
+              url: relative_url,
+              date: dataset.date,
+              format: "relative",
+            },
+          ];
+        }, []);
 
-        console.log(urls)
-        return urls
+      return urls;
     },
     getDates: async () => {
-      return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
+      return nta_dataset_info.value
+        .filter((dataset) => dataset.type === "surface_temp")
+        .map((d: any) => d.date)
+        .sort();
     },
     views: {
       nta: {
@@ -228,7 +256,17 @@ export const datasets: Dataset[] = [
           });
         },
       },
-      raw: { name: "Raw Data", init: (map) => viewTreeCanopy(map) },
+      raw: {
+        name: "Raw Data",
+        init: function (map) {
+          const ntaLayerCleanup = createNtaLayer(map, "PCT_TREES", this.name);
+          const treeCanopyCleanup = viewTreeCanopy(map);
+          return function onDestory() {
+            ntaLayerCleanup();
+            treeCanopyCleanup();
+          };
+        },
+      },
     },
   },
   {
@@ -242,10 +280,10 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legend: [
           { label: "3%", value: "#ccd7e1" },
-          { label: "21.37%", value: "#9aafc4" },
-          { label: "39.74%", value: "#6788a6" },
-          { label: "58.11%", value: "#356089" },
-          { label: "76.5%", value: "#03396c" },
+          { label: "21%", value: "#9aafc4" },
+          { label: "39%", value: "#6788a6" },
+          { label: "58%", value: "#356089" },
+          { label: "77%", value: "#03396c" },
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_AREA_COOLROOF", this.name, {
@@ -261,7 +299,21 @@ export const datasets: Dataset[] = [
           });
         },
       },
-      raw: { name: "Raw Data", init: (map) => viewCoolRoofs(map) },
+      raw: {
+        name: "Raw Data",
+        init: function (map) {
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            "PCT_AREA_COOLROOF",
+            this.name
+          );
+          const coolRoofsCleanup = viewCoolRoofs(map);
+          return function onDestory() {
+            ntaLayerCleanup();
+            coolRoofsCleanup();
+          };
+        },
+      },
     },
   },
   {
@@ -298,38 +350,38 @@ export const datasets: Dataset[] = [
       },
     },
   },
-  {
-    name: "Parks",
-    group: "Heat Mitigation",
-    icon: parks,
-    currentView: null,
-    views: {
-      nta: {
-        name: "NTA Aggregated",
-        legend: [
-          { label: 6144, value: "#d4dfda" },
-          { label: 4662, value: "#a9bfb5" },
-          { label: 3182, value: "#7e9f91" },
-          { label: 1702, value: "#537e6c" },
-          { label: 222, value: "#295f48" },
-        ],
-        init: function (map) {
-          return createNtaLayer(map, "AVG_DIST_TO_PARKS_FT", this.name, {
-            "fill-color": [
-              "interpolate",
-              ["linear"],
-              ["get", "AVG_DIST_TO_PARKS_FT"],
-              222,
-              "#295f48",
-              6144,
-              "#d4dfda",
-            ],
-          });
-        },
-      },
-      raw: { name: "Raw Data" },
-    },
-  },
+  // {
+  //   name: "Parks",
+  //   group: "Heat Mitigation",
+  //   icon: parks,
+  //   currentView: null,
+  //   views: {
+  //     nta: {
+  //       name: "NTA Aggregated",
+  //       legend: [
+  //         { label: 6144, value: "#d4dfda" },
+  //         { label: 4662, value: "#a9bfb5" },
+  //         { label: 3182, value: "#7e9f91" },
+  //         { label: 1702, value: "#537e6c" },
+  //         { label: 222, value: "#295f48" },
+  //       ],
+  //       init: function (map) {
+  //         return createNtaLayer(map, "AVG_DIST_TO_PARKS_FT", this.name, {
+  //           "fill-color": [
+  //             "interpolate",
+  //             ["linear"],
+  //             ["get", "AVG_DIST_TO_PARKS_FT"],
+  //             222,
+  //             "#295f48",
+  //             6144,
+  //             "#d4dfda",
+  //           ],
+  //         });
+  //       },
+  //     },
+  //     raw: { name: "Raw Data" },
+  //   },
+  // },
 ];
 
 let destroyCallback: (() => void) | null = null;
@@ -356,7 +408,7 @@ export async function initializeView(
     // set up dates for the dataset
     if (dataset.getDates) {
       dataset.dates = await dataset.getDates();
-      console.log(dataset.dates)
+      console.log(dataset.dates);
       // set the first option, if there is no currentDate
       if (!dataset.currentDate) {
         dataset.currentDate = dataset.dates.at(-1);
