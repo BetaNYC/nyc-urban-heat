@@ -17,6 +17,8 @@ import { API_KEY, BASE_URL, fetchStationHeatStats } from "./api";
 import { viewTreeCanopy } from "./viewTreeCanopy";
 import { viewWeatherStations } from "./viewWeatherStations";
 import { nta_dataset_info } from "../App"
+import { viewMRT } from "./viewMRT";
+import { viewCoolRoofs } from "./viewCoolRoofs";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -40,11 +42,23 @@ interface CollectionOfViews {
   [key: string]: View;
 }
 
+export interface DownloadUrl {
+  name: string;
+  url: string;
+  date?: string; // in YYYY or YYYYMMDD
+  format: string;
+}
+
 export interface Dataset {
   name: string;
   group: string;
   icon: IconType;
   info?: string;
+  externalSource?: string;
+  externalUrl?: string; // direct to the landing page of the external resource we don't own
+  // in some cases we need to look up the csv, generate a custom urls to the supabase, or call an api to get the links
+  getDownloadUrls?: (options?: any) => Promise<DownloadUrl[]>; 
+
   currentView: null | string;
   dates?: string[];
   currentDate?: null | string;
@@ -114,6 +128,7 @@ export const datasets: Dataset[] = [
     name: "Air Temperature",
     group: "Outdoor Heat Exposure",
     icon: airTemperature,
+    info: "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter.",
     currentView: null,
     views: {
       nta: { name: "NTA Aggregated" },
@@ -124,6 +139,7 @@ export const datasets: Dataset[] = [
     name: "Air Heat Index",
     group: "Outdoor Heat Exposure",
     icon: airHeatIndex,
+    info: "Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort.",
     currentView: null,
     views: {
       nta: { name: "NTA Aggregated" },
@@ -136,21 +152,30 @@ export const datasets: Dataset[] = [
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
-      nta: { name: "NTA Aggregated" },
-      raw: { name: "Raw Data" },
+      raw: { name: "Raw Data", init: (map) => viewMRT(map) },
     },
   },
   {
     name: "Surface Temperature",
     group: "Outdoor Heat Exposure",
     icon: surfaceTemperature,
+    info: `Surface Temperature indicates how hot the "surface" of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report.`,
     currentView: null,
     dates: [],
     currentDate: null,
+    getDownloadUrls: async() => {
+        const urls = nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').reduce((urls: DownloadUrl[], dataset: any) => {
+          // todo: setup csv in a better format
+          const raw_url = dataset.downloads
+          const relative_url = dataset.downloads_2
+          return [...urls, {name: 'Raw', url: raw_url, date: dataset.date, format: 'raw'}, {name: 'Relative', url: relative_url, date: dataset.date, format: 'relative'}]
+        },[])
+
+        console.log(urls)
+        return urls
+    },
     getDates: async () => {
       return nta_dataset_info.value.filter(dataset => dataset.type === 'surface_temp').map((d: any) => d.date).sort()
-        .map((d: any) => d.date)
-        .sort();
     },
     views: {
       nta: { name: "NTA Aggregated" },
@@ -164,6 +189,7 @@ export const datasets: Dataset[] = [
     name: "Tree Canopy",
     group: "Heat Mitigation",
     icon: treeCanopy,
+    info: "Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution.",
     currentView: null,
     views: {
       nta: {
@@ -202,6 +228,7 @@ export const datasets: Dataset[] = [
     name: "Cool Roofs",
     group: "Heat Mitigation",
     icon: coolRoofs,
+    info: "Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
     currentView: null,
     views: {
       nta: {
@@ -227,7 +254,7 @@ export const datasets: Dataset[] = [
           });
         },
       },
-      raw: { name: "Raw Data" },
+      raw: { name: "Raw Data", init: (map) => viewCoolRoofs(map) },
     },
   },
   {

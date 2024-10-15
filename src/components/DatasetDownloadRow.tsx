@@ -1,26 +1,41 @@
 
 import { ArrowDownTrayIcon, CalendarDaysIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
-// import { useMediaQuery } from "react-responsive"
-
-interface Options {
-    [key: string]: {
-        [key: string]: string
-    }
-}
+import { Dataset, DownloadUrl } from "../utils/datasets"
+import { formatDateString } from "../utils/format"
 
 type Props = {
-    title?: string
-    hasTitle?: boolean
-    source: string
-    content: string
-    options: Options
-    hasStation?: boolean
-    hasDistrict?: boolean
-    date?: string
+    dataset: Dataset | undefined
 }
 
-const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props) => {
+const DatasetDownloadRow = ({ dataset }: Props) => {
+    const [urls, setUrls] = useState<DownloadUrl[]>([])
+    const [selectedDate, setSelectedDate] = useState('')
+    const [selectedFormat, setSelectedFormat] = useState('')
+
+    // get unique date options and sort date
+    const dateOptions = [...new Set(urls.sort((a, b) => {
+        return parseInt(b.date ?? '') - parseInt(a.date ?? '');
+    }).map(d => d.date).filter(d => d))]
+
+    // get unique file formats
+    const formatOptions = [...new Set(urls.map(d => d.format))]
+
+    if(!dataset) return 'error'
+
+    useEffect(() => {
+        if(dataset.getDownloadUrls){
+            dataset.getDownloadUrls().then(downloadUrls => {
+                setUrls(downloadUrls)
+            })
+        }
+    },[])
+
+    useEffect(()=> {
+        // update the selectedFormat and selectedDate, when the urls list gets updated
+        setSelectedDate(dateOptions.at(0) ?? '')
+        setSelectedFormat(formatOptions.at(0) ?? '')
+    },[urls])
 
     // const isDesktop = useMediaQuery({
     //     query: '(min-width: 1280px)'
@@ -32,19 +47,50 @@ const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props
     // const isMobile = useMediaQuery({
     //     query: '(max-width: 768px)'
     // })
-    const optionsKeys = Object.keys(options)
 
-    if (optionsKeys.length === 0) {
+
+    const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, filename?: string) => {
+        console.log(urls, selectedDate, selectedFormat)
+        const download = urls.find((url: any) => {
+            if(selectedDate){
+                // compare dates and format
+                return url.date === String(selectedDate) && url.format === selectedFormat
+            }else{
+                return url.format === selectedFormat
+            }
+        })
+
+        if(download){
+            const format = download.url.split('.').at(-1)
+            const a = document.createElement('a');
+            a.target = '_blank'
+            if (format === 'geojson') {
+                a.href = '';
+                a.download = download.url
+            } else {
+                a.href = download.url;
+            }
+            a.download = filename ?? 'file.' + format;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }else{
+            alert('Issue with download')
+        }
+    }
+
+    // datasets that are external 
+    if (dataset.externalUrl) {
         return (
             <div className={`md:flex mb-10 `}>
                 <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
                     <div className="w-[120px] h-[120px] text-center bg-[#DCDCDC]"></div>
                     <div className="flex-1">
-                        {hasTitle && <h3 className="mb-2 font-semibold text-subheadline">{title}</h3>}
+                        <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
                         <div className="font-light text-small">
-                            <a href="">{source}</a> | date <br />
+                            <a href={dataset.externalUrl}>{dataset.externalSource}</a><br />
                             <p className="">
-                                {content}
+                                {dataset.info}
                             </p>
                         </div>
                     </div>
@@ -53,74 +99,25 @@ const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props
         )
     }
 
-    const hasDateInKeys = !!optionsKeys.find(d => d.startsWith('20'))
-    // when options has more than key and at least one element starts with 20
-    const hasDate = optionsKeys.length > 1 && hasDateInKeys
-
-    const [selectedOption, setSelectedOption] = useState(optionsKeys[0])
-    useEffect(() => {
-        setSelectedFormat(Object.keys(options[selectedOption])[0])
-    }, [selectedOption])
-
-    const [selectedFormat, setSelectedFormat] = useState('')
-
-    function formatDate(dateString: string) {
-        if (dateString.length === 4) { // Year
-            return dateString
-        }
-        const date = new Date(
-            parseInt(dateString.slice(0, 4)), // Year
-            parseInt(dateString.slice(4, 6)) - 1, // Month (0-indexed)
-            parseInt(dateString.slice(6, 8)) // Day
-        );
-        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
-    }
-
-    function downloadFile() {
-        let url = options[selectedOption][selectedFormat]
-        let filename = url.split('/').pop()
-        if (!url.startsWith('https://')) {
-            // add base url 
-            url = 'https://urban-heat-files.s3.amazonaws.com/' + url
-        }
-
-        // check if vaild filename
-        if (!filename?.endsWith('.' + selectedFormat)) {
-            filename = `${title?.toLocaleLowerCase().replace(' ', '_')}${selectedOption === '_' ? '' : selectedOption}.${selectedFormat}`
-        }
-
-        const a = document.createElement('a');
-        a.target = '_blank'
-        if(selectedFormat === 'geojson'){
-            a.href = '';
-            a.download = url
-        }else{
-            a.href = url;
-        }
-        a.download = filename ?? 'file.' + selectedFormat;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
     return (
-        // <div className="container">
         <div className={`md:flex mb-10 `}>
             <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
-                <div className="w-[120px] h-[120px] text-center bg-[#DCDCDC]"></div>
+                <div className="w-[120px] h-[120px] text-center">
+                    <img src={dataset.icon} alt="" className="w-[120px] h-[120px] text-[#BDBDBD]" />
+                </div>
                 <div className="flex-1">
-                    {hasTitle && <h3 className="mb-2 font-semibold text-subheadline">{title}</h3>}
+                    <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
                     <div className="font-light text-small">
-                        <a href="">{source}</a> | date <br />
+                        <a href="">{dataset.externalSource}</a> | date <br />
                         <p className="">
-                            {content}
+                            {dataset.info}
                         </p>
                     </div>
                 </div>
             </div>
             <div className="flex-1 flex md:justify-end gap-[1.875rem] ">
                 {
-                    hasDate &&
+                    dateOptions &&
                     <div className="md:w-[40%]">
                         <h3 className="mb-2  font-semibold text-small">Date</h3>
                         <div className="relative">
@@ -129,27 +126,12 @@ const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props
                                 name="Date"
                                 defaultValue=""
                                 className="pl-10 h-8 w-full font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]"
-                                value={selectedOption}
-                                onChange={e => setSelectedOption(e.target.value)}
+                                value={selectedDate}
+                                onChange={e => setSelectedDate(e.target.value)}
                             >
-                                {optionsKeys.sort((a, b) => {
-                                    return parseInt(b) - parseInt(a);
-                                }).map(key => <option key={key} value={key}>{formatDate(key)}</option>)}
+                                {dateOptions.map(key => <option key={key} value={key}>{formatDateString(key ?? '')}</option>)}
                             </select>
                         </div>
-                    </div>
-                }
-                {
-                    !hasDate && optionsKeys.length > 1 &&
-                    <div className="w-[40%]">
-                        <h3 className="mb-2 font-semibold text-small">Weather Station</h3>
-                        <select name="Date"
-                            id=""
-                            className="pl-3  h-8 w-[100%] font-semibold text-small border-[1px] border-[#4F4F4F] rounded-[0.25rem]"
-                            value={selectedOption}
-                            onChange={e => setSelectedOption(e.target.value)}>
-                            {optionsKeys.map(key => <option key={key} value={key}>{key}</option>)}
-                        </select>
                     </div>
                 }
                 <div>
@@ -160,9 +142,9 @@ const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props
                             value={selectedFormat}
                             onChange={e => setSelectedFormat(e.target.value)}
                             className="py-1 pr-3 font-regular text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem]">
-                            {Object.keys(options[selectedOption]).map(key => <option key={key} value={key}>.{key}</option>)}
-                        </select>
-                        <button onClick={downloadFile}
+                                {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
+                            </select>
+                        <button onClick={() => downloadFile(urls, selectedDate, selectedFormat)}
                             className="flex items-center justify-center w-8 h-8 bg-[#4F4F4F] border-[1px] border-[#4F4F4F] rounded-r-[0.25rem]">
                             <ArrowDownTrayIcon className="w-4 h-4 text-white" />
                         </button>
@@ -170,8 +152,6 @@ const DatasetDownloadRow = ({ title, options, hasTitle, source, content }: Props
                 </div>
             </div>
         </div>
-        // </div>
-
     )
 }
 
