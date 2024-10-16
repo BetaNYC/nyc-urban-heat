@@ -325,11 +325,11 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: 70.4, value: "#e8ceb3" },
-          { label: 52.97, value: "#dcb68d" },
-          { label: 35.56, value: "#d19e67" },
-          { label: 18.15, value: "#c68642" },
-          { label: 0.74, value: "#9e6b34" },
+          { label: 70, value: "#e8ceb3" },
+          { label: 53, value: "#dcb68d" },
+          { label: 35, value: "#d19e67" },
+          { label: 18, value: "#c68642" },
+          { label: 0, value: "#9e6b34" },
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, {

@@ -18,6 +18,7 @@ export const map = signal<mapboxgl.Map | null>(null)
 export const selectedDataset = signal<Dataset | null>(null)
 export const profileData = signal<NtaProfileData | null>(null)
 export const isProfileExpanded = signal(false)
+export const isDataSelectionExpanded = signal(false)
 
 
 const MapPage = () => {

@@ -6,10 +6,11 @@ import { GeoJSONTransformHandler } from "./geojson";
 
 import { format } from "d3-format";
 import { nta_dataset_info } from "../App";
-import { isProfileExpanded, profileData } from "../pages/MapPage";
+import { isProfileExpanded, profileData, isDataSelectionExpanded } from "../pages/MapPage";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
+let ntaFirstClick: boolean = true
 
 function getDataset(metric: string) {
   return nta_dataset_info.value.find((dataset) => dataset.metric === metric);
@@ -71,15 +72,15 @@ export function createNtaLayer(
   });
 
   map.addLayer({
-    id:layerBasicOutlineId,
-    type: 'line',
+    id: layerBasicOutlineId,
+    type: "line",
     source: sourceId,
-    layout:{},
+    layout: {},
     paint: {
-      'line-color': '#FBD266',
-      'line-width': 1
-    }
-  })
+      "line-color": "#FBD266",
+      "line-width": 1,
+    },
+  });
 
   map.addLayer({
     id: layerOutlineId,
@@ -109,6 +110,9 @@ export function createNtaLayer(
   map.on("mousemove", layerFillId, (e: MapLayerMouseEvent) => {
     map.getCanvas().style.cursor = "pointer";
     if (e.features) {
+
+      isDataSelectionExpanded.value = false
+
       const coordinates = e.lngLat;
       const { ntacode, boroname, ntaname } = e.features[0].properties as any;
 
@@ -207,7 +211,38 @@ export function createNtaLayer(
 
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode } = e.features![0].properties as any;
+
+    const lat = e.lngLat.lat;
+    const lng = e.lngLat.lng;
+
     isProfileExpanded.value = true;
+    isDataSelectionExpanded.value = false
+
+
+
+    const bounds = map.getBounds();
+    const center = map.getCenter();
+    const mapContainer = map.getContainer();
+    const mapWidth = mapContainer.offsetWidth;
+
+    const shiftPercentage = 0.35;
+    const lngSpan = bounds.getEast() - bounds.getWest();
+    const newLng = center.lng + lngSpan * (shiftPercentage);
+
+    map.flyTo({
+      center: [newLng, center.lat],
+      zoom: map.getZoom(),
+      essential: true, 
+      duration:2000,
+      easing: (t) => t * (2.5 - t)
+    });
+
+    // map.flyTo({
+    //   center: [e.lngLat.lng, e.lngLat.lat],
+    //   zoom: map.getZoom(),
+    //   essential: true 
+    // });
+
     if (clickedNtacode !== null) {
       map.setFeatureState(
         { source: sourceId, id: clickedNtacode },

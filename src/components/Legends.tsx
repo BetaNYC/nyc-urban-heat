@@ -146,9 +146,9 @@ const Legends = () => {
                             <div className='w-[50%] h-full bg-gradient-to-r from-[#FFE6A9] via-[#F2A18D] to-[#5E1A19]'></div>
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
-                            <p>{surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] - 30}℉</p>
-                            <p>{surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage]}℉</p>
-                            <p>{surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] + 70}℉</p>
+                            <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] - 30).toFixed(1)}℉</p>
+                            <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage]).toFixed(1)}℉</p>
+                            <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] + 70).toFixed(1)}℉</p>
                         </div>
                     </div>
                 }
