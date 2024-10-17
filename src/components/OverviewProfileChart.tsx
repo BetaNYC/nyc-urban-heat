@@ -1,6 +1,7 @@
 import { NtaProfileData } from "../types"
 
 type Props = {
+    //@ts-ignore
     allFeatures: NtaProfileData["allFeatures"],
     clickedIndex: string
 }

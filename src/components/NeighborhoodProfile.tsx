@@ -2,7 +2,7 @@ import { ArrowRightIcon, ArrowLeftIcon, ArrowLongRightIcon, InformationCircleIco
 import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
-import { isProfileExpanded, profileData } from "../pages/MapPage"
+import { isProfileExpanded, profileData, map, previousClickCor } from "../pages/MapPage"
 
 
 
@@ -22,6 +22,15 @@ const NeighborhoodProfile = () => {
 
     const clickHandler = () => {
         isProfileExpanded.value = !isProfileExpanded.value
+        if(isProfileExpanded.value === false) {
+            map.value!.flyTo({
+                center: previousClickCor.value,
+                // zoom: ,
+                // essential: true, 
+                duration:2000,
+                easing: (t) => t * (2.5 - t)
+            })
+        }
     }
 
     // const { currentFeature, allFeatures } = ntaProfileData

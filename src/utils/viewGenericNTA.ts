@@ -6,11 +6,15 @@ import { GeoJSONTransformHandler } from "./geojson";
 
 import { format } from "d3-format";
 import { nta_dataset_info } from "../App";
-import { isProfileExpanded, profileData, isDataSelectionExpanded } from "../pages/MapPage";
+import {
+  isProfileExpanded,
+  profileData,
+  isDataSelectionExpanded,
+  previousClickCor,
+} from "../pages/MapPage";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
-let ntaFirstClick: boolean = true
 
 function getDataset(metric: string) {
   return nta_dataset_info.value.find((dataset) => dataset.metric === metric);
@@ -110,8 +114,7 @@ export function createNtaLayer(
   map.on("mousemove", layerFillId, (e: MapLayerMouseEvent) => {
     map.getCanvas().style.cursor = "pointer";
     if (e.features) {
-
-      isDataSelectionExpanded.value = false
+      isDataSelectionExpanded.value = false;
 
       const coordinates = e.lngLat;
       const { ntacode, boroname, ntaname } = e.features[0].properties as any;
@@ -212,36 +215,35 @@ export function createNtaLayer(
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode } = e.features![0].properties as any;
 
-    const lat = e.lngLat.lat;
-    const lng = e.lngLat.lng;
-
     isProfileExpanded.value = true;
-    isDataSelectionExpanded.value = false
+    isDataSelectionExpanded.value = false;
 
+    const clickedLat = e.lngLat.lat;
+    const clickedLng = e.lngLat.lng;
 
+    previousClickCor.value = [clickedLng, clickedLat];
 
     const bounds = map.getBounds();
-    const center = map.getCenter();
-    const mapContainer = map.getContainer();
-    const mapWidth = mapContainer.offsetWidth;
 
-    const shiftPercentage = 0.35;
-    const lngSpan = bounds.getEast() - bounds.getWest();
-    const newLng = center.lng + lngSpan * (shiftPercentage);
+    const centerCoordinates = map.getCenter();
+    const centerLng = centerCoordinates.lng;
 
+    const mapWidth = bounds.getEast() - bounds.getWest();
+
+    const targetLng = bounds.getWest() + mapWidth * 0.175;
+
+    const newLng = centerLng + (clickedLng - targetLng)*0.65;
+    console.log(newLng);
+
+
+    // Fly to the target with a westward offset to keep the red line in the same position
     map.flyTo({
-      center: [newLng, center.lat],
-      zoom: map.getZoom(),
-      essential: true, 
-      duration:2000,
-      easing: (t) => t * (2.5 - t)
+      center: [newLng, clickedLat], // Fly to the red line's longitude and half-height latitude
+      zoom: map.getZoom(), // Maintain current zoom level
+      essential: true,
+      duration: 2000, // Duration of the animation
+      easing: (t) => t * (2.5 - t), // Smooth easing
     });
-
-    // map.flyTo({
-    //   center: [e.lngLat.lng, e.lngLat.lat],
-    //   zoom: map.getZoom(),
-    //   essential: true 
-    // });
 
     if (clickedNtacode !== null) {
       map.setFeatureState(
