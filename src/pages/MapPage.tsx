@@ -66,8 +66,8 @@ const MapPage = () => {
 
   return (
     <div className='relative w-full h-full'>
-      <div className='absolute top-0 left-[17.5vw] w-[2px] h-[100vh] bg-[#fe8585] z-[100000]'></div>
-      <div className='absolute top-1/2 left-1/2 w-[20px] h-[20px] bg-[#fe8585] z-[1000000] rounded-full transform -translate-x-1/2 -translate-y-1/2'></div>
+      {/* <div className='absolute top-0 left-[17.5vw] w-[2px] h-[100vh] bg-[#fe8585] z-[100000]'></div>
+      <div className='absolute top-1/2 left-1/2 w-[20px] h-[20px] bg-[#fe8585] z-[1000000] rounded-full transform -translate-x-1/2 -translate-y-1/2'></div> */}
       <Nav />
       {/* {
         selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />

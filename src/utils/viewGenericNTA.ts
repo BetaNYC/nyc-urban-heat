@@ -13,6 +13,8 @@ import {
   previousClickCor,
 } from "../pages/MapPage";
 
+import "../pages/Map.css"
+
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
 
@@ -55,7 +57,7 @@ export function createNtaLayer(
       }
       return feature;
     })
-    .filter((feature) => feature.properties && feature.properties[metric]); // filter out features without the metric
+    .filter((feature) => feature.properties && feature.properties[metric]);
 
   // create layers
   map.addSource(sourceId, {
@@ -81,7 +83,7 @@ export function createNtaLayer(
     source: sourceId,
     layout: {},
     paint: {
-      "line-color": "#FBD266",
+      "line-color": "#ffffff",
       "line-width": 1,
     },
   });
@@ -95,17 +97,17 @@ export function createNtaLayer(
       "line-color": [
         "case",
         ["boolean", ["feature-state", "clicked"], false],
-        "#0c0c0c", // Clicked NTA outline color
+        "#0079DA", // Clicked NTA outline color
         ["boolean", ["feature-state", "hovered"], false],
-        "#808080", // Hovered NTA outline color
+        "#666666", // Hovered NTA outline color
         "rgba(0, 0, 0, 0)", // Default (no outline if not hovered or clicked)
       ],
       "line-width": [
         "case",
         ["boolean", ["feature-state", "clicked"], false],
-        2, // Thicker line for clicked NTA
+        2.5, // Thicker line for clicked NTA
         ["boolean", ["feature-state", "hovered"], false],
-        2, // Thinner line for hovered NTA
+        2.5, // Thinner line for hovered NTA
         0, // No line for default
       ],
     },
@@ -213,9 +215,12 @@ export function createNtaLayer(
   });
 
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
-    const { ntacode } = e.features![0].properties as any;
+    const { ntacode, ntaname } = e.features![0].properties as any;
 
-    isProfileExpanded.value = true;
+    console.log(e.features![0].properties);
+    console.log(e);
+
+    // isProfileExpanded.value = true;
     isDataSelectionExpanded.value = false;
 
     const clickedLat = e.lngLat.lat;
@@ -232,17 +237,26 @@ export function createNtaLayer(
 
     const targetLng = bounds.getWest() + mapWidth * 0.175;
 
-    const newLng = centerLng + (clickedLng - targetLng)*0.65;
-    console.log(newLng);
+    const newLng = centerLng + (clickedLng - targetLng) * 0.65;
 
+    const offsetLat = 0.005;
+    const tooltipLat = clickedLat + offsetLat;
 
-    // Fly to the target with a westward offset to keep the red line in the same position
+    new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: true,
+      className: 'clicked-popup'
+    })
+      .setLngLat([clickedLng, tooltipLat])
+      .setHTML(`<div class='clicked-nta'>${ntaname}</div>`)
+      .addTo(map);
+
     map.flyTo({
-      center: [newLng, clickedLat], // Fly to the red line's longitude and half-height latitude
-      zoom: map.getZoom(), // Maintain current zoom level
+      center: [newLng, clickedLat],
+      zoom: map.getZoom(),
       essential: true,
-      duration: 2000, // Duration of the animation
-      easing: (t) => t * (2.5 - t), // Smooth easing
+      duration: 2000,
+      easing: (t) => t * (2.5 - t),
     });
 
     if (clickedNtacode !== null) {

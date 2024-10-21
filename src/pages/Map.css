@@ -1,8 +1,38 @@
 .mapboxgl-ctrl-bottom-right .mapboxgl-ctrl.mapboxgl-ctrl-group {
-    margin: 0 0px 0px 0 !important;
-    position: absolute !important;
-    right: 1.5rem !important;
-    bottom: 1.5rem !important;
+  margin: 0 0px 0px 0 !important;
+  position: absolute !important;
+  right: 1.5rem !important;
+  bottom: 1.5rem !important;
 }
 
+.mapboxgl-popup {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
 
+/* Remove any default styles applied to popup content */
+.mapboxgl-popup.clicked-popup .mapboxgl-popup-content {
+  min-width: 0 !important; /* Remove max-width constraints */
+  background: transparent !important; /* Make the content background transparent */
+  margin: 0;
+}
+
+/* Hide the arrow of the popup */
+.clicked-popup .mapboxgl-popup-tip {
+  display: none; /* Hides the arrow */
+}
+
+/* Your custom clicked-nta styling */
+.clicked-nta {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background-color: #0079da;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 14px;
+  color: white;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.3);
+}
