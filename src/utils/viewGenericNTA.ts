@@ -17,6 +17,7 @@ import "../pages/Map.css"
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
+let previousLayerId: null | string = null
 
 function getDataset(metric: string) {
   return nta_dataset_info.value.find((dataset) => dataset.metric === metric);
@@ -220,7 +221,7 @@ export function createNtaLayer(
     console.log(e.features![0].properties);
     console.log(e);
 
-    // isProfileExpanded.value = true;
+    isProfileExpanded.value = true;
     isDataSelectionExpanded.value = false;
 
     const clickedLat = e.lngLat.lat;
@@ -275,5 +276,25 @@ export function createNtaLayer(
     map.removeLayer(layerOutlineId);
     map.removeLayer(layerBasicOutlineId);
     map.removeSource(sourceId);
+    removeAllPopupsAndBorders(map, sourceId);
   };
 }
+
+
+function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId:string) {
+  // Remove all popups
+  document.querySelectorAll('.mapboxgl-popup').forEach((popup) => popup.remove());
+
+  // Reset the clicked state if there's a clicked NTA
+  if (clickedNtacode !== null) {
+    try {
+      if (map.getSource(sourceId)) {
+        map.setFeatureState({ source: sourceId, id: clickedNtacode }, { clicked: false });
+      }
+      clickedNtacode = null; // Reset the clicked feature
+    } catch (error) {
+      console.error('Error resetting feature state:', error);
+    }
+  }
+}
+
