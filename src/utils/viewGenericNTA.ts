@@ -13,11 +13,11 @@ import {
   previousClickCor,
 } from "../pages/MapPage";
 
-import "../pages/Map.css"
+import "../pages/Map.css";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
-let previousLayerId: null | string = null
+let previousLayerId: null | string = null;
 
 function getDataset(metric: string) {
   return nta_dataset_info.value.find((dataset) => dataset.metric === metric);
@@ -215,11 +215,10 @@ export function createNtaLayer(
     }
   });
 
+  let currentPopup: mapboxgl.Popup | null = null;
+
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode, ntaname } = e.features![0].properties as any;
-
-    console.log(e.features![0].properties);
-    console.log(e);
 
     isProfileExpanded.value = true;
     isDataSelectionExpanded.value = false;
@@ -243,10 +242,15 @@ export function createNtaLayer(
     const offsetLat = 0.005;
     const tooltipLat = clickedLat + offsetLat;
 
-    new mapboxgl.Popup({
+    if (currentPopup) {
+      currentPopup.remove();
+      currentPopup = null;
+    }
+
+    currentPopup = new mapboxgl.Popup({
       closeButton: false,
-      closeOnClick: true,
-      className: 'clicked-popup'
+      closeOnClick: false,
+      className: "clicked-popup",
     })
       .setLngLat([clickedLng, tooltipLat])
       .setHTML(`<div class='clicked-nta'>${ntaname}</div>`)
@@ -280,21 +284,23 @@ export function createNtaLayer(
   };
 }
 
+function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
 
-function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId:string) {
-  // Remove all popups
-  document.querySelectorAll('.mapboxgl-popup').forEach((popup) => popup.remove());
+  document
+    .querySelectorAll(".mapboxgl-popup")
+    .forEach((popup) => popup.remove());
 
-  // Reset the clicked state if there's a clicked NTA
   if (clickedNtacode !== null) {
     try {
       if (map.getSource(sourceId)) {
-        map.setFeatureState({ source: sourceId, id: clickedNtacode }, { clicked: false });
+        map.setFeatureState(
+          { source: sourceId, id: clickedNtacode },
+          { clicked: false }
+        );
       }
-      clickedNtacode = null; // Reset the clicked feature
+      clickedNtacode = null;
     } catch (error) {
-      console.error('Error resetting feature state:', error);
+      console.error("Error resetting feature state:", error);
     }
   }
 }
-
