@@ -31,6 +31,8 @@ const Legends = () => {
         '20130601': 90.52
     })
 
+    const currentYear = selectedDataset.value?.currentYear || 2023;
+
     const handleClick = () => setIsLegendExpanded(!isLegendExpanded)
     const datasetName = computed(() => selectedDataset.value?.name)
     const viewName = computed(() => selectedDataset.value?.currentView)
@@ -45,10 +47,10 @@ const Legends = () => {
 
     if (!isLegendExpanded) {
         return (<div
-            className={`absolute left-6 bottom-6 flex justify-center items-center w-10 h-10 bg-white rounded-full  cursor-pointer z-10`}
+            className={`absolute left-6 bottom-6 flex justify-center items-center w-10 h-10 bg-[#1B1B1B] rounded-full  cursor-pointer z-10`}
             onClick={handleClick}
         >
-            <ListBulletIcon width={18} height={18} />
+            <ListBulletIcon width={18} height={18} className='text-white' />
         </div>)
     } else {
         return (
@@ -64,11 +66,11 @@ const Legends = () => {
                     ) && viewName.value == 'nta' && <div className='p-5 bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex gap-2 mb-2 items-center justify-between font-medium'>
                             <h3 className='text-regular text-[#F4F4F4]'>{datasetName.value}</h3>
-                            <XMarkIcon width={20} height={20} className='text-[#F4F4F4] cursor-pointer' onClick={handleClick} />
+                            <XMarkIcon width={18} height={18} className='text-[#BDBDBD] cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex items-center'>
                             {legend.value?.map((item: any) => (
-                                <div key={`legend-${item.label}`} className='flex flex-col items-start gap-1 text-xsmall text-[#F4F4F4]'>
+                                <div key={`legend-${item.label}`} className='flex flex-col items-center gap-1 text-xsmall text-[#F4F4F4]'>
                                     <span className="w-10 h-4 block " style={{ backgroundColor: item.value }} />
                                     {item.label}
                                 </div>
@@ -77,30 +79,29 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Weather Stations" && <div className='p-5 bg-[#1B1B1B] rounded-[0.5rem]'>
-                        <div className='mb-4'>
-                            <div className='flex gap-4 mb-2 items-center font-medium'>
-                                <h3 className='text-[#F4F4F4]'>Extreme Heat Advisory Alert</h3>
-                                <XMarkIcon width={20} height={20} className='text-[#F4F4F4] cursor-pointer' onClick={handleClick} />
-                            </div>
-                            <div className='flex items-center gap-3'>
-                                <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
-                                <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
-                                <InformationCircleIcon width={24} height={24} className='text-[#F4F4F4]' />
-                            </div>
-                            <div className='flex items-center gap-3'>
-                                <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
-                                <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
-                                <InformationCircleIcon width={24} height={24} className='text-[#F4F4F4]' />
-                            </div>
-                            <div className='flex items-center gap-3'>
-                                <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
-                                <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
-                                <InformationCircleIcon width={24} height={24} className='text-[#F4F4F4]' />
+                    datasetName.value === "Weather Stations" && <div className='p-5 flex items-start bg-[#1B1B1B] rounded-[0.5rem]'>
+                        <div className='mr-8'>
+                            <h3 className='mb-3 font-medium text-[#F4F4F4]'>Extreme Heat days in {currentYear}</h3>
+                            <div className='flex flex-col gap-1'>
+                                <div className='flex items-center gap-3'>
+                                    <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
+                                    <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
+                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                </div>
+                                <div className='flex items-center gap-3'>
+                                    <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
+                                    <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
+                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                </div>
+                                <div className='flex items-center gap-3'>
+                                    <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
+                                    <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
+                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                </div>
                             </div>
                         </div>
                         <div >
-                            <div className='flex mb-4 items-center font-medium text-[#F4F4F4]'>Number of extreme heat days</div>
+                            {/* <div className='flex mb-4 items-center font-medium text-[#F4F4F4]'>Number of extreme heat days</div>
                             <div className='flex '>
                                 <div className='relative w-[70%] h-24'>
                                     <div className='absolute left-0 bottom-0 w-24 h-24 border-[1.5px] border-[#F4F4F4] rounded-full'></div>
@@ -118,15 +119,16 @@ const Legends = () => {
                                     <div className='absolute top-[calc(4rem_-_9px)] font-medium text-small text-[#F4F4F4]'>10 days</div>
                                     <div className='absolute top-[calc(5rem_-_9px)] font-medium text-small text-[#F4F4F4]'>5 days</div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
+
                     </div>
                 }
                 {
                     datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[12rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
                         <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
-                            <XMarkIcon width={20} height={20} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
+                            <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
                         <div className='my-[0.25rem] h-5 bg-[#345C67]'>
                         </div>
@@ -139,7 +141,7 @@ const Legends = () => {
                     datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[15rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
                             <p>Surface Temperature</p>
-                            <XMarkIcon width={20} height={20} className='cursor-pointer' onClick={handleClick} />
+                            <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
                             <div className='w-[50%] h-full bg-gradient-to-r from-[#202E41] via-[#BED0DD] to-[#BED0DD]'></div>

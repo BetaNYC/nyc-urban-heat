@@ -13,9 +13,7 @@ function App() {
   useEffect(() => {
     document.title = 'NYC Urban Heat Portal'
     
-    // load datasets from csv file
     csv(`${import.meta.env.BASE_URL}/datasets.csv`).then(rows => {
-      // console.log(rows)
       nta_dataset_info.value = rows
     })
   }, [])

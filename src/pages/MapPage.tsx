@@ -10,14 +10,18 @@ import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
 import "./Map.css"
 import { signal } from '@preact/signals-react'
-import { Dataset, View } from '../utils/datasets.js';
-import { NtaProfileData } from '../types.js';
+import { Dataset, datasets } from '../utils/datasets.js';
+import { NtaProfileData, WeatherStationData } from '../types.js';
+import { initializeView } from '../utils/datasets.js';
 
 
 export const map = signal<mapboxgl.Map | null>(null)
-export const selectedDataset = signal<Dataset | null>(null)
+export const selectedDataset = signal<Dataset | null>(datasets[0])
 export const profileData = signal<NtaProfileData | null>(null)
 export const isProfileExpanded = signal(false)
+export const weatherStationProfileData = signal<WeatherStationData | null>(null)
+export const isWeatherStationProfileExpanded = signal(false)
+export const clickedAddress = signal<string | null>(null)
 export const isDataSelectionExpanded = signal(false)
 export const previousClickCor = signal<[number, number]>([0, 0])
 
@@ -39,8 +43,7 @@ const MapPage = () => {
       style: "mapbox://styles/cloudlun/clle3783901j201p43864c07n",
       center: defaultCoordinates,
       zoom: defaultZoom,
-      minZoom: 10,
-      maxZoom: 15,
+      maxZoom: 20,
       interactive: true,
       doubleClickZoom: false,
     });
@@ -52,8 +55,17 @@ const MapPage = () => {
       showZoom: true,
     }), 'bottom-right');
 
-    // set map signal
-    m.on('load', () => map.value = m);
+    const bounds = new mapboxgl.LngLatBounds(
+      [-74.30, 40.40], // 西南角：West Orange 和 Sandy Hook Bay
+      [-73.10, 40.98]  // 東北角：Long Island 和 White Plains
+    );
+    
+    m.setMaxBounds(bounds);
+
+    m.on('load', () => {
+      map.value = m
+      initializeView(datasets[0], map.value)
+    });
 
     return () => {
       if (m) {
@@ -64,14 +76,15 @@ const MapPage = () => {
   }, []);
 
 
+
   return (
     <div className='relative w-full h-full'>
       {/* <div className='absolute top-0 left-[17.5vw] w-[2px] h-[100vh] bg-[#fe8585] z-[100000]'></div>
       <div className='absolute top-1/2 left-1/2 w-[20px] h-[20px] bg-[#fe8585] z-[1000000] rounded-full transform -translate-x-1/2 -translate-y-1/2'></div> */}
       <Nav />
-      {/* {
-        selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile profileExpanded={profileExpanded} setProfileExpanded={setProfileExpanded} year={year} setYear={setYear} heatEventDays={heatEventDays} address={address} />
-      } */}
+      {
+        selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile />
+      } 
       {
         selectedDataset.value?.name !== "Weather Stations" && selectedDataset.value?.currentView === 'nta' && <NeighborhoodProfile />
       }

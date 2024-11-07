@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { NavLink } from "react-router-dom"
+import { NavLink, useLocation } from "react-router-dom"
 import ProjectLogo from "/icons/NYC Urban Heat Portal.svg"
 import { useMediaQuery } from "react-responsive"
 import { Bars3Icon } from "@heroicons/react/24/outline"
@@ -12,6 +12,7 @@ interface NavButtonProps {
 
 const Nav: React.FC = () => {
   const [expanded, setExpanded] = useState<boolean>(false)
+  const location = useLocation()
   
   const isDesktop = useMediaQuery({
     query: '(min-width: 1280px)'
@@ -40,7 +41,7 @@ const Nav: React.FC = () => {
 
   return (
     <nav className='flex justify-center w-full h-[3.125rem] bg-[#1B1B1B]'>
-      <div className={`relative flex justify-between items-center px-5 container h-full bg-[#1B1B1B]`}>
+      <div className={`relative flex justify-between items-center px-5 ${location.pathname === '/' ? 'px-6 w-full' : 'container'} h-full bg-[#1B1B1B]`}>
         <NavLink to="/">
           <img src={ProjectLogo} alt="Urban Heat logo" className='cursor-pointer' />
         </NavLink>

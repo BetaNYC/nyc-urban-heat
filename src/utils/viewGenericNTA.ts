@@ -14,6 +14,7 @@ import {
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
+import { centerOfMass } from "@turf/turf";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
@@ -119,7 +120,7 @@ export function createNtaLayer(
     if (e.features) {
       isDataSelectionExpanded.value = false;
 
-      const coordinates = e.lngLat;
+
       const { ntacode, boroname, ntaname } = e.features[0].properties as any;
 
       const data = getNTAInfo(ntacode);
@@ -164,7 +165,12 @@ export function createNtaLayer(
               </div>`;
 
       const divElement = document.createElement("div");
+      
       divElement.innerHTML = title + details;
+      divElement.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
+      divElement.style.borderRadius = "8px";
+      divElement.style.overflow = "hidden";
+
       divElement
         .querySelector("#view-profile-link")
         ?.addEventListener("click", () => {
@@ -180,14 +186,30 @@ export function createNtaLayer(
           isProfileExpanded.value = true;
         });
 
+      const ntaCenter = centerOfMass(e.features[0]).geometry.coordinates;
+      // const selectedCoordinates = e.features[0].geometry.coordinates.flat(Infinity);
+      // const northLatitude = Math.max(...selectedCoordinates.filter((_, i) => i % 2 !== 0));
+      // [ntaCenter[0], northLatitude]
+
+      const coordinates = e.lngLat;
+
+      const lng = ntaCenter[0];
+      const lat = ntaCenter[1];
+
+      // Get mouse position (relative to the map)
+      const mousePosY = e.originalEvent.clientY;
+      const mapHeight = map.getContainer().clientHeight; // Map container height
+
       if (popup) popup.remove();
+
       popup = new Popup({
         closeButton: true,
       })
         .setLngLat(coordinates)
         .setDOMContent(divElement)
+        .setOffset([0, 20])
         .addTo(map);
-      // unoutline previous, then outline
+
       if (hoveredNtacode !== null && hoveredNtacode !== ntacode) {
         map.setFeatureState(
           { source: sourceId, id: hoveredNtacode },
@@ -285,7 +307,6 @@ export function createNtaLayer(
 }
 
 function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
-
   document
     .querySelectorAll(".mapboxgl-popup")
     .forEach((popup) => popup.remove());

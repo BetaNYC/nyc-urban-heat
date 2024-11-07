@@ -1,40 +1,31 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import airHeatIndex from "../data/airHeatIndex2022.json";
+import { selectedDataset, clickedAddress } from '../pages/MapPage';
 
-interface AirHeatIndexData {
-    stations: string;
-    datetime: string;
-    feelslikemax: number;
-    feelslikemin: number;
+import { WeatherStationData } from '../types';
+
+interface AirTemperatureData {
+    address: string;
+    datetime: Date;
+    year: number;
+    tempmax: number;
+    tempmin: number;
     Normal_Temp_Max: number;
     Normal_Temp_Min: number;
-    NYC_HeatEvent: "" | "NYC_Heat_Event"
-    HeatAdvisory: "" | "HeatAdvisory"
-    ExcessiveHeat: "" | "Excessive_Heat_Event"
+}
+
+type Props = {
+    data: AirTemperatureData[]
 }
 
 
-const AirTemperatureLineChart = () => {
+const AirTemperatureLineChart = ({ data }: Props) => {
 
     const svgRef = useRef<SVGSVGElement | null>(null);
-
-
     const renderChart = () => {
-
-
         const parseDate = d3.timeParse('%Y-%m-%d');
 
-
-        const data = (airHeatIndex as AirHeatIndexData[])
-            .filter(d => d.stations === "['AV066']")
-            .map(d => ({
-                ...d,
-                datetime: parseDate(d.datetime)!,
-            }))
-            .filter(d => d.datetime !== null);
-
-        console.log(data)
+        const currentYear = selectedDataset.value?.currentYear;
 
         const svgElement = svgRef.current;
         if (!svgElement) return;
@@ -52,8 +43,8 @@ const AirTemperatureLineChart = () => {
 
         const x = d3.scaleTime()
             .domain([
-                parseDate('2022-05-01') as Date,
-                parseDate('2022-10-01') as Date
+                parseDate(`${currentYear}-05-01`) as Date,
+                parseDate(`${currentYear}-10-01`) as Date
             ] as [Date, Date])
             .range([margin.left, width - margin.right]);
 
@@ -61,14 +52,7 @@ const AirTemperatureLineChart = () => {
             .domain([30, 120])
             .range([height - margin.bottom, margin.top]);
 
-        const tickDates = [
-            parseDate('2022-05-01'),
-            parseDate('2022-06-01'),
-            parseDate('2022-07-01'),
-            parseDate('2022-08-01'),
-            parseDate('2022-09-01'),
-            parseDate('2022-10-01')
-        ];
+        const tickDates = Array.from({ length: 6 }, (_, i) => parseDate(`${currentYear}-${String(i + 5).padStart(2, '0')}-01`));
 
         svg.append('text')
             .attr('x', -margin.top) // X position
@@ -99,7 +83,7 @@ const AirTemperatureLineChart = () => {
 
         xAxis.selectAll("path, line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         xAxis.selectAll("text")
             .attr("fill", "#999")
@@ -115,7 +99,7 @@ const AirTemperatureLineChart = () => {
 
         xGrid.selectAll(".tick line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         const yAxis = svg.append("g")
             .attr("transform", `translate(${margin.left}, 0)`)
@@ -123,27 +107,27 @@ const AirTemperatureLineChart = () => {
             .call(d3.axisLeft(y)
                 .tickSize(-width + margin.left + margin.right)
             )
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         yAxis.selectAll("path, line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         yAxis.selectAll("text")
             .attr("fill", "#999")
             .attr("stroke-width", 0);
 
-        const lineMax = d3.line<{ datetime: Date, feelslikemax: number }>()
+        const lineMax = d3.line<{ datetime: Date, tempmax: number }>()
             .x(d => x(d.datetime))
-            .y(d => y(d.feelslikemax));
+            .y(d => y(d.tempmax));
 
         const lineNormalMax = d3.line<{ datetime: Date, Normal_Temp_Max: number }>()
             .x(d => x(d.datetime))
             .y(d => y(d.Normal_Temp_Max));
 
-        const lineMin = d3.line<{ datetime: Date, feelslikemin: number }>()
+        const lineMin = d3.line<{ datetime: Date, tempmin: number }>()
             .x(d => x(d.datetime))
-            .y(d => y(d.feelslikemin));
+            .y(d => y(d.tempmin));
 
         const lineNormalMin = d3.line<{ datetime: Date, Normal_Temp_Min: number }>()
             .x(d => x(d.datetime))
@@ -186,62 +170,75 @@ const AirTemperatureLineChart = () => {
 
         const tooltipDiv = d3.select('#tooltip')
             .style('position', 'absolute')
-            .style('background', '#E2E2E2')
-            .style('border', '1px solid #F2F2F2') // Add border color
+            .style('background', '#4F4F4F')
+            // .style('border', '1px solid #F2F2F2') // Add border color
             .style('border-radius', '12px')
             .style('display', 'none');
 
         svg.on('mousemove', (event) => {
             const [xPos, yPos] = d3.pointer(event, svgRef.current);
             const xDate = x.invert(xPos);
+            const xOffset = 15
+
             const closestDataPoint = data.reduce((prev, curr) =>
-                Math.abs(xDate.getTime() - curr.datetime.getTime()) < Math.abs(xDate.getTime() - prev.datetime.getTime())
+                Math.abs(xDate.getTime() - curr.datetime!.getTime()) < Math.abs(xDate.getTime() - prev.datetime!.getTime())
                     ? curr : prev);
 
             verticalLine
-                .attr('x1', x(closestDataPoint.datetime))
-                .attr('x2', x(closestDataPoint.datetime))
+                .attr('x1', x(closestDataPoint.datetime!))
+                .attr('x2', x(closestDataPoint.datetime!))
                 .attr('y1', margin.top)
                 .attr('y2', height - margin.bottom)
                 .style('display', 'block');
 
+            const svgWidth = (svg.node() as SVGSVGElement).getBoundingClientRect().width;
+            const tooltipWidth = (tooltipDiv.node() as HTMLElement).getBoundingClientRect().width;
+            const isNearRightEdge = xPos + tooltipWidth + xOffset > svgWidth;
+
             tooltipDiv
-                .style('left', `${xPos}px`) // Add some offset
-                .style('top', `${margin.bottom}px`) // Add some offset
+                .style('left', isNearRightEdge ? `${xPos - tooltipWidth - xOffset}px` : `${xPos + xOffset}px`)
+                .style('top', `${yPos}px`)
                 .style('display', 'block')
                 .html(`
                 <div style="">
-                    <div style="padding: 8px; background: #828282; font-weight:bold; font-size:14px; color: #fff; border:1px solid; border:#828282; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}</div>
+                    <div style="padding:4px 8px 4px 8px; font-weight:medium; font-size:10px; color: #f2f2f2; border-bottom: 1px solid #F2F2F2; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime!)}</div>
                     <div style="margin: 8px; padding:0">
                         <div style="display:flex; align-items: flex-start; gap: 15px; margin-bottom: 12px">
-                            <div style="font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.feelslikemax)} °F</div>
+                            <div style="font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.tempmax)} °F</div>
                             <div style="">
-                                <h3 style="font-weight: 500; font-size:10px;">Maximum Air Temperature</h3>
+                                <h3 style="font-weight: 500; font-size:10px; color:#F2F2F2">Maximum Air Temperature</h3>
                                 <div style="display: flex; gap:8px">
-                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px;">
-                                        ${Math.round(closestDataPoint.feelslikemax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0 ? "+" : "-"}
-                                        ${Math.abs(Math.round(closestDataPoint.feelslikemax) - Math.round(closestDataPoint.Normal_Temp_Max))}°
+                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px; color:#F2F2F2">
+                                        ${Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0 ? "+" : "-"}
+                                        ${Math.abs(Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max))}°
                                     </p>
-                                    <p style="font-weight: 500; font-size: 8px">above Historic normal max</p>
+                                    <p style="font-weight: 500; font-size: 8px;color:#F2F2F2">above Historic normal max</p>
                                 </div>
                             </div>
                         </div> 
                         <div style="display:flex; gap: 15px; align-items: flex-start;">
-                            <div style="font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.feelslikemin)} °F</div>
+                            <div style="font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.tempmin)} °F</div>
                             <div style="">
-                                <h3 style="font-weight: 500; font-size:10px;">Minimum Air Temperature</h3>
+                                <h3 style="font-weight: 500; font-size:10px; color:#F2F2F2">Minimum Air Temperature</h3>
                                 <div style="display: flex; gap:8px">
-                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px;">
-                                        ${Math.round(closestDataPoint.feelslikemin) - Math.round(closestDataPoint.Normal_Temp_Min) > 0 ? "+" : "-"}
-                                        ${Math.abs(Math.round(closestDataPoint.feelslikemin) - Math.round(closestDataPoint.Normal_Temp_Min))}°
+                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px; color:#F2F2F2">
+                                        ${Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min) > 0 ? "+" : "-"}
+                                        ${Math.abs(Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min))}°
                                     </p>
-                                    <p style="font-weight: 500; font-size: 8px">above Historic normal min</p>
+                                    <p style="font-weight: 500; font-size: 8px; color:#F2F2F2">above Historic normal min</p>
                                 </div>
                             </div>
                         </div>       
                     </div>
                 </div>
             `);
+
+            const tooltipElement = tooltipDiv.node() as HTMLElement;
+            if (tooltipElement) {
+                const tooltipHeight = tooltipElement.getBoundingClientRect().height;
+                tooltipDiv.style('top', `${yPos - tooltipHeight / 2}px`);
+            }
+
         })
             .on('mouseout', () => {
                 verticalLine.style('display', 'none');
@@ -249,18 +246,16 @@ const AirTemperatureLineChart = () => {
             });
     };
 
-    // <strong>Max Heat Index:</strong> ${closestDataPoint.feelslikemax}<br>
-    // <strong>Min Heat Index:</strong> ${closestDataPoint.feelslikemin}
-
     useEffect(() => {
         renderChart();
 
-        window.addEventListener('resize', renderChart);
+        const handleResize = () => renderChart();
+        window.addEventListener('resize', handleResize);
 
         return () => {
-            window.removeEventListener('resize', renderChart);
+            window.removeEventListener('resize', handleResize); // Clean up listener
         };
-    }, []);
+    }, [data]); // Re-run when currentYear changes
 
     return (
         <div className='relative w-full h-[80%]'>

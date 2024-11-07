@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive"
 import { CalendarDaysIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { formatDateString } from "../utils/format"
-import { map, selectedDataset, isProfileExpanded } from '../pages/MapPage'
+import { map, selectedDataset, isProfileExpanded, isWeatherStationProfileExpanded } from '../pages/MapPage'
 import { computed } from "@preact/signals-react"
 import { group } from 'd3-array';
 import { initializeView } from "../utils/datasets"
@@ -21,12 +21,11 @@ const MapDateSelections = () => {
   }
   const dates = computed(() => {
     const dates = selectedDataset.value?.dates ?? []
-    console.log(dates)
-    // sort dates and create an new object that can be grouped
+
     const datesObj = dates.sort((a, b) => b.localeCompare(a)).map(date => {
       let formattedDate = date
       let group = ''
-      // check if the date contains a year/month/date
+
       if (date.startsWith('20') && date.length == 8) {
         formattedDate = formatDateString(date)
         group = date.slice(0, 4)
@@ -60,14 +59,14 @@ const MapDateSelections = () => {
 
 
       initializeView(selectedDataset.value, map.value).then(dataset => {
-        selectedDataset.value = {...dataset}
+        selectedDataset.value = { ...dataset }
       })
     }
   }
-
+  // ${isProfileExpanded.value ? "left-6 top-[9.25rem]" :
   if (selectedDataset.value?.dates) {
     return (
-      <div className={`absolute ${isProfileExpanded ? "left-[22rem] top-[4.625rem]" : "left-6 top-[9.25rem]"}
+      <div className={`absolute  left-[23rem] top-[4.625rem]
            bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`}
         onClick={() => setIsExpanded(!isExpanded)}>
         <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
@@ -75,23 +74,24 @@ const MapDateSelections = () => {
           {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">
             {selectedDataset.value?.currentDate ? formatDate(selectedDataset.value?.currentDate) : 'Available Datasets'}
           </div>}
-          {isExpanded ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]" />
-            : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]" />}
+          {isExpanded ? <ChevronUpIcon width={20} height={20} className="text-[#BDBDBD]" />
+            : <ChevronDownIcon width={20} height={20} className="text-[#BDBDBD]" />}
         </div>
-        <div className={`flex flex-col gap-0 my-3 w-full ${isExpanded ? "h-[60vh] overflow-scroll" : "hidden"}`}>
-          {Array.from(dates.value).map(([category, values]) => (
+        <div className={`flex flex-col gap-0 mb-3 w-full ${isExpanded ? "h-[60vh] overflow-scroll" : "hidden"}`}>
+          {Array.from(dates.value).map(([category, values], index) => (
             <div key={`date-cat-${category}`}>
               {category !== '' ? (
-                // divider
                 <>
-                  <h3 className="px-5 pt-2 font-medium text-regular text-[#BDBDBD]">{category}</h3>
-                  <div className='my-2 h-[1px] bg-[#828282]'></div>
+                  <h3 className={`px-5 ${index !== 0 ? "pt-4" : ""} font-medium text-regular text-[#BDBDBD]`}>
+                    {category}
+                  </h3>
+                  <div className="h-[1px] bg-[#828282]"></div>
                 </>
               ) : ''}
               <>
                 {values.map((date: any) => <div className=" text-[#F2F2F2] hover:bg-[#6A6A6A]" key={`date-${date}`} onClick={() => handleDateChange(date.date)}>
-                  <h3 className="my-2 px-5 font-medium text-regular ">{date.formattedDate}</h3>
-                  <div className='h-[1px] bg-[#828282]'></div>
+                  <h3 className=" px-5 py-2 font-medium text-regular ">{date.formattedDate}</h3>
+                  {/* <div className='h-[1px] bg-[#828282]'></div> */}
                 </div>)}
               </>
             </div>
@@ -100,19 +100,19 @@ const MapDateSelections = () => {
       </div>
     )
   }
-
+  // ${isWeatherStationProfileExpanded.value ? "left-6 top-[9.25rem]" : 
   if (selectedDataset.value?.years) {
     return (
-      <div className={`absolute ${isProfileExpanded ? "left-[22rem] top-[4.625rem]" : "left-6 top-[9.25rem]"}
-      bg-[#1B1B1B] rounded-[0.5rem] cursor-pointer overflow-hidden z-10`}
+      <div className={`absolute left-[23rem] top-[4.625rem]
+      bg-[#1B1B1B] rounded-[0.5rem] cursor-ointer overflow-hidden z-10`}
         onClick={() => setIsExpanded(!isExpanded)}>
         <div className="flex justify-between items-center gap-3 px-3 h-[3.5rem] ">
           <CalendarDaysIcon width={24} height={24} className="text-[#BDBDBD]" />
           {isTablet && <div className="mr-5 font-medium text-regular text-[#F2F2F2]">
             {selectedDataset.value?.currentYear ? selectedDataset.value?.currentYear : 'Available Datasets'}
           </div>}
-          {isExpanded ? <ChevronUpIcon width={24} height={24} className="text-[#BDBDBD]" />
-            : <ChevronDownIcon width={24} height={24} className="text-[#BDBDBD]" />}
+          {isExpanded ? <ChevronUpIcon width={20} height={20} className="text-[#BDBDBD]" />
+            : <ChevronDownIcon width={20} height={20} className="text-[#BDBDBD]" />}
         </div>
         <div className={`flex flex-col gap-0 my-3 w-full ${isExpanded ? "overflow-scroll" : "hidden"}`}>
           {

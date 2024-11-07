@@ -19,6 +19,7 @@ import { viewWeatherStations } from "./viewWeatherStations";
 import { nta_dataset_info } from "../App";
 import { viewMRT } from "./viewMRT";
 import { viewCoolRoofs } from "./viewCoolRoofs";
+import { viewPremeableSurface } from "./viewPremeableSurface";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -75,7 +76,7 @@ export const datasets: Dataset[] = [
     group: "",
     icon: outdoorHeatExposureIndex,
     info: "The Outdoor Heat Exposure Index is a measure of the risk of heat-related illnesses for people spending time outdoors.",
-    currentView: null,
+    currentView: "nta",
     views: {
       nta: {
         name: "NTA Aggregated",
@@ -105,57 +106,14 @@ export const datasets: Dataset[] = [
     },
   },
   {
-    name: "Weather Stations",
-    group: "",
-    icon: weatherStations,
-    currentView: null,
-    getYears: async (): Promise<number[]> => {
-      const data = await fetchStationHeatStats();
-      const years = data.features.map((d: any) => d.properties.year);
-      const uniqueYears = [...new Set(years)];
-      return uniqueYears as number[];
-    },
-    years: [],
-    currentYear: null,
-    views: {
-      points: {
-        name: "Raw Data",
-        init: (map, options) => viewWeatherStations(map, options?.year!),
-      },
-    },
-  },
-  {
-    name: "Air Temperature",
-    group: "Outdoor Heat Exposure",
-    icon: airTemperature,
-    info: "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter.",
-    currentView: null,
-    views: {
-      nta: { name: "NTA Aggregated" },
-      raw: { name: "Raw Data" },
-    },
-  },
-  {
-    name: "Air Heat Index",
-    group: "Outdoor Heat Exposure",
-    icon: airHeatIndex,
-    info: "Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort.",
-    currentView: null,
-    views: {
-      nta: { name: "NTA Aggregated" },
-      raw: { name: "Raw Data" },
-    },
-  },
-  {
     name: "Mean Radiant Temperature",
-    group: "Outdoor Heat Exposure",
+    group: "OHE Static Factors",
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
       raw: {
         name: "Raw Data",
         init: function (map) {
-
           const MRTCleanup = viewMRT(map);
           const ntaLayerCleanup = createNtaLayer(
             map,
@@ -172,7 +130,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Surface Temperature",
-    group: "Outdoor Heat Exposure",
+    group: "OHE Static Factors",
     icon: surfaceTemperature,
     info: `Surface Temperature indicates how hot the "surface" of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report.`,
     currentView: null,
@@ -208,21 +166,34 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
-        init: function (map) {
-          return createNtaLayer(map, "ST_20230902", this.name, {
+        init: function (map, options) {
+          const date = `ST_${options?.date || "20230902"}`;
+          return createNtaLayer(map, date, this.name, {
             "fill-color": "orange",
           });
         },
       },
       raw: {
         name: "Raw Data",
-        init: (map, options) => viewSurfaceTemperature(map, options?.date),
+        init: function (map, options) {
+          const date = `ST_${options?.date || "20230902"}`;
+          const surfaceTemperatureCleanup = viewSurfaceTemperature(
+            map,
+            options?.date
+          );
+          const ntaLayerCleanup = createNtaLayer(map, date, this.name);
+
+          return function onDestroy() {
+            ntaLayerCleanup();
+            surfaceTemperatureCleanup;
+          };
+        },
       },
     },
   },
   {
     name: "Tree Canopy",
-    group: "Heat Mitigation",
+    group: "OHE Static Factors",
     icon: treeCanopy,
     info: "Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution.",
     currentView: null,
@@ -271,7 +242,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Cool Roofs",
-    group: "Heat Mitigation",
+    group: "OHE Static Factors",
     icon: coolRoofs,
     info: "Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
     currentView: null,
@@ -317,8 +288,8 @@ export const datasets: Dataset[] = [
     },
   },
   {
-    name: "Premeable Surfaces",
-    group: "Heat Mitigation",
+    name: "Permeable Surfaces",
+    group: "OHE Static Factors",
     icon: premeableSurface,
     currentView: null,
     views: {
@@ -347,9 +318,54 @@ export const datasets: Dataset[] = [
       },
       raw: {
         name: "Raw Data",
+        legend: [],
+        init: (map) => viewPremeableSurface(map),
       },
     },
   },
+  {
+    name: "Weather Stations",
+    group: "OHE Dynamic Factors",
+    icon: weatherStations,
+    currentView: null,
+    getYears: async (): Promise<number[]> => {
+      const data = await fetchStationHeatStats();
+      const years = data.features.map((d: any) => d.properties.year);
+      const uniqueYears = [...new Set(years)];
+      return uniqueYears as number[];
+    },
+    years: [],
+    currentYear: 2023,
+    views: {
+      points: {
+        name: "Raw Data",
+        init: (map, options) => viewWeatherStations(map, options?.year!),
+      },
+    },
+  },
+  {
+    name: "Air Temperature",
+    group: "OHE Dynamic Factors",
+    icon: airTemperature,
+    info: "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter.",
+    currentView: null,
+    views: {
+      nta: { name: "NTA Aggregated" },
+      raw: { name: "Raw Data" },
+    },
+  },
+  {
+    name: "Air Heat Index",
+    group: "OHE Dynamic Factors",
+    icon: airHeatIndex,
+    info: "Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort.",
+    currentView: null,
+    views: {
+      nta: { name: "NTA Aggregated" },
+      raw: { name: "Raw Data" },
+    },
+  },
+
   // {
   //   name: "Parks",
   //   group: "Heat Mitigation",
@@ -405,11 +421,8 @@ export async function initializeView(
   if (view.init) {
     const options: ViewOptions = {};
 
-    // set up dates for the dataset
     if (dataset.getDates) {
       dataset.dates = await dataset.getDates();
-      console.log(dataset.dates);
-      // set the first option, if there is no currentDate
       if (!dataset.currentDate) {
         dataset.currentDate = dataset.dates.at(-1);
       }

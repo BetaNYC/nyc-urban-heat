@@ -21,7 +21,6 @@ const DatasetSelections = () => {
       dataset.currentView = Object.keys(dataset.views)[0]
     }
     selectedDataset.value = dataset
-
     isProfileExpanded.value = false
 
     initializeView(dataset, map.value).then(dataset => {
@@ -56,13 +55,13 @@ const DatasetSelections = () => {
           }
           <h2 className={`font-medium text-regular text-[#F2F2F2]`}>{selectedDataset.value?.name ?? 'Urban Heat Data Layers'}</h2>
         </div>
-        {isDataSelectionExpanded.value ? <ChevronUpIcon width={24} height={24} className='text-[#BDBDBD]' />
-          : <ChevronDownIcon width={24} height={24} className='text-[#BDBDBD]' />}
+        {isDataSelectionExpanded.value ? <ChevronUpIcon width={20} height={20} className='text-[#BDBDBD]' />
+          : <ChevronDownIcon width={20} height={20} className='text-[#BDBDBD]' />}
       </div>
       {
         isDataSelectionExpanded.value && (
           <>
-            <div className='h-[calc(100%_-_7.25rem)] overflow-y-scroll overflow-hidden scrollbar'>
+            <div className='h-[calc(100%_-_7.25rem)] overflow-y-auto overflow-hidden scrollbar'>
 
               {Array.from(groupedDataset).map(([category, values]) => (
                 <div key={`ds-cat-${category}`}>

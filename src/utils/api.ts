@@ -11,12 +11,21 @@ export function getNTAInfo(nta: string) {
   );
 }
 
+export const fetchWeatherStationData = async (
+  selectedYear: number,
+  selectedAddress: string
+) => {
+  const weatherStationData = await cachedFetch(
+    `${BASE_URL}weather_stations_year?select=*&year=eq.${selectedYear}&address=eq.${selectedAddress}&apikey=${API_KEY}`
+  );
+  return weatherStationData;
+};
+
 export const fetchStationHeatStats = async () => {
   const [stationPoints, stationHeatStats] = await Promise.all([
     cachedFetch(`${BASE_URL}stations_point?select=*&apikey=${API_KEY}`),
     cachedFetch(`${BASE_URL}stations_summerstat?select=*&apikey=${API_KEY}`),
   ]);
-
 
   const stationPointsMap = new Map<string, any[]>();
   stationPoints.forEach((feature: Feature) => {
@@ -42,11 +51,10 @@ export const fetchStationHeatStats = async () => {
     };
   });
 
-
   const weatherStationsGeoJSON = {
     type: "FeatureCollection",
     features: stationFeatures,
-  }
+  };
 
-  return weatherStationsGeoJSON
+  return weatherStationsGeoJSON;
 };

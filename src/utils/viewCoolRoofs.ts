@@ -1,41 +1,52 @@
 // @ts-ignore
-import FeatureService from "mapbox-gl-arcgis-featureserver";
+import * as mapboxPmTiles from "mapbox-pmtiles";
 import mapboxgl from "mapbox-gl";
 
 export function viewCoolRoofs(map: mapboxgl.Map) {
-  const fsSourceId = "featureserver-src";
+  const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
-  const service = new FeatureService(fsSourceId, map, {
-    url: "https://services3.arcgis.com/QnAlpI4OtHhbgGN9/arcgis/rest/services/Dashboard_Data_WFL1/FeatureServer/2",
-    tileSize: 1024
-  });
+  //@ts-ignore
+  mapboxgl.Style.setSourceType(SOURCE_TYPE, PmTilesSource);
 
-  // see attributes here
-  // https://services3.arcgis.com/QnAlpI4OtHhbgGN9/arcgis/rest/services/Dashboard_Data_WFL1/FeatureServer/2
-  map.addLayer({
-    id: "fill-lyr",
-    source: fsSourceId,
-    type: "fill",
-    paint: {
-      "fill-opacity": 1,
-      "fill-color": [
-        "step",
-        ["get", "ref2020"],
-        "#6e008c", // color for values < 30
-        30,
-        "#a23f9a",
-        45,
-        "#cd6666",
-        55,
-        "#e0bf80",
-        60,
-        "#ffff73",
-      ],
-    },
-    minzoom: 0,
+  const PMTILES_URL = `https://urban-heat-portal-tiles.s3.us-east-1.amazonaws.com/CoolRoof_2020.pmtiles`;
+
+  PmTilesSource.getHeader(PMTILES_URL).then((header) => {
+    const bounds = [header.minLon, header.minLat, header.maxLon, header.maxLat];
+    map.addSource("cool_roofs", {
+      type: PmTilesSource.SOURCE_TYPE as any,
+      url: PMTILES_URL,
+      minzoom: header.minZoom,
+      maxzoom: header.maxZoom,
+      bounds: bounds,
+    });
+    map.addLayer({
+      id: "cool_roofs",
+      source: "cool_roofs",
+      "source-layer": "raster-layer",
+      type: "raster",
+      layout: { visibility: "visible" },
+      paint: {
+        "raster-color": [
+          "interpolate",
+          ["linear"],
+          ["raster-value"],
+          0,"#6e008c",
+          1,"#a23f9a",
+          // "#cd6666",
+          // 55,
+          // "#e0bf80",
+          // 60,
+          // "#ffff73",
+        ],
+      },
+    });
   });
 
   return function onDestory() {
-    map.removeLayer("fill-lyr");
+    map.removeLayer("cool_roofs");
+    map.removeSource("cool_roofs");
   };
+
+  // see attributes here
+  // https://services3.arcgis.com/QnAlpI4OtHhbgGN9/arcgis/rest/services/Dashboard_Data_WFL1/FeatureServer/2
 }

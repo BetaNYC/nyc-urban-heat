@@ -1,36 +1,32 @@
 import { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-import airHeatIndex from "../data/airHeatIndex2022.json";
+import { selectedDataset, clickedAddress } from '../pages/MapPage';
 
 interface AirHeatIndexData {
-    stations: string;
-    datetime: string;
+    address: string;
+    datetime: Date;
+    year: number;
     feelslikemax: number;
     feelslikemin: number;
-    NYC_HeatEvent: "" | "NYC_Heat_Event"
-    HeatAdvisory: "" | "HeatAdvisory"
-    ExcessiveHeat: "" | "Excessive_Heat_Event"
+    NYC_HeatEvent: "" | "NYC_Heat_Event";
+    HeatAdvisory: "" | "HeatAdvisory";
+    ExcessiveHeat: "" | "Excessive_Heat_Event";
 }
 
-const AirHeatIndexLineChart = () => {
+type Props = {
+    data: AirHeatIndexData[]
+}
+
+const AirHeatIndexLineChart = ({ data }: Props) => {
     const svgRef = useRef<SVGSVGElement | null>(null);
 
     const renderChart = () => {
 
-
         const parseDate = d3.timeParse('%Y-%m-%d');
-
-        const data = (airHeatIndex as AirHeatIndexData[])
-            .filter(d => d.stations === "['AV066']")
-            .map(d => ({
-                ...d,
-                datetime: parseDate(d.datetime)!,
-            }))
-            .filter(d => d.datetime !== null);
+        const currentYear = selectedDataset.value?.currentYear
 
         const svgElement = svgRef.current;
         if (!svgElement) return;
-
 
         const margin = { top: 15, right: 15, bottom: 40, left: 40 };
         const width = svgElement.clientWidth
@@ -44,8 +40,8 @@ const AirHeatIndexLineChart = () => {
 
         const x = d3.scaleTime()
             .domain([
-                parseDate('2022-05-01') as Date,
-                parseDate('2022-10-01') as Date
+                parseDate(`${currentYear}-05-01`) as Date,
+                parseDate(`${currentYear}-10-01`) as Date
             ] as [Date, Date])
             .range([margin.left, width - margin.right]);
 
@@ -53,14 +49,9 @@ const AirHeatIndexLineChart = () => {
             .domain([30, 120])
             .range([height - margin.bottom, margin.top]);
 
-        const tickDates = [
-            parseDate('2022-05-01'),
-            parseDate('2022-06-01'),
-            parseDate('2022-07-01'),
-            parseDate('2022-08-01'),
-            parseDate('2022-09-01'),
-            parseDate('2022-10-01')
-        ];
+
+
+        const tickDates = Array.from({ length: 6 }, (_, i) => parseDate(`${currentYear}-${String(i + 5).padStart(2, '0')}-01`));
 
         svg.append('text')
             .attr('x', -margin.top) // X position
@@ -73,7 +64,7 @@ const AirHeatIndexLineChart = () => {
 
         svg.append('text')
             .attr('x', width - margin.right - 24)
-            .attr('y', height - margin.bottom / 4)
+            .attr('y', height - margin.bottom / 4 + 3)
             .text('Date')
             .style('font-size', '12px') // Adjust font size
             .style('fill', '#ccc'); // Adjust text color
@@ -86,16 +77,25 @@ const AirHeatIndexLineChart = () => {
                 //@ts-ignore
                 .tickValues(tickDates)
                 //@ts-ignore
-                .tickFormat(d3.timeFormat("%b %d"))
+                .tickFormat(d => d3.timeFormat("%b")(d) + " " + d.getDate())
             );
 
         xAxis.selectAll("path, line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         xAxis.selectAll("text")
             .attr("fill", "#999")
-            .attr("stroke-width", 0);
+            .attr("stroke-width", 0)
+            .attr("transform", "translate(0, 3)");
+
+        xAxis.selectAll("text")
+            .filter((d, i) => i === 0)
+            .style("text-anchor", "start");
+
+        xAxis.selectAll("text")
+            .filter((d, i) => i === xAxis.selectAll("text").size() - 1)  // Select the last label
+            .style("text-anchor", "end");
 
         const xGrid = svg.append("g")
             .attr("class", "x-grid")
@@ -107,7 +107,7 @@ const AirHeatIndexLineChart = () => {
 
         xGrid.selectAll(".tick line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         const yAxis = svg.append("g")
             .attr("transform", `translate(${margin.left}, 0)`)
@@ -115,11 +115,11 @@ const AirHeatIndexLineChart = () => {
             .call(d3.axisLeft(y)
                 .tickSize(-width + margin.left + margin.right)
             )
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         yAxis.selectAll("path, line")
             .attr("stroke", "#999")
-            .attr("stroke-width", 0.5);
+            .attr("stroke-width", 0.25);
 
         yAxis.selectAll("text")
             .attr("fill", "#999")
@@ -139,8 +139,6 @@ const AirHeatIndexLineChart = () => {
             .map(d => d.datetime)
             .filter(date => date instanceof Date);
 
-        // Calculate the width of one date tick
-        // Calculate the width of one date tick
         const calculateTickWidth = (date: Date) => {
             const oneDay = d3.timeDay.offset(date, -1);
             const nextDay = d3.timeDay.offset(date, 1);
@@ -159,7 +157,7 @@ const AirHeatIndexLineChart = () => {
         const partWidth = tickWidth / 3;
 
         // Draw rectangles function with offset
-        const heatDaysRectsDrawer = (dates: Date[], color: string, partIndex: number) => {
+        const heatDaysRectsDrawer = (dates: Date[], color: string, partIndex: number, event: string) => {
             dates.forEach(date => {
                 if (date) {
                     const xPosition = x(date);
@@ -175,33 +173,24 @@ const AirHeatIndexLineChart = () => {
                         .attr("fill", color)
                         .attr("stroke-width", 0)
                         .on('mousemove', () => {
-
                             tooltipDiv.style('background', color)
-                            svg.select('#heat-event').append('text').text('heat')
-                            .attr('x', 50) // Example x position
-                            .attr('y', 50)
-                            .style('font-size', '12px')
-                            .style('fill', '#000'); // Example style
+                            tooltipDiv.select('#heat-event') // Use `select` to target the existing div
+                                .html(`
+                                <div style="padding: 4px 8px; font-weight: bold; font-size: 14px; color: #F2F2F2;">
+                                    ${event}
+                                </div>
+                            `);
                         })
                         .on('mouseout', () => {
-
                             tooltipDiv.style('background', '#4F4F4F')
-
                         })
                 }
             });
         };
 
-
-        // nycHeatEventDates = [parseDate('2022-08-09')]
-        // heatAdvisoryDates = [parseDate('2022-08-09')]
-        // excessiveHeatDates = [parseDate('2022-08-09')]
-
-        heatDaysRectsDrawer(nycHeatEventDates, "#AD844A", 0);
-        heatDaysRectsDrawer(heatAdvisoryDates, "#A46338", 1);
-        heatDaysRectsDrawer(excessiveHeatDates, "#823E35", 2);
-
-
+        heatDaysRectsDrawer(nycHeatEventDates, "#AD844A", 0, 'NYC Heat Event');
+        heatDaysRectsDrawer(heatAdvisoryDates, "#A46338", 1, 'Heat Advisory');
+        heatDaysRectsDrawer(excessiveHeatDates, "#823E35", 2, 'Excessive Heat');
 
         const lineMax = d3.line<{ datetime: Date, feelslikemax: number }>()
             .x(d => x(d.datetime))
@@ -225,27 +214,46 @@ const AirHeatIndexLineChart = () => {
             .attr('stroke-width', 1.5)
             .attr('d', lineMin as unknown as string);
 
+        const verticalLine = svg.append('line')
+            .attr('stroke', '#F2F2F2')
+            .attr('stroke-width', 1)
+            .style('pointer-events', 'none');
+
         const tooltipDiv = d3.select('#tooltip')
             .style('position', 'absolute')
             .style('background', '#4F4F4F')
-            .style('border', '1px solid #4F4F4F') // Add border color
+            .style('border', '1px solid #4F4F4F')
             .style('border-radius', '12px')
             .style('display', 'none');
 
         svg.on('mousemove', (event) => {
+            
             const [xPos, yPos] = d3.pointer(event, svgRef.current);
             const xDate = x.invert(xPos);
+            const xOffset = 15
+
             const closestDataPoint = data.reduce((prev, curr) =>
-                Math.abs(xDate.getTime() - curr.datetime.getTime()) < Math.abs(xDate.getTime() - prev.datetime.getTime())
+                Math.abs(xDate.getTime() - curr.datetime!.getTime()) < Math.abs(xDate.getTime() - prev.datetime!.getTime())
                     ? curr : prev);
 
+            verticalLine
+                .attr('x1', x(closestDataPoint.datetime!))
+                .attr('x2', x(closestDataPoint.datetime!))
+                .attr('y1', margin.top)
+                .attr('y2', height - margin.bottom)
+                .style('display', 'block');
+
+            const svgWidth = (svg.node() as SVGSVGElement).getBoundingClientRect().width;
+            const tooltipWidth = (tooltipDiv.node() as HTMLElement).getBoundingClientRect().width;
+            const isNearRightEdge = xPos + tooltipWidth + xOffset > svgWidth;
+
             tooltipDiv
-                .style('left', `${xPos}px`) // Add some offset
-                .style('top', `${margin.bottom}px`) // Add some offset
+                .style('left', isNearRightEdge ? `${xPos - tooltipWidth - xOffset}px` : `${xPos + xOffset}px`)
+                .style('top', `${yPos}px`)
                 .style('display', 'block')
                 .html(`
                 <div style="">
-                    <div style="padding:4px 8px 4px 8px;  font-weight:medium; font-size:10px; color: #f2f2f2; border-bottom: 1px solid #F2F2F2; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime)}</div>
+                    <div style="padding:4px 8px 4px 8px; font-weight:medium; font-size:10px; color: #f2f2f2; border-bottom: 1px solid #F2F2F2; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime!)}</div>
                     <div id="heat-event"></div>
                     <div style="padding: 4px 8px 4px 8px; background:#4F4F4F">
                         <div style="display:flex; align-items:center; margin-bottom: 6px">
@@ -259,8 +267,15 @@ const AirHeatIndexLineChart = () => {
                     </div>
                 </div>
             `);
+
+            const tooltipElement = tooltipDiv.node() as HTMLElement;
+            if (tooltipElement) {
+                const tooltipHeight = tooltipElement.getBoundingClientRect().height;
+                tooltipDiv.style('top', `${yPos - tooltipHeight / 2}px`);
+            }
         })
             .on('mouseout', () => {
+                verticalLine.style('display', 'none');
                 tooltipDiv.style('display', 'none');
             });
     };
@@ -268,12 +283,13 @@ const AirHeatIndexLineChart = () => {
     useEffect(() => {
         renderChart();
 
-        window.addEventListener('resize', renderChart);
+        const handleResize = () => renderChart();
+        window.addEventListener('resize', handleResize);
 
         return () => {
-            window.removeEventListener('resize', renderChart);
+            window.removeEventListener('resize', handleResize);
         };
-    }, []);
+    }, [data]);
 
     return (
         <div className='relative w-full h-[80%]'>
@@ -284,6 +300,3 @@ const AirHeatIndexLineChart = () => {
 };
 
 export default AirHeatIndexLineChart;
-
-// jessicayang6768@gmail.com
-//8/19 上午十點
