@@ -90,11 +90,11 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
             .attr("transform", "translate(0, 3)");
 
         xAxis.selectAll("text")
-            .filter((d, i) => i === 0)
+            .filter((_, i) => i === 0)
             .style("text-anchor", "start");
 
         xAxis.selectAll("text")
-            .filter((d, i) => i === xAxis.selectAll("text").size() - 1)  // Select the last label
+            .filter((_, i) => i === xAxis.selectAll("text").size() - 1)  // Select the last label
             .style("text-anchor", "end");
 
         const xGrid = svg.append("g")
