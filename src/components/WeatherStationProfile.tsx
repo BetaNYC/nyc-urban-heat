@@ -120,12 +120,12 @@ const WeatherStationProfile = () => {
                                 {
                                     isTablet &&
                                     <div className="flex justify-center max-w-40 min-w-10">
-                                        <div className="relative aspect-square rounded-full bg-[#BA8E50]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
+                                        <div className="relative aspect-square rounded-full bg-[#e19f3c]" style={{ width: heatEventDaysCircleRadius, height: heatEventDaysCircleRadius }}>
                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className=" bg-[#c9733A] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
+                                                <div className=" bg-[#d66852] rounded-full" style={{ width: heatAdvisoryDaysCircleRadius, height: heatAdvisoryDaysCircleRadius }}></div>
                                             </div>
                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="w-2 h-2 bg-[#823E35] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
+                                                <div className="w-2 h-2 bg-[#9d2b2b] rounded-full" style={{ width: excessiveHeatDaysRadius, height: excessiveHeatDaysRadius }}></div>
                                             </div>
                                         </div>
                                     </div>

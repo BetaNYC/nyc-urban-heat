@@ -17,8 +17,8 @@ import { initializeView } from '../utils/datasets.js';
 
 export const map = signal<mapboxgl.Map | null>(null)
 export const selectedDataset = signal<Dataset | null>(datasets[0])
-export const profileData = signal<NtaProfileData | null>(null)
-export const isProfileExpanded = signal(false)
+export const neighborhoodProfileData = signal<NtaProfileData | null>(null)
+export const isNeighborhoodProfileExpanded = signal(false)
 export const weatherStationProfileData = signal<WeatherStationData | null>(null)
 export const isWeatherStationProfileExpanded = signal(false)
 export const clickedAddress = signal<string | null>(null)
@@ -59,7 +59,7 @@ const MapPage = () => {
       [-74.30, 40.40], // 西南角：West Orange 和 Sandy Hook Bay
       [-73.10, 40.98]  // 東北角：Long Island 和 White Plains
     );
-    
+
     m.setMaxBounds(bounds);
 
     m.on('load', () => {
@@ -84,7 +84,7 @@ const MapPage = () => {
       <Nav />
       {
         selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile />
-      } 
+      }
       {
         selectedDataset.value?.name !== "Weather Stations" && selectedDataset.value?.currentView === 'nta' && <NeighborhoodProfile />
       }

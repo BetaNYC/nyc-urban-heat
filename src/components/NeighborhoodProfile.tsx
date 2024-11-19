@@ -2,11 +2,11 @@ import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, InformationCircl
 import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
-import { isProfileExpanded, profileData, map, previousClickCor } from "../pages/MapPage"
+import { isNeighborhoodProfileExpanded, neighborhoodProfileData, map, previousClickCor } from "../pages/MapPage"
 
 
 
-// ntaProfileData 
+// ntaneighborhoodProfileData 
 const NeighborhoodProfile = () => {
     const [clickedIndex, setClickedIndex] = useState("cool_roofs")
 
@@ -21,8 +21,8 @@ const NeighborhoodProfile = () => {
     }
 
     const clickHandler = () => {
-        isProfileExpanded.value = !isProfileExpanded.value
-        if (isProfileExpanded.value === false) {
+        isNeighborhoodProfileExpanded.value = !isNeighborhoodProfileExpanded.value
+        if (isNeighborhoodProfileExpanded.value === false) {
             map.value!.flyTo({
                 center: [-73.913, 40.763],
                 zoom: 11,
@@ -33,7 +33,7 @@ const NeighborhoodProfile = () => {
         }
     }
 
-    // const { currentFeature, allFeatures } = ntaProfileData
+    // const { currentFeature, allFeatures } = ntaneighborhoodProfileData
     // if (Object.keys(currentFeature).length === 0) {
     //     // no feature is selected
     //     return (
@@ -53,20 +53,20 @@ const NeighborhoodProfile = () => {
     // const { properties } = (currentFeature as any)
     // const { borough, ntaname } = properties
 
-    // if (profileData.value) {
+    // if (neighborhoodProfileData.value) {
 
     return (
-        <div className={`transition-all duration-[1500ms] ${!isProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
+        <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
             {
                 isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
-                    {isProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
+                    {isNeighborhoodProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
                 </div>
             }
             <div className={`printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:gap-8 md:h-[30%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
-                        <h2 className="text-regular md:text-subheadline text-gray_six">{profileData.value?.boroname}</h2>
-                        <h1 className="md:mb-4 font-semibold text-subheadline md:text-headline text-gray_six">{profileData.value?.ntaname}</h1>
+                        <h2 className="text-regular md:text-subheadline text-gray_six">{neighborhoodProfileData.value?.boroname}</h2>
+                        <h1 className="md:mb-4 font-semibold text-subheadline md:text-headline text-gray_six">{neighborhoodProfileData.value?.ntaname}</h1>
                         {
                             isTablet &&
                             <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-scroll">

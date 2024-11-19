@@ -171,7 +171,6 @@ const AirTemperatureLineChart = ({ data }: Props) => {
         const tooltipDiv = d3.select('#tooltip')
             .style('position', 'absolute')
             .style('background', '#4F4F4F')
-            // .style('border', '1px solid #F2F2F2') // Add border color
             .style('border-radius', '12px')
             .style('display', 'none');
 
@@ -195,6 +194,12 @@ const AirTemperatureLineChart = ({ data }: Props) => {
             const tooltipWidth = (tooltipDiv.node() as HTMLElement).getBoundingClientRect().width;
             const isNearRightEdge = xPos + tooltipWidth + xOffset > svgWidth;
 
+            const isAboveHistoricalMax = Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0
+            const isAboveHistoricalMin = Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0
+
+            const tempMaxDifference = Math.abs(Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max))
+            const tempMinDifference = Math.abs(Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min))
+
             tooltipDiv
                 .style('left', isNearRightEdge ? `${xPos - tooltipWidth - xOffset}px` : `${xPos + xOffset}px`)
                 .style('top', `${yPos}px`)
@@ -206,32 +211,34 @@ const AirTemperatureLineChart = ({ data }: Props) => {
                         <div style="display:flex; align-items: flex-start; gap: 15px; margin-bottom: 12px">
                             <div style="font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.tempmax)} °F</div>
                             <div style="">
-                                <h3 style="font-weight: 500; font-size:10px; color:#F2F2F2">Maximum Air Temperature</h3>
+                                <h3 style="font-weight: 500; font-size:12px; color:#F2F2F2">Maximum Air Temperature</h3>
                                 <div style="display: flex; gap:8px">
-                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px; color:#F2F2F2">
-                                        ${Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0 ? "+" : "-"}
-                                        ${Math.abs(Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max))}°
+                                    <p class="max-difference" style="font-weight: bold; font-size: 12px; letter-spacing: -1px;" >
+                                        ${isAboveHistoricalMax ? "+" : "-"}
+                                        ${tempMaxDifference}°
                                     </p>
-                                    <p style="font-weight: 500; font-size: 8px;color:#F2F2F2">above Historic normal max</p>
+                                    <p style="font-weight: 500; font-size: 12px;color:#F2F2F2">above Historic normal max</p>
                                 </div>
                             </div>
                         </div> 
                         <div style="display:flex; gap: 15px; align-items: flex-start;">
                             <div style="font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.tempmin)} °F</div>
                             <div style="">
-                                <h3 style="font-weight: 500; font-size:10px; color:#F2F2F2">Minimum Air Temperature</h3>
+                                <h3 style="font-weight: 500; font-size:12px; color:#F2F2F2">Minimum Air Temperature</h3>
                                 <div style="display: flex; gap:8px">
-                                    <p style="font-weight: bold; font-size: 8px; letter-spacing: -1px; color:#F2F2F2">
-                                        ${Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min) > 0 ? "+" : "-"}
-                                        ${Math.abs(Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min))}°
+                                    <p class='min-difference' style="font-weight: bold; font-size: 12px; letter-spacing: -1px;">
+                                        ${isAboveHistoricalMin ? "+" : "-"}
+                                        ${tempMinDifference}°
                                     </p>
-                                    <p style="font-weight: 500; font-size: 8px; color:#F2F2F2">above Historic normal min</p>
+                                    <p style="font-weight: 500; font-size: 12px; color:#F2F2F2">above Historic normal min</p>
                                 </div>
                             </div>
                         </div>       
                     </div>
                 </div>
             `);
+            tooltipDiv.selectAll('.max-difference').style('color', isAboveHistoricalMax ? '#e19f3c' : '#F2F2F2')
+            tooltipDiv.selectAll('.min-difference').style('color', isAboveHistoricalMin ? '#e19f3c' : '#F2F2F2')
 
             const tooltipElement = tooltipDiv.node() as HTMLElement;
             if (tooltipElement) {

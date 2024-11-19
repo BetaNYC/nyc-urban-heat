@@ -52,11 +52,6 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
     if (map?.getLayer("weather_stations_heat_advisory"))
       map.removeLayer("weather_stations_heat_advisory");
 
-    // map?.addSource("weather_stations", {
-    //   type: "geojson",
-    //   data: weatherStationsDataYear as GeoJSON.FeatureCollection,
-    // });
-
     map?.addLayer({
       id: "weather_stations_heat_event",
       type: "circle",
@@ -72,7 +67,7 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           ["number", ["get", "Days_with_NYC_HeatEvent"]],
           1.05,
         ],
-        "circle-color": "#e19f3d",
+        "circle-color": "#e19f3c",
         "circle-opacity": 1,
       },
     });
@@ -90,7 +85,7 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           ["-", 0, ["number", ["get", "Days_with_NWS_HeatAdvisory"]]],
           1.05,
         ],
-        "circle-color": "#c9733A",
+        "circle-color": "#d66852",
         "circle-opacity": 1,
       },
     });
@@ -108,7 +103,7 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           ["-", 0, ["number", ["get", "Days_with_NWS_Excessive_Heat_Event"]]],
           1.05,
         ],
-        "circle-color": "#823E35",
+        "circle-color": "#9d2b2b",
         "circle-opacity": 1,
       },
     });

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { map, selectedDataset, isProfileExpanded, isDataSelectionExpanded } from '../pages/MapPage'
+import { map, selectedDataset, isNeighborhoodProfileExpanded, isDataSelectionExpanded } from '../pages/MapPage'
 import DatasetSelectionOption from './DatasetSelectionOption'
 
 import { Dataset, ViewOptions, datasets, initializeView } from '../utils/datasets'
@@ -21,7 +21,7 @@ const DatasetSelections = () => {
       dataset.currentView = Object.keys(dataset.views)[0]
     }
     selectedDataset.value = dataset
-    isProfileExpanded.value = false
+    isNeighborhoodProfileExpanded.value = false
 
     initializeView(dataset, map.value).then(dataset => {
       selectedDataset.value = { ...dataset }

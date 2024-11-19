@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { XMarkIcon, InformationCircleIcon, ListBulletIcon } from '@heroicons/react/24/outline'
-import { selectedDataset, isProfileExpanded } from '../pages/MapPage'
+import { selectedDataset } from '../pages/MapPage'
 import { computed } from '@preact/signals-react'
 
 const Legends = () => {
@@ -63,7 +63,7 @@ const Legends = () => {
                         legend.value[0] &&
                         legend.value[0].hasOwnProperty('label') &&
                         legend.value[0].hasOwnProperty('value')
-                    ) && viewName.value == 'nta' && <div className='p-5 bg-[#1B1B1B] rounded-[0.5rem]'>
+                    ) && viewName.value == 'nta' && <div className='p-5 w-[18.75rem] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex gap-2 mb-2 items-center justify-between font-medium'>
                             <h3 className='text-regular text-[#F4F4F4]'>{datasetName.value}</h3>
                             <XMarkIcon width={18} height={18} className='text-[#BDBDBD] cursor-pointer' onClick={handleClick} />
@@ -79,7 +79,7 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Weather Stations" && <div className='p-5 flex items-start bg-[#1B1B1B] rounded-[0.5rem]'>
+                    datasetName.value === "Weather Stations" && <div className='p-5 w-[18.75rem] flex items-start bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='mr-8'>
                             <h3 className='mb-3 font-medium text-[#F4F4F4]'>Extreme Heat days in {currentYear}</h3>
                             <div className='flex flex-col gap-1'>
@@ -125,12 +125,12 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[12rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[18.75rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
                         <div className='flex justify-between text-regular '>
                             <p>Tree Canopy</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
-                        <div className='my-[0.25rem] h-5 bg-[#345C67]'>
+                        <div className='my-[0.25rem] h-5 bg-[#335d68]'>
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
                             <p>Covered by trees</p>
@@ -138,7 +138,7 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[15rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[18.75rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
                             <p>Surface Temperature</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />

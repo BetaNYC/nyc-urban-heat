@@ -31,11 +31,9 @@ export function viewTreeCanopy(map: mapboxgl.Map) {
             "layout": { "visibility": "visible" },
             paint: {
                 'raster-color': [
-                    'interpolate',
-                    ['linear'],
-                    ['raster-value'],
-                    0, 'rgba(188,188,195,1)',
-                    1 / 255, 'rgba(52,92,103,0.6)',
+                    'case',
+                    ['==', ['raster-value'], 0], 'rgba(0, 0, 0, 0)', 
+                    '#335d68' 
                 ],
                 "raster-resampling": "nearest",
             },

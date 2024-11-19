@@ -7,8 +7,8 @@ import { GeoJSONTransformHandler } from "./geojson";
 import { format } from "d3-format";
 import { nta_dataset_info } from "../App";
 import {
-  isProfileExpanded,
-  profileData,
+  isNeighborhoodProfileExpanded,
+  neighborhoodProfileData,
   isDataSelectionExpanded,
   previousClickCor,
 } from "../pages/MapPage";
@@ -35,6 +35,7 @@ export function createNtaLayer(
   map: mapboxgl.Map,
   metric: string,
   layerName: string,
+  breakpoints: { label: string; value: string }[],
   fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" }
 ) {
   const sourceId = metric + "_SOURCE";
@@ -56,10 +57,30 @@ export function createNtaLayer(
       if (feature.properties) {
         const { ntacode } = feature.properties;
         feature.properties[metric] = +data[ntacode];
+  
+        
+        if (metric === "NTA_PCT_MRT_Less_Than_110") {
+          feature.properties[metric] *= 100;
+        }
       }
+
       return feature;
     })
-    .filter((feature) => feature.properties && feature.properties[metric]);
+    .filter(
+      (feature) =>
+        feature.properties &&
+        feature.properties[metric] &&
+        !feature.properties.ntaname.includes("park-cemetery")
+    );
+
+
+  // const mrtValues = features.map(
+  //   (feature) => feature.properties.metric
+  // );
+  // const maxValue = Math.max(...mrtValues);
+  // const minValue = Math.min(...mrtValues);
+
+  // console.log(maxValue, minValue)
 
   // create layers
   map.addSource(sourceId, {
@@ -120,71 +141,77 @@ export function createNtaLayer(
     if (e.features) {
       isDataSelectionExpanded.value = false;
 
+      const {
+        ntacode,
+        boroname,
+        ntaname,
+        [metric]: selectedMetric,
+      } = e.features[0].properties as any;
 
-      const { ntacode, boroname, ntaname } = e.features[0].properties as any;
-
-      const data = getNTAInfo(ntacode);
-
-      const metrics = new Map<string, string>(
-        data.map((d: any) => [d.metric, d[ntacode]])
-      );
-      let current_metric = metrics.has(metric)
-        ? format(".1f")(+(metrics.get(metric) ?? ""))
-        : "N/A";
-
-      if (metric.startsWith("PCT")) {
-        current_metric += "%";
-      }
-
-      const PCT_TREES = format(".1f")(+(metrics.get("PCT_TREES") ?? ""));
-      const PCT_BUILDINGS_COOLROOF = format(".1f")(
-        +(metrics.get("PCT_BUILDINGS_COOLROOF") ?? "")
+      const sortedBreakpoints = breakpoints.sort(
+        (a, b) => parseInt(b.label) - parseInt(a.label)
       );
 
-      const title = `<div class="tooltip-top">
+      const selectedBreakpoint = breakpoints.find(
+        (breakpoint, index, array) => {
+          const currentLabel = parseInt(breakpoint.label);
+          const nextLabel =
+            index < array.length - 1
+              ? parseInt(array[index + 1].label)
+              : -Infinity;
+          return selectedMetric <= currentLabel && selectedMetric > nextLabel;
+        }
+      );
+
+      const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
+
+      const textColor =
+        selectedMetric > parseInt(sortedBreakpoints[2].label)
+          ? "text-[#FFF]"
+          : selectedMetric > parseInt(sortedBreakpoints[3].label)
+          ? "text-[#000]"
+          : "text-[#333]";
+
+      const title = `<div class="px-[1rem] py-[0.5rem] ${textColor} rounded-t-[0.75rem]" style="${backgroundColor}">
                               <div>
-                                  <h5>${boroname}</h5>
-                                  <h4>${ntaname}</h4>
-                              </div>
-                              <div class="text-center">
-                                  <span class="text-xxs leading-3">${layerName}</span>
-                                  <span class="text-xl font-mono font-bold">${current_metric}</span>
+                                  <h1 class='font-bold text-[1.125rem]'>${ntaname}</h1>
+                                  <h1 class='font-medium text-[0.75rem]'>${boroname}</h1>
                               </div>
                           </div>`;
 
       const details = `
-              <div class="tooltip-bottom">
-                  <div class="flex flex-col">
-                      <div class="flex flex-row justify-between"><span>Average Surface Temperature</span><span></span></div>
-                      <div class="flex flex-row justify-between"><span>Average Air Temperature</span><span></span></div>
-                      <div class="flex flex-row justify-between"><span>Area Covered By Trees</span><span>${PCT_TREES}%</span></div>
-                      <div class="flex flex-row justify-between"><span>Cool Roofs</span><span>${PCT_BUILDINGS_COOLROOF}%</span></div>
-                      <div class="flex flex-row justify-between"><span>Number of Cooling Centers</span><span></span></div>
+              <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem]">
+                  <div class="font-medium text-[0.75rem] text-white leading-normal">
+                    Cool roofs reflect more solar heat and mitigate urban heat island by lowering outdoor temperatures.
                   </div>
-                  <button class="mt-2 underline cursor-pointer" id="view-profile-link">Click to view community district profile</button>
+                  <div class="flex items-start gap-3">
+                    <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="${backgroundColor}">
+                      <div class='font-bold text-[1rem] ${textColor}'>${Math.round(
+        selectedMetric
+      )}%</div>
+                      <div class='font-medium text-[0.5rem] ${textColor}'>low</div>                   
+                    </div>
+                    <div>
+                      <div class="font-semibold text-[1rem] text-white whitespace-nowrap">
+                        Area of buildings with cool roofs                      
+                      </div>
+                      <div class='font-light text-[0.5rem] text-[#D9D9D9] leading-normal'>
+                        4,000 sf cool roof area of 100,000 sf total building area in ${ntaname}
+                      </div>    
+                    </div>
+                  </div>
               </div>`;
 
+      //   <div class="flex items-start gap-[1.375rem]">
+      //   <div class="font-semibold text-[1rem] text-white">120℉</div>
+      //   <div class="font-medium text-[1rem] text-white">Average Mean Radiant Temperature</div>
+      // </div>
+
       const divElement = document.createElement("div");
-      
+
       divElement.innerHTML = title + details;
       divElement.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
       divElement.style.borderRadius = "8px";
-      divElement.style.overflow = "hidden";
-
-      divElement
-        .querySelector("#view-profile-link")
-        ?.addEventListener("click", () => {
-          //dispatch data to profile
-          const data = {
-            metrics,
-            currentMetric: metric,
-            ntacode,
-            boroname,
-            ntaname,
-          };
-          profileData.value = data;
-          isProfileExpanded.value = true;
-        });
 
       const ntaCenter = centerOfMass(e.features[0]).geometry.coordinates;
       // const selectedCoordinates = e.features[0].geometry.coordinates.flat(Infinity);
@@ -203,11 +230,12 @@ export function createNtaLayer(
       if (popup) popup.remove();
 
       popup = new Popup({
-        closeButton: true,
+        closeButton: false,
+        maxWidth: "365px",
       })
         .setLngLat(coordinates)
         .setDOMContent(divElement)
-        .setOffset([0, 20])
+        .setOffset([0, 0])
         .addTo(map);
 
       if (hoveredNtacode !== null && hoveredNtacode !== ntacode) {
@@ -242,7 +270,7 @@ export function createNtaLayer(
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode, ntaname } = e.features![0].properties as any;
 
-    isProfileExpanded.value = true;
+    isNeighborhoodProfileExpanded.value = true;
     isDataSelectionExpanded.value = false;
 
     const clickedLat = e.lngLat.lat;

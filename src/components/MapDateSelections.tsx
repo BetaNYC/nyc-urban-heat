@@ -3,7 +3,7 @@ import { useMediaQuery } from "react-responsive"
 import { CalendarDaysIcon } from "@heroicons/react/24/outline"
 import { ChevronUpIcon, ChevronDownIcon } from '@heroicons/react/20/solid'
 import { formatDateString } from "../utils/format"
-import { map, selectedDataset, isProfileExpanded, isWeatherStationProfileExpanded } from '../pages/MapPage'
+import { map, selectedDataset, isWeatherStationProfileExpanded } from '../pages/MapPage'
 import { computed } from "@preact/signals-react"
 import { group } from 'd3-array';
 import { initializeView } from "../utils/datasets"

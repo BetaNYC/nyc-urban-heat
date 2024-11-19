@@ -27,16 +27,9 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
       layout: { visibility: "visible" },
       paint: {
         "raster-color": [
-          "interpolate",
-          ["linear"],
-          ["raster-value"],
-          0,"#6e008c",
-          1,"#a23f9a",
-          // "#cd6666",
-          // 55,
-          // "#e0bf80",
-          // 60,
-          // "#ffff73",
+          "case",
+          ["==", ["raster-value"], 0], "#d3d5d9",  // 當值為 0 時顯示 #d3d5d9
+          "#212d40"  // 當值為 1 時顯示 #212d40
         ],
       },
     });
