@@ -1,0 +1,1410 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.70129999999992, 40.781000000000056]
+      },
+      "properties": {
+        "address": "0826W",
+        "name": "Greentree Foundation",
+        "tempmax": 76.8725490196078,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 14,
+        "Days_warmer_than_normal_max": 49,
+        "Days_warmer_than_normal_min": 49,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.9661, 40.85350000000005]
+      },
+      "properties": {
+        "address": "A3655",
+        "name": "George Washington Bridge",
+        "tempmax": 78.8614379084967,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 75,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.12609999999995, 40.67030000000005]
+      },
+      "properties": {
+        "address": "A3676",
+        "name": "Bayonne",
+        "tempmax": 77.8169934640523,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 60,
+        "Days_warmer_than_normal_min": 66,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.20839999999998, 40.64140000000003]
+      },
+      "properties": {
+        "address": "AN396",
+        "name": "Elizabeth Trailer",
+        "tempmax": 79.1993464052288,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 70,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.19289999999995, 40.72100000000007]
+      },
+      "properties": {
+        "address": "AN736",
+        "name": "Newark Firehouse",
+        "tempmax": 79.2830065359477,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 9,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 79,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.03079999999994, 40.635200000000054]
+      },
+      "properties": {
+        "address": "AU015",
+        "name": "82nd St / Narrows Ave",
+        "tempmax": 75.6,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 2,
+        "Days_warmer_than_normal_max": 34,
+        "Days_warmer_than_normal_min": 89,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.15829999999994, 40.96030000000007]
+      },
+      "properties": {
+        "address": "AV066",
+        "name": "Hawthorne",
+        "tempmax": 80.3169934640523,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 90,
+        "Days_warmer_than_normal_min": 38,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.01419999999996, 40.70060000000007]
+      },
+      "properties": {
+        "address": "BATN6",
+        "name": "The Battery",
+        "tempmax": 76.3248366013072,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 0,
+        "Days_warmer_than_normal_max": 43,
+        "Days_warmer_than_normal_min": 83,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.15199999999999, 40.748200000000054]
+      },
+      "properties": {
+        "address": "C1099",
+        "name": "Harrison",
+        "tempmax": 80.0483660130719,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 19,
+        "Days_warmer_than_normal_max": 85,
+        "Days_warmer_than_normal_min": 54,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.28329999999994, 40.866700000000044]
+      },
+      "properties": {
+        "address": "C2504",
+        "name": "Fairfield",
+        "tempmax": 77.5562091503268,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 5,
+        "Days_warmer_than_normal_max": 58,
+        "Days_warmer_than_normal_min": 33,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.69379999999994, 40.65120000000009]
+      },
+      "properties": {
+        "address": "C3340",
+        "name": "Valley Stream",
+        "tempmax": 77.837908496732,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 9,
+        "Days_warmer_than_normal_max": 64,
+        "Days_warmer_than_normal_min": 53,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.23529999999994, 40.67950000000008]
+      },
+      "properties": {
+        "address": "C3712",
+        "name": "Townsend Hall",
+        "tempmax": 79.8888888888889,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 87,
+        "Days_warmer_than_normal_min": 68,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.97749999999996, 40.91470000000003]
+      },
+      "properties": {
+        "address": "C5425",
+        "name": "Tenafly",
+        "tempmax": 77.640522875817,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 15,
+        "Days_warmer_than_normal_max": 58,
+        "Days_warmer_than_normal_min": 45,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.11419999999998, 40.928600000000074]
+      },
+      "properties": {
+        "address": "C5885",
+        "name": "Fair Lawn",
+        "tempmax": 79.0705882352941,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 74,
+        "Days_warmer_than_normal_min": 45,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.16969999999998, 40.83250000000003]
+      },
+      "properties": {
+        "address": "C9476",
+        "name": "Bloomfield",
+        "tempmax": 79.1261437908497,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 19,
+        "Days_warmer_than_normal_max": 77,
+        "Days_warmer_than_normal_min": 42,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.14079999999997, 40.772800000000075]
+      },
+      "properties": {
+        "address": "D1415",
+        "name": "Kearny",
+        "tempmax": 79.3156862745098,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 3,
+        "Days_with_NYC_HeatEvent": 12,
+        "Days_warmer_than_normal_max": 79,
+        "Days_warmer_than_normal_min": 68,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.71079999999992, 40.72260000000004]
+      },
+      "properties": {
+        "address": "D1891",
+        "name": "Floral Park",
+        "tempmax": 77.6196078431372,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 60,
+        "Days_warmer_than_normal_min": 68,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.00439999999998, 40.87750000000006]
+      },
+      "properties": {
+        "address": "D2034",
+        "name": "Teaneck",
+        "tempmax": 78.1823529411765,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 64,
+        "Days_warmer_than_normal_min": 57,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.91099999999993, 40.77630000000005]
+      },
+      "properties": {
+        "address": "D3216",
+        "name": "Astoria",
+        "tempmax": 78.4771241830065,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 65,
+        "Days_warmer_than_normal_min": 92,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.27319999999997, 40.576000000000086]
+      },
+      "properties": {
+        "address": "D5516",
+        "name": "Avenel",
+        "tempmax": 78.0601307189543,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 58,
+        "Days_warmer_than_normal_min": 53,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.94879999999995, 40.60000000000008]
+      },
+      "properties": {
+        "address": "D5729",
+        "name": "Ave U / E 23rd St",
+        "tempmax": 77.6915032679739,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 3,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 61,
+        "Days_warmer_than_normal_min": 74,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.10439999999994, 40.92170000000004]
+      },
+      "properties": {
+        "address": "D6004",
+        "name": "Fair Lawn",
+        "tempmax": 80.321568627451,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 17,
+        "Days_warmer_than_normal_max": 88,
+        "Days_warmer_than_normal_min": 31,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.08449999999993, 40.856300000000026]
+      },
+      "properties": {
+        "address": "D8219",
+        "name": "Hasbrouck Heights",
+        "tempmax": 78.7764705882353,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 14,
+        "Days_warmer_than_normal_max": 72,
+        "Days_warmer_than_normal_min": 41,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.98169999999999, 40.92450000000009]
+      },
+      "properties": {
+        "address": "D8340",
+        "name": "Tenafly",
+        "tempmax": 79.0718954248366,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 72,
+        "Days_warmer_than_normal_min": 43,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.16129999999998, 40.55370000000005]
+      },
+      "properties": {
+        "address": "D8569",
+        "name": "Eltingville",
+        "tempmax": 78.4986928104575,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 27,
+        "Days_warmer_than_normal_max": 71,
+        "Days_warmer_than_normal_min": 42,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.21629999999993, 40.84420000000006]
+      },
+      "properties": {
+        "address": "D9424",
+        "name": "Cedar Grove",
+        "tempmax": 78.9797385620915,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 70,
+        "Days_warmer_than_normal_min": 54,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.07869999999997, 40.78750000000008]
+      },
+      "properties": {
+        "address": "E0405",
+        "name": "Secaucus",
+        "tempmax": 78.9522875816994,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 69,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.27749999999997, 40.861500000000035]
+      },
+      "properties": {
+        "address": "E0732",
+        "name": "West Caldwell",
+        "tempmax": 77.5287581699346,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 59,
+        "Days_warmer_than_normal_min": 35,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.01299999999998, 40.624500000000076]
+      },
+      "properties": {
+        "address": "E1296",
+        "name": "74th St / 10th Ave",
+        "tempmax": 80.3934640522876,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 7,
+        "Days_with_NYC_HeatEvent": 25,
+        "Days_warmer_than_normal_max": 90,
+        "Days_warmer_than_normal_min": 86,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.03719999999998, 40.62800000000004]
+      },
+      "properties": {
+        "address": "E2876",
+        "name": "82nd St / Narrows Ave",
+        "tempmax": 75.6,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 2,
+        "Days_warmer_than_normal_max": 34,
+        "Days_warmer_than_normal_min": 89,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.78979999999996, 40.85000000000008]
+      },
+      "properties": {
+        "address": "E3462",
+        "name": "City Island",
+        "tempmax": 75.7254901960784,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 39,
+        "Days_warmer_than_normal_min": 58,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.12979999999999, 40.85220000000004]
+      },
+      "properties": {
+        "address": "E4570",
+        "name": "Passaic",
+        "tempmax": 77.9732026143791,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 13,
+        "Days_warmer_than_normal_max": 60,
+        "Days_warmer_than_normal_min": 43,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.13269999999994, 40.56730000000005]
+      },
+      "properties": {
+        "address": "E5465",
+        "name": "Richmond Town",
+        "tempmax": 78.0267973856209,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 13,
+        "Days_warmer_than_normal_max": 60,
+        "Days_warmer_than_normal_min": 54,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.27419999999995, 40.55550000000004]
+      },
+      "properties": {
+        "address": "E5922",
+        "tempmax": 80.3294117647059,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 26,
+        "Days_warmer_than_normal_max": 92,
+        "Days_warmer_than_normal_min": 49,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.25649999999996, 40.66920000000004]
+      },
+      "properties": {
+        "address": "E6780",
+        "name": "Roselle Park",
+        "tempmax": 78.7718954248366,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 18,
+        "Days_warmer_than_normal_max": 73,
+        "Days_warmer_than_normal_min": 42,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.95769999999999, 40.940300000000036]
+      },
+      "properties": {
+        "address": "E7562",
+        "name": "Old Tappan",
+        "tempmax": 78.7248366013072,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 72,
+        "Days_warmer_than_normal_min": 57,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.14549999999997, 40.61570000000006]
+      },
+      "properties": {
+        "address": "E7893",
+        "name": "Westerleigh",
+        "tempmax": 79.083660130719,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 22,
+        "Days_warmer_than_normal_max": 77,
+        "Days_warmer_than_normal_min": 44,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.14829999999995, 40.77700000000006]
+      },
+      "properties": {
+        "address": "E9345",
+        "name": "Kearny",
+        "tempmax": 79.3006535947712,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 14,
+        "Days_warmer_than_normal_max": 78,
+        "Days_warmer_than_normal_min": 52,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.71799999999993, 40.72800000000006]
+      },
+      "properties": {
+        "address": "F1075",
+        "name": "Bellerose",
+        "tempmax": 80.983660130719,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 22,
+        "Days_warmer_than_normal_max": 95,
+        "Days_warmer_than_normal_min": 55,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.02919999999995, 40.74530000000004]
+      },
+      "properties": {
+        "address": "F1417",
+        "name": " Hoboken",
+        "tempmax": 80.3954248366013,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 19,
+        "Days_warmer_than_normal_max": 90,
+        "Days_warmer_than_normal_min": 89,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.79999999999994, 40.800000000000054]
+      },
+      "properties": {
+        "address": "F1633",
+        "name": "Throgs Point",
+        "tempmax": 77.8196078431372,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 63,
+        "Days_warmer_than_normal_min": 74,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.93199999999995, 40.57720000000006]
+      },
+      "properties": {
+        "address": "F1729",
+        "name": "Manhattan Beach",
+        "tempmax": 74.3516339869281,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 1,
+        "Days_warmer_than_normal_max": 25,
+        "Days_warmer_than_normal_min": 93,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.18849999999998, 40.59130000000004]
+      },
+      "properties": {
+        "address": "F2134",
+        "name":"Travis-Chelsea",
+        "tempmax": 79.3954248366013,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 20,
+        "Days_warmer_than_normal_max": 80,
+        "Days_warmer_than_normal_min": 42,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.03649999999999, 40.70170000000008]
+      },
+      "properties": {
+        "address": "F2280",
+        "name":"Ellis Island",
+        "tempmax": 76.156862745098,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 3,
+        "Days_warmer_than_normal_max": 36,
+        "Days_warmer_than_normal_min": 88,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.76049999999996, 40.916300000000035]
+      },
+      "properties": {
+        "address": "F2966",
+        "name":"New Rochelle",
+        "tempmax": 76.3941176470588,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 51,
+        "Days_warmer_than_normal_min": 46,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.67299999999992, 40.63000000000006]
+      },
+      "properties": {
+        "address": "F3861",
+        "name":"Bay Park",
+        "tempmax": 77.3745098039216,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 9,
+        "Days_warmer_than_normal_max": 58,
+        "Days_warmer_than_normal_min": 55,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.95719999999993, 40.77170000000007]
+      },
+      "properties": {
+        "address": "F4321",
+        "name":"Upper East Side",
+        "tempmax": 78.3542483660131,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 64,
+        "Days_warmer_than_normal_min": 87,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.23849999999999, 40.58180000000004]
+      },
+      "properties": {
+        "address": "F5744",
+        "name": "Carteret",
+        "tempmax": 78.5091503267974,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 15,
+        "Days_warmer_than_normal_max": 71,
+        "Days_warmer_than_normal_min": 45,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.06519999999995, 40.890700000000024]
+      },
+      "properties": {
+        "address": "F6101",
+        "name":"Maywood",
+        "tempmax": 78.9679738562092,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 73,
+        "Days_warmer_than_normal_min": 56,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.72099999999993, 40.79370000000006]
+      },
+      "properties": {
+        "address": "F6107",
+        "name":"Great Neck",
+        "tempmax": 77.5986928104575,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 63,
+        "Days_warmer_than_normal_min": 41,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.03249999999997, 40.95520000000005]
+      },
+      "properties": {
+        "address": "F6481",
+        "name":"Oradell",
+        "tempmax": 79.1764705882353,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 75,
+        "Days_warmer_than_normal_min": 46,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.86029999999992, 40.86030000000006]
+      },
+      "properties": {
+        "address": "F6867",
+        "name":"Astor Collegiate Academy",
+        "tempmax": 77.5058823529412,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 52,
+        "Days_warmer_than_normal_min": 84,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.75369999999995, 40.756800000000055]
+      },
+      "properties": {
+        "address": "F7223",
+        "name":"Oakland Gardens",
+        "tempmax": 78.9699346405229,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 3,
+        "Days_with_NYC_HeatEvent": 12,
+        "Days_warmer_than_normal_max": 75,
+        "Days_warmer_than_normal_min": 71,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.98149999999998, 40.671000000000035]
+      },
+      "properties": {
+        "address": "F8726",
+        "name":"4th St / 6th Ave",
+        "tempmax": 77.3477124183007,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 51,
+        "Days_warmer_than_normal_min": 83,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.27219999999994, 40.93120000000005]
+      },
+      "properties": {
+        "address": "F8945",
+        "name":"Wayne 3",
+        "tempmax": 78.8137254901961,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 70,
+        "Days_warmer_than_normal_min": 35,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.27999999999997, 40.88000000000006]
+      },
+      "properties": {
+        "address": "KCDW",
+        "name": "Essex County Airport",
+        "tempmax": 79.5032679738562,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 5,
+        "Days_warmer_than_normal_max": 78,
+        "Days_warmer_than_normal_min": 44,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.16999999999997, 40.700000000000045]
+      },
+      "properties": {
+        "address": "KEWR",
+        "name":"Newark Campus",
+        "tempmax": 80.6535947712418,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 13,
+        "Days_warmer_than_normal_max": 91,
+        "Days_warmer_than_normal_min": 83,
+        "Days_warmer_than_max_record": 1,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.77999999999996, 40.65000000000003]
+      },
+      "properties": {
+        "address": "KJFK",
+        "name":"City Island",
+        "tempmax": 76.6771241830065,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 42,
+        "Days_warmer_than_normal_min": 59,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.00999999999993, 40.700000000000045]
+      },
+      "properties": {
+        "address": "KJRB",
+        "name":"Sandy Hook",
+        "tempmax": 79.0562091503268,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 7,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 100,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.24459999999993, 40.617400000000025]
+      },
+      "properties": {
+        "address": "KLDJ",
+        "name":"Linden Airport",
+        "tempmax": 78.0601307189543,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 58,
+        "Days_warmer_than_normal_min": 53,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.89999999999998, 40.77000000000003]
+      },
+      "properties": {
+        "address": "KLGA",
+        "name":"Union City High School",
+        "tempmax": 78.656862745098,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 70,
+        "Days_warmer_than_normal_min": 103,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.97999999999996, 40.77000000000004]
+      },
+      "properties": {
+        "address": "KNYC",
+        "name":"Upper East Side",
+        "tempmax": 77.9464052287582,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 4,
+        "Days_warmer_than_normal_max": 60,
+        "Days_warmer_than_normal_min": 76,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-73.76489999999993, 40.81030000000005]
+      },
+      "properties": {
+        "address": "KPTN6",
+        "name":"US Merchant Marine Academy",
+        "tempmax": 75.2424836601307,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 0,
+        "Days_warmer_than_normal_max": 35,
+        "Days_warmer_than_normal_min": 69,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.05999999999995, 40.85000000000009]
+      },
+      "properties": {
+        "address": "KTEB",
+        "name":"Teterboro Airport",
+        "tempmax": 78.8614379084967,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 69,
+        "Days_warmer_than_normal_min": 47,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.08829999999996, 40.876700000000035]
+      },
+      "properties": {
+        "address": "LOIN4",
+        "name":"Lodi Memorial Park",
+        "tempmax": 79.3098039215686,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 2,
+        "Days_with_NYC_HeatEvent": 10,
+        "Days_warmer_than_normal_max": 75,
+        "Days_warmer_than_normal_min": 54,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.15769999999998, 40.951900000000094]
+      },
+      "properties": {
+        "address": "NJ07",
+        "name":"Hawthorne",
+        "tempmax": 79.2653594771242,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 76,
+        "Days_warmer_than_normal_min": 44,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.05309999999997, 40.70870000000008]
+      },
+      "properties": {
+        "address": "NJ12",
+        "name":"Liberty State Park",
+        "tempmax": 78.3464052287582,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 66,
+        "Days_warmer_than_normal_min": 36,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.01359999999994, 40.95930000000004]
+      },
+      "properties": {
+        "address": "NJ48",
+        "name":"Haworth",
+        "tempmax": 77.9196078431373,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 63,
+        "Days_warmer_than_normal_min": 31,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.12309999999997, 40.71310000000005]
+      },
+      "properties": {
+        "address": "NWKN4",
+        "name":"Passaic River",
+        "tempmax": 76.6980392156863,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 3,
+        "Days_warmer_than_normal_max": 44,
+        "Days_warmer_than_normal_min": 80,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.28189999999995, 40.96970000000004]
+      },
+      "properties": {
+        "address": "PPPN4",
+        "name":"Pompton River",
+        "tempmax": 78.8169934640523,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 71,
+        "Days_warmer_than_normal_min": 35,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.06499999999994, 40.65670000000006]
+      },
+      "properties": {
+        "address": "ROBN4",
+        "name":"Robbins Reef",
+        "tempmax": 74.8470588235294,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 0,
+        "Days_warmer_than_normal_max": 29,
+        "Days_warmer_than_normal_min": 80,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.00939999999997, 40.46690000000005]
+      },
+      "properties": {
+        "address": "SDHN4",
+        "name":"Sandy Hook",
+        "tempmax": 73.6856209150327,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 0,
+        "Days_warmer_than_normal_max": 21,
+        "Days_warmer_than_normal_min": 81,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.18169999999998, 40.88470000000006]
+      },
+      "properties": {
+        "address": "WTPN4",
+        "name":"Garret Mountain",
+        "tempmax": 78.3660130718954,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 8,
+        "Days_warmer_than_normal_max": 66,
+        "Days_warmer_than_normal_min": 40,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-74.25279999999998, 40.91030000000006]
+      },
+      "properties": {
+        "address": "WYNN4",
+        "name":"Wayne",
+        "tempmax": 78.1888888888889,
+        "Days_with_NWS_Excessive_Heat_Event": 0,
+        "Days_with_NWS_HeatAdvisory": 0,
+        "Days_with_NYC_HeatEvent": 6,
+        "Days_warmer_than_normal_max": 65,
+        "Days_warmer_than_normal_min": 38,
+        "Days_warmer_than_max_record": 0,
+        "year": 2023
+      }
+    }
+  ]
+}
