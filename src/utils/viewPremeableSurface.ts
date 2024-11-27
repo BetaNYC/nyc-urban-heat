@@ -30,11 +30,16 @@ export function viewPremeableSurface(map: mapboxgl.Map) {
             type: "raster",
             "layout": { "visibility": "visible" },
             paint: {
+                
                 'raster-color': [
                     'interpolate',
                     ['linear'],
                     ['raster-value'],
-                    10,'rgba(188,188,195,1)',
+                    0.10,"#f3d9b1",
+                    0.20,"#dabb8b",
+                    0.30,"#c19d65",
+                    0.40,"#a87e3e",
+                    0.71,"#8f6018"
                 ],
                 "raster-resampling": "nearest",
             },

@@ -21,9 +21,19 @@ export const neighborhoodProfileData = signal<NtaProfileData | null>(null)
 export const isNeighborhoodProfileExpanded = signal(false)
 export const weatherStationProfileData = signal<WeatherStationData | null>(null)
 export const isWeatherStationProfileExpanded = signal(false)
-export const clickedAddress = signal<string | null>(null)
+export const clickedAddress = signal<string>("F4321")
+export const clickedWeatherStationName = signal<string>("Upper East Side")
 export const isDataSelectionExpanded = signal(false)
 export const previousClickCor = signal<[number, number]>([0, 0])
+export const clickedWeatherStationPopup = signal<mapboxgl.Popup | null>(null)
+export const clickedNeighborhoodPopup = signal<mapboxgl.Popup | null>(null)
+export const clickedNeighborhoodInfo = signal<{
+  boro: string,
+  nta: string
+}>({
+  boro: "Manhattan",
+  nta: "West Village"
+})
 
 
 const MapPage = () => {
@@ -86,7 +96,7 @@ const MapPage = () => {
         selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile />
       }
       {
-        selectedDataset.value?.name !== "Weather Stations" && selectedDataset.value?.currentView === 'nta' && <NeighborhoodProfile />
+        selectedDataset.value?.name !== "Weather Stations" && <NeighborhoodProfile />
       }
       <DatasetSelections />
       <MapDateSelections />

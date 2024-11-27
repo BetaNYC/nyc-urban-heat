@@ -9,8 +9,10 @@ import { nta_dataset_info } from "../App";
 import {
   isNeighborhoodProfileExpanded,
   neighborhoodProfileData,
+  clickedNeighborhoodPopup,
   isDataSelectionExpanded,
   previousClickCor,
+  clickedNeighborhoodInfo,
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
@@ -49,6 +51,8 @@ export function createNtaLayer(
 
   const data = getDataset(metric);
 
+  console.log(breakpoints)
+
   // merge in data with nta
   const features = GeoJSONTransformHandler(
     (ntaFeatureCollection as FeatureCollection).features
@@ -57,8 +61,7 @@ export function createNtaLayer(
       if (feature.properties) {
         const { ntacode } = feature.properties;
         feature.properties[metric] = +data[ntacode];
-  
-        
+
         if (metric === "NTA_PCT_MRT_Less_Than_110") {
           feature.properties[metric] *= 100;
         }
@@ -72,7 +75,6 @@ export function createNtaLayer(
         feature.properties[metric] &&
         !feature.properties.ntaname.includes("park-cemetery")
     );
-
 
   // const mrtValues = features.map(
   //   (feature) => feature.properties.metric
@@ -182,24 +184,63 @@ export function createNtaLayer(
       const details = `
               <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem]">
                   <div class="font-medium text-[0.75rem] text-white leading-normal">
-                    Cool roofs reflect more solar heat and mitigate urban heat island by lowering outdoor temperatures.
+                  ${
+                    metric === "PCT_AREA_COOLROOF"
+                      ? "Cool roofs reflect more solar heat and mitigate urban heat island by lowering outdoor temperatures."
+                      : metric === "NTA_PCT_MRT_Less_Than_110"
+                      ? "Tolerable thermal comfort areas have a Mean Radiant Temperature (MRT) at or below 110° F."
+                      : metric === "PCT_PERMEABLE"
+                      ? "Permeable surfaces such as soil or grass retain less heat and mitigate air temperature and mean radiant temperature."
+                      : metric === "PCT_TREES"
+                      ? "Urban tree canopy measures the layer of leaves, branches and stems of trees that shelter the ground."
+                      : ""
+                  }
+
                   </div>
                   <div class="flex items-start gap-3">
                     <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="${backgroundColor}">
                       <div class='font-bold text-[1rem] ${textColor}'>${Math.round(
         selectedMetric
       )}%</div>
-                      <div class='font-medium text-[0.5rem] ${textColor}'>low</div>                   
+                      <div class='font-medium text-[0.75rem] ${textColor}'>low</div>                   
                     </div>
                     <div>
                       <div class="font-semibold text-[1rem] text-white whitespace-nowrap">
-                        Area of buildings with cool roofs                      
+                          ${
+                            metric === "PCT_AREA_COOLROOF"
+                              ? "Area of buildings with cool roofs"
+                              : metric === "NTA_PCT_MRT_Less_Than_110"
+                              ? "Outdoor area with thermal comfort"
+                              : metric === "PCT_PERMEABLE"
+                              ? "Area with permeable surfaces"
+                              : metric === "PCT_TREES"
+                              ? "Area covered by tree canopy"
+                              : "Average Surface Temperature"
+                          }                    
                       </div>
-                      <div class='font-light text-[0.5rem] text-[#D9D9D9] leading-normal'>
-                        4,000 sf cool roof area of 100,000 sf total building area in ${ntaname}
+                      <div class='font-light text-[0.75rem] text-[#D9D9D9] leading-normal'>
+                            ${
+                              metric === "PCT_AREA_COOLROOF"
+                                ? `4,000 sf cool roof area of 100,000 sf total building area in ${ntaname}`
+                                : metric === "NTA_PCT_MRT_Less_Than_110"
+                                ? `8,500 sf with MRT at or below 110° F of 100,000 sf total outdoor area in ${ntaname}`
+                                : metric === "PCT_PERMEABLE"
+                                ? `4,000 sf permeable surface area of 100,000 sf total area in ${ntaname}`
+                                : metric === "PCT_TREES"
+                                ? `4,000 sf urban tree canopy area of 100,000 sf total area in ${ntaname}`
+                                : `in ${ntaname} on [date]`
+                            }   
                       </div>    
                     </div>
                   </div>
+                  ${
+                    metric === "NTA_PCT_MRT_Less_Than_110"
+                      ? `<div class="flex items-start ">
+                    <div class="flex flex-col items-center px-[0.625rem] font-bold text-[1rem] text-white leading-tight">120° F</div>
+                    <div class="font-semibold text-[1rem] text-white">Average Mean Radiant Temperature</div>
+                     </div>`
+                      : ""
+                  }
               </div>`;
 
       //   <div class="flex items-start gap-[1.375rem]">
@@ -223,9 +264,8 @@ export function createNtaLayer(
       const lng = ntaCenter[0];
       const lat = ntaCenter[1];
 
-      // Get mouse position (relative to the map)
       const mousePosY = e.originalEvent.clientY;
-      const mapHeight = map.getContainer().clientHeight; // Map container height
+      const mapHeight = map.getContainer().clientHeight;
 
       if (popup) popup.remove();
 
@@ -265,10 +305,13 @@ export function createNtaLayer(
     }
   });
 
-  let currentPopup: mapboxgl.Popup | null = null;
-
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
-    const { ntacode, ntaname } = e.features![0].properties as any;
+    const { ntacode, ntaname, boroname } = e.features![0].properties as any;
+
+    clickedNeighborhoodInfo.value = {
+      boro: boroname,
+      nta: ntaname,
+    };
 
     isNeighborhoodProfileExpanded.value = true;
     isDataSelectionExpanded.value = false;
@@ -292,12 +335,12 @@ export function createNtaLayer(
     const offsetLat = 0.005;
     const tooltipLat = clickedLat + offsetLat;
 
-    if (currentPopup) {
-      currentPopup.remove();
-      currentPopup = null;
+    if (clickedNeighborhoodPopup) {
+      clickedNeighborhoodPopup.value?.remove();
+      clickedNeighborhoodPopup.value = null;
     }
 
-    currentPopup = new mapboxgl.Popup({
+    clickedNeighborhoodPopup.value = new mapboxgl.Popup({
       closeButton: false,
       closeOnClick: false,
       className: "clicked-popup",
@@ -334,7 +377,7 @@ export function createNtaLayer(
   };
 }
 
-function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
+export function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
   document
     .querySelectorAll(".mapboxgl-popup")
     .forEach((popup) => popup.remove());
@@ -353,3 +396,4 @@ function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
     }
   }
 }
+

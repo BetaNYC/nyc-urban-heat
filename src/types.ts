@@ -38,4 +38,5 @@ export type WeatherStationData = {
   tempmax: number;
   tempmin: number;
   year: number;
+  name:string
 };

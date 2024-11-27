@@ -23,6 +23,8 @@
   display: none; /* Hides the arrow */
 }
 
+
+
 /* Your custom clicked-nta styling */
 .clicked-nta {
   display: flex;
@@ -41,7 +43,7 @@
 .mapboxgl-popup.mapboxgl-popup-anchor-bottom-left,
 .mapboxgl-popup.mapboxgl-popup-anchor-bottom-right {
   top: -5px;
-  z-index: 10000000;
+  z-index: 19;
 }
 
 .mapboxgl-ctrl-zoom-in,

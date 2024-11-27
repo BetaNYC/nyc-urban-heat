@@ -27,12 +27,25 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
       layout: { visibility: "visible" },
       paint: {
         "raster-color": [
-          "case",
-          ["==", ["raster-value"], 0], "#d3d5d9",  // 當值為 0 時顯示 #d3d5d9
-          "#212d40"  // 當值為 1 時顯示 #212d40
+          "interpolate",
+          ["linear"], 
+          ["raster-value"],
+          0,
+          "#BDBDBD",
+          1/255,
+          "#4d5766"
         ],
       },
     });
+
+    const source = map.getSource("cool_roofs");
+    if (source) {
+      console.log(source);
+    }
+
+    map.on("click", "cool_roofs", (e) => {
+      console.log(e)
+    })
   });
 
   return function onDestory() {

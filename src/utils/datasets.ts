@@ -116,8 +116,28 @@ export const datasets: Dataset[] = [
     },
   },
   {
+    name: "Weather Stations",
+    group: "",
+    icon: weatherStations,
+    currentView: null,
+    getYears: async (): Promise<number[]> => {
+      const data = await fetchStationHeatStats();
+      const years = data.features.map((d: any) => d.properties.year);
+      const uniqueYears = [...new Set(years)];
+      return uniqueYears as number[];
+    },
+    years: [],
+    currentYear: 2023,
+    views: {
+      points: {
+        name: "Raw Data",
+        init: (map, options) => viewWeatherStations(map, options?.year!),
+      },
+    },
+  },
+  {
     name: "Mean Radiant Temperature",
-    group: "OHE Static Factors",
+    group: "Static Factors",
     icon: meanRadiantTemperature,
     currentView: null,
     views: {
@@ -175,7 +195,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Surface Temperature",
-    group: "OHE Static Factors",
+    group: "Static Factors",
     icon: surfaceTemperature,
     info: `Surface Temperature indicates how hot the "surface" of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report.`,
     currentView: null,
@@ -211,20 +231,27 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
+        legend: [
+          { label: "92.1", value: "#f4e0d7" },
+          { label: "93.3", value: "#cbada6" },
+          { label: "94.4", value: "#a37a76" },
+          { label: "95.7", value: "#7a4645" },
+          { label: "98.8", value: "#511314" },
+        ],
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
           return createNtaLayer(map, date, this.name, this.legend!, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], 72.6],
-              "#202e41",
-              ["<=", ["get", date], 84.9],
-              "#bed0dd",
-              ["<=", ["get", date], 97.3],
-              "#f7e7d0",
-              ["<=", ["get", date], 109.7],
-              "#d66852",
-              ["<=", ["get", date], 122.1],
+              ["<=", ["get", date], 92.1],
+              "#f4e0d7",
+              ["<=", ["get", date], 93.3],
+              "#cbada6",
+              ["<=", ["get", date], 94.4],
+              "#a37a76",
+              ["<=", ["get", date], 95.7],
+              "#7a4645",
+              ["<=", ["get", date], 98.8],
               "#511314",
               "#000000", // Default color if no match
             ],
@@ -239,15 +266,15 @@ export const datasets: Dataset[] = [
             map,
             options?.date
           );
-          // const ntaLayerCleanup = createNtaLayer(
-          //   map,
-          //   date,
-          //   this.name,
-          //   this.legend!
-          // );
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            date,
+            this.name,
+            this.legend!
+          );
 
           return function onDestroy() {
-            // ntaLayerCleanup();
+            ntaLayerCleanup();
             surfaceTemperatureCleanup();
           };
         },
@@ -256,7 +283,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Tree Canopy",
-    group: "OHE Static Factors",
+    group: "Static Factors",
     icon: treeCanopy,
     info: "Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution.",
     currentView: null,
@@ -309,7 +336,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Cool Roofs",
-    group: "OHE Static Factors",
+    group: "Static Factors",
     icon: coolRoofs,
     info: "Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
     currentView: null,
@@ -351,15 +378,15 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         init: function (map) {
-          const ntaLayerCleanup = createNtaLayer(
-            map,
-            "PCT_AREA_COOLROOF",
-            this.name,
-            this.legend!
-          );
+          // const ntaLayerCleanup = createNtaLayer(
+          //   map,
+          //   "PCT_AREA_COOLROOF",
+          //   this.name,
+          //   this.legend!
+          // );
           const coolRoofsCleanup = viewCoolRoofs(map);
           return function onDestroy() {
-            ntaLayerCleanup();
+            // ntaLayerCleanup();
             coolRoofsCleanup();
           };
         },
@@ -368,36 +395,35 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Permeable Surfaces",
-    group: "OHE Static Factors",
+    group: "Static Factors",
     icon: premeableSurface,
     currentView: null,
     views: {
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "70%", value: "#f3d9b1" },
-          { label: "53%", value: "#edc58a" },
-          { label: "35", value: "#e7b263" },
-          { label: "18", value: "#c88d35" },
-          { label: "0", value: "#8f6018" },
+          { label: "10%", value: "#f3d9b1" },
+          { label: "20%", value: "#dabb8b" },
+          { label: "30%", value: "#c19d65" },
+          { label: "40%", value: "#a87e3e" },
+          { label: "71%", value: "#8f6018" },
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, this.legend!, {
-            "fill-color": [
-              "interpolate",
-              ["linear"],
-              ["get", "PCT_PERMEABLE"],
-              0,
-              "#8f6018",
-              18,
-              "#c88d35",
-              35,
-              "#e7b263",
-              53,
-              "#edc58a",
-              70,
-              "#f3d9b1",
-            ],
+           "fill-color": [
+                "case",
+                ["<=", ["get", "PCT_PERMEABLE"], 10],
+                "#f3d9b1",
+                ["<=", ["get", "PCT_PERMEABLE"], 20],
+                "#dabb8b",
+                ["<=", ["get", "PCT_PERMEABLE"], 30],
+                "#c19d65",
+                ["<=", ["get", "PCT_PERMEABLE"], 40],
+                "#a87e3e",
+                ["<=", ["get", "PCT_PERMEABLE"], 71],
+                "#8f6018",
+                "#000000", // Default color if no match
+              ],
           });
         },
       },
@@ -409,28 +435,8 @@ export const datasets: Dataset[] = [
     },
   },
   {
-    name: "Weather Stations",
-    group: "OHE Dynamic Factors",
-    icon: weatherStations,
-    currentView: null,
-    getYears: async (): Promise<number[]> => {
-      const data = await fetchStationHeatStats();
-      const years = data.features.map((d: any) => d.properties.year);
-      const uniqueYears = [...new Set(years)];
-      return uniqueYears as number[];
-    },
-    years: [],
-    currentYear: 2023,
-    views: {
-      points: {
-        name: "Raw Data",
-        init: (map, options) => viewWeatherStations(map, options?.year!),
-      },
-    },
-  },
-  {
     name: "Air Temperature",
-    group: "OHE Dynamic Factors",
+    group: "Dynamic Factors",
     icon: airTemperature,
     info: "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter.",
     currentView: null,
@@ -441,7 +447,7 @@ export const datasets: Dataset[] = [
   },
   {
     name: "Air Heat Index",
-    group: "OHE Dynamic Factors",
+    group: "Dynamic Factors",
     icon: airHeatIndex,
     info: "Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort.",
     currentView: null,
@@ -491,8 +497,10 @@ export async function initializeView(
   dataset: Dataset,
   map: mapboxgl.Map | null
 ) {
-  // fail states
+
+
   if (!dataset.currentView || !map) return dataset;
+
 
   // remove the previous view
   try {

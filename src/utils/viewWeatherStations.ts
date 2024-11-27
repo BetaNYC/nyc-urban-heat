@@ -5,16 +5,22 @@ import mapboxgl, {
   Popup,
 } from "mapbox-gl";
 
+import * as turf from "@turf/turf";
+
 import { fetchStationHeatStats } from "./api";
 import {
   selectedDataset,
   weatherStationProfileData,
   clickedAddress,
+  clickedWeatherStationName,
   isWeatherStationProfileExpanded,
   isDataSelectionExpanded,
   previousClickCor,
+  clickedWeatherStationPopup,
 } from "../pages/MapPage";
-// import { WeatherStationProfileData } from "../types";
+
+import "../pages/Map.css";
+import ntaFeatureCollection from "../data/nta.geo.json";
 
 export function viewWeatherStations(map: mapboxgl.Map, year: number) {
   fetchStationHeatStats().then((data) => {
@@ -41,8 +47,31 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
       map?.addSource("weather_stations", {
         type: "geojson",
         data: weatherStationsDataYear as GeoJSON.FeatureCollection,
+        promoteId: "address",
       });
     }
+
+    if (!map?.getSource("nta_layer")) {
+      map?.addSource("nta_layer", {
+        type: "geojson",
+        //@ts-ignore
+        data: ntaFeatureCollection,
+      });
+    }
+
+    map.addLayer({
+      id: "nta_layer",
+      type: "line",
+      source: "nta_layer",
+      layout: {},
+      paint: {
+        "line-color": "#000",
+        "line-width": 1,
+        "line-opacity": 0,
+      },
+    });
+
+    // console.log(weatherStationsDataYear);
 
     // Remove existing layers if they exist
     if (map?.getLayer("weather_stations_heat_event"))
@@ -60,12 +89,26 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
         visibility: "visible",
       },
       paint: {
-        "circle-stroke-width": 0,
-        "circle-stroke-color": "#1B1B1B",
+        "circle-stroke-width": [
+          "case",
+          ["boolean", ["feature-state", "clicked"], false],
+          2.5,
+          ["boolean", ["feature-state", "hovered"], false],
+          2.5,
+          0, // Default width 0
+        ],
+        "circle-stroke-color": [
+          "case",
+          ["boolean", ["feature-state", "clicked"], false],
+          "#0079DA", // Blue for clicked
+          ["boolean", ["feature-state", "hovered"], false],
+          "#666666", // Gray for hovered
+          "rgba(0, 0, 0, 0)", // Transparent by default
+        ],
         "circle-radius": [
           "*",
           ["number", ["get", "Days_with_NYC_HeatEvent"]],
-          1.05,
+          1.25,
         ],
         "circle-color": "#e19f3c",
         "circle-opacity": 1,
@@ -83,7 +126,7 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
         "circle-radius": [
           "*",
           ["-", 0, ["number", ["get", "Days_with_NWS_HeatAdvisory"]]],
-          1.05,
+          1.25,
         ],
         "circle-color": "#d66852",
         "circle-opacity": 1,
@@ -101,22 +144,24 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
         "circle-radius": [
           "*",
           ["-", 0, ["number", ["get", "Days_with_NWS_Excessive_Heat_Event"]]],
-          1.05,
+          1.25,
         ],
         "circle-color": "#9d2b2b",
         "circle-opacity": 1,
       },
     });
 
-    let weatherStationNamePopup: mapboxgl.Popup | null = null;
+    let hoveredWeatherStationAddress: null | string = null;
+    let clickedWeatherStationAddress: null | string = null;
 
     map?.on(
       "click",
       "weather_stations_heat_event",
       (event: MapMouseEvent & EventData) => {
-        const { address } = event.features[0].properties;
+        const { address, name } = event.features[0].properties;
 
         clickedAddress.value = address;
+        clickedWeatherStationName.value = name;
         isWeatherStationProfileExpanded.value = true;
         isDataSelectionExpanded.value = false;
 
@@ -136,12 +181,17 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
         const offsetLat = 0.005;
         const tooltipLat = clickedLat + offsetLat;
 
-        if (weatherStationNamePopup) {
-          weatherStationNamePopup.remove();
-          weatherStationNamePopup = null;
+        const clickedPoint = turf.point([event.lngLat.lng, event.lngLat.lat]);
+        // const ntaName = ntaFeatureCollection.features.find((feature) =>
+        //   turf.booleanPointInPolygon(clickedPoint, feature)
+        // ).properties.ntaname;
+
+        if (clickedWeatherStationPopup.value) {
+          clickedWeatherStationPopup.value.remove();
+          // clickedWeatherStationPopup.value = null;
         }
 
-        weatherStationNamePopup = new mapboxgl.Popup({
+        clickedWeatherStationPopup.value = new mapboxgl.Popup({
           closeButton: false,
           closeOnClick: false,
           className: "clicked-popup",
@@ -157,6 +207,23 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           duration: 2000,
           easing: (t) => t * (2.5 - t),
         });
+
+        if (
+          clickedWeatherStationAddress !== null &&
+          clickedWeatherStationAddress !== address
+        ) {
+          map.setFeatureState(
+            { source: "weather_stations", id: clickedWeatherStationAddress },
+            { clicked: false }
+          );
+        }
+
+
+        clickedWeatherStationAddress = address;
+        map.setFeatureState(
+          { source: "weather_stations", id: address },
+          { clicked: true }
+        );
       }
     );
 
@@ -173,25 +240,36 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           Days_with_NWS_Excessive_Heat_Event,
           Days_with_NWS_HeatAdvisory,
           Days_with_NYC_HeatEvent,
+          address,
+          name,
         } = event.features[0].properties;
+        console.log(address);
 
         const contents = `
-          <div className="bg-[#1B1B1B]">
-            <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Extreme Heat days in ${currentYear}</h2>
-            <div className="">
-              <div className="flex gap-4 text-[#D36051] text-xsmall">
-                  <p className="font-medium ">NWS Excessive Heat</p>
-                  <p className="w-4">${Days_with_NWS_Excessive_Heat_Event}</p>
-              </div>
-              <div className="flex gap-4 text-[#C9733A] text-xsmall">
-                  <p className="font-medium ">NWS Heat Advisory</p>
-                  <p className="w-4">${Days_with_NWS_HeatAdvisory}</p>
-              </div>
-              <div className="flex gap-4 text-[#BA8E50] text-xsmall">
-                  <p className="font-medium ">NYC Heat Event</p>
-                  <p className="w-4">${Days_with_NYC_HeatEvent}</p>
-              </div>
+          <div class="px-[1rem] py-[0.5rem] bg-[#1B1B1B]">
+            <div class="mb-2 pb-2 border-b-[1px] border-[#999]">
+              <h1 class="font-medium text-[#F2F2F2] text-large">${name}</h1>
+              <h2 class="font-medium text-[#F2F2F2] text-small">Weather Station ${address}</h2>
             </div>
+            <div>
+              <h2 class="mb-1 font-medium text-[#F2F2F2] text-small">Extreme Heat days measured in ${currentYear}</h2>
+              <div class="flex flex-col gap-0">
+                <div class="flex gap-4 text-[#D36051] text-regular">
+                  <p class="w-3">${Days_with_NWS_Excessive_Heat_Event}</p>
+                  <p class="font-medium ">NWS Excessive Heat</p>
+
+                </div>
+                <div class="flex gap-4 text-[#C9733A] text-regular">
+                  <p class="w-3">${Days_with_NWS_HeatAdvisory}</p>
+                  <p class="font-medium ">NWS Heat Advisory</p>
+                </div>
+                <div class="flex gap-4 text-[#BA8E50] text-regular">
+                  <p class="w-3">${Days_with_NYC_HeatEvent}</p>
+                  <p class="font-medium ">NYC Heat Event</p>
+                </div>
+            </div>
+            </div>
+
           </div>
         `;
 
@@ -212,18 +290,52 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           .setDOMContent(divElement)
           .setOffset([0, 0])
           .addTo(map);
+
+        if (
+          hoveredWeatherStationAddress &&
+          hoveredWeatherStationAddress !== address
+        ) {
+          map.setFeatureState(
+            { source: "weather_stations", id: hoveredWeatherStationAddress },
+            { hovered: false }
+          );
+        }
+
+        hoveredWeatherStationAddress = address;
+
+        map.setFeatureState(
+          { source: "weather_stations", id: address },
+          { hovered: true }
+        );
       }
     );
 
-    map?.on("mouseleave", "weather_stations_heat_event", () => {
+    map?.on("mouseout", "weather_stations_heat_event", () => {
       if (popup) popup.remove();
+
+      if (hoveredWeatherStationAddress !== null) {
+        map.setFeatureState(
+          { source: "weather_stations", id: hoveredWeatherStationAddress },
+          { hovered: false }
+        );
+        hoveredWeatherStationAddress = null; // Reset to null
+      }
     });
   });
 
   return function onDestory() {
+    removeAllPopups();
     map.removeLayer("weather_stations_heat_event");
     map.removeLayer("weather_stations_heat_advisory");
     map.removeLayer("weather_stations_heat_excessive");
     map.removeSource("weather_stations");
+
   };
+}
+
+function removeAllPopups() {
+  if (clickedWeatherStationPopup.value) {
+    clickedWeatherStationPopup.value.remove();
+    clickedWeatherStationPopup.value = null; // Optionally, set the value to null if it's used later
+  }
 }

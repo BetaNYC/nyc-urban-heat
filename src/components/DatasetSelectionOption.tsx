@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import { Dataset } from '../utils/datasets';
 import { selectedDataset } from "../pages/MapPage";
 import { computed } from '@preact/signals-react';
+import InformationCircle from "./InformationCircle";
 
 type Props = {
     dataset: Dataset,
@@ -23,18 +24,20 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
         if(isDatasetSelected) return selectedDataset.value?.currentView
     });
     const viewNames = Object.keys(dataset.views);
+    console.log(viewNames)
 
     return (
         <div
             className={`px-5 py-3 w-[20rem] ${isDatasetSelected.value ? 'bg-[#D9D9D9] text-[#4F4F4F]' : "hover:bg-[#6A6A6A] text-[#F2F2F2]"} cursor-pointer`}
             onClick={(e) => handleDatasetChange(e, dataset)}
         >
-            <div className="flex justify-between items-center gap-3 ">
+            <div className="flex justify-between items-center ">
                 <div className="flex items-center gap-3">
                     <img src={dataset.icon} alt="" className="w-6 h-6 text-[#BDBDBD]" />
                     <h3 className={`text-regular ${isDatasetSelected.value ? "font-semibold" : ''}`}>{dataset.name}</h3>
                 </div>
-                <InformationCircleIcon width={20} height={20} onClick={handleInfoChange} />
+                {/* <ExclamationCircleIcon width={20} height={20}  onClick={handleInfoChange}/> */}
+                <InformationCircle isActive={isDatasetSelected.value} clickHandler={handleInfoChange} size="big"/>
             </div>
             {isDatasetSelected.value && isInfoExpanded && (
                 <div

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { XMarkIcon, InformationCircleIcon, ListBulletIcon } from '@heroicons/react/24/outline'
 import { selectedDataset } from '../pages/MapPage'
 import { computed } from '@preact/signals-react'
+import InformationCircle from "./InformationCircle";
 
 const Legends = () => {
     const [isLegendExpanded, setIsLegendExpanded] = useState(true)
@@ -63,7 +64,7 @@ const Legends = () => {
                         legend.value[0] &&
                         legend.value[0].hasOwnProperty('label') &&
                         legend.value[0].hasOwnProperty('value')
-                    ) && viewName.value == 'nta' && <div className='p-5 w-[18.75rem] bg-[#1B1B1B] rounded-[0.5rem]'>
+                    ) && viewName.value == 'nta' && <div className='p-5 w-[20rem] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex gap-2 mb-2 items-center justify-between font-medium'>
                             <h3 className='text-regular text-[#F4F4F4]'>{datasetName.value}</h3>
                             <XMarkIcon width={18} height={18} className='text-[#BDBDBD] cursor-pointer' onClick={handleClick} />
@@ -71,7 +72,7 @@ const Legends = () => {
                         <div className='flex items-center'>
                             {legend.value?.map((item: any) => (
                                 <div key={`legend-${item.label}`} className='flex flex-col items-center gap-1 text-xsmall text-[#F4F4F4]'>
-                                    <span className="w-10 h-4 block " style={{ backgroundColor: item.value }} />
+                                    <span className="w-[3.5rem] h-4 block " style={{ backgroundColor: item.value }} />
                                     {item.label}
                                 </div>
                             ))}
@@ -79,66 +80,49 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Weather Stations" && <div className='p-5 w-[18.75rem] flex items-start bg-[#1B1B1B] rounded-[0.5rem]'>
+                    datasetName.value === "Weather Stations" && <div className='p-5 w-[20rem] flex items-start bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='mr-8'>
                             <h3 className='mb-3 font-medium text-[#F4F4F4]'>Extreme Heat days in {currentYear}</h3>
                             <div className='flex flex-col gap-1'>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
-                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                    <InformationCircle size='big'/>
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
-                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                    <InformationCircle size='big'/>
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
-                                    <InformationCircleIcon width={14} height={14} className='text-[#BDBDBD]' />
+                                    <InformationCircle size='big'/>
                                 </div>
                             </div>
                         </div>
-                        <div >
-                            {/* <div className='flex mb-4 items-center font-medium text-[#F4F4F4]'>Number of extreme heat days</div>
-                            <div className='flex '>
-                                <div className='relative w-[70%] h-24'>
-                                    <div className='absolute left-0 bottom-0 w-24 h-24 border-[1.5px] border-[#F4F4F4] rounded-full'></div>
-                                    <div className='absolute left-[1rem] bottom-0 w-16 h-16 border-[1.5px] border-[#F4F4F4] rounded-full'></div>
-                                    <div className='absolute left-[2rem] bottom-0 w-8 h-8 border-[1.5px] border-[#F4F4F4] rounded-full'></div>
-                                    <div className='absolute left-[2.5rem] bottom-0 w-4 h-4 border-[1.5px] border-[#F4F4F4] rounded-full'></div>
-                                    <div className='absolute top-0 left-12 w-28 h-[1px] bg-[#F4F4F4]'></div>
-                                    <div className='absolute top-8 left-12 w-28 h-[1px] bg-[#F4F4F4]'></div>
-                                    <div className='absolute top-16 left-12 w-28 h-[1px] bg-[#F4F4F4]'></div>
-                                    <div className='absolute top-20 left-12 w-28 h-[1px] bg-[#F4F4F4]'></div>
-                                </div>
-                                <div className='relative w-[30%]'>
-                                    <div className='absolute top-[-9px] font-medium text-small text-[#F4F4F4]'>30 days</div>
-                                    <div className='absolute top-[calc(2rem_-_9px)] font-medium text-small text-[#F4F4F4]'>20 days</div>
-                                    <div className='absolute top-[calc(4rem_-_9px)] font-medium text-small text-[#F4F4F4]'>10 days</div>
-                                    <div className='absolute top-[calc(5rem_-_9px)] font-medium text-small text-[#F4F4F4]'>5 days</div>
-                                </div>
-                            </div> */}
-                        </div>
-
                     </div>
                 }
                 {
-                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[18.75rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
-                        <div className='flex justify-between text-regular '>
-                            <p>Tree Canopy</p>
-                            <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
+                    datasetName.value === "Mean Radiant Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular text-[#F4F4F4]'>
+                            <p>Mean Radiant Temperature</p>
+                            <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
-                        <div className='my-[0.25rem] h-5 bg-[#335d68]'>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-[100%] h-full bg-gradient-to-r from-[#859ea4] via-[#e0d0b6,#edc58a,#d39365] to-[#b8613f]'></div>
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
-                            <p>Covered by trees</p>
+                            <p>88℉</p>
+                            {/* <p>110</p> */}
+                            <p>122℉</p>
+                            {/* <p>136</p> */}
+                            <p>152℉</p>
                         </div>
                     </div>
                 }
                 {
-                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[18.75rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
                             <p>Surface Temperature</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
@@ -154,9 +138,51 @@ const Legends = () => {
                         </div>
                     </div>
                 }
-                {/* {
-                    layer === 'Cool Roofs' && shown['']
-                } */}
+                {
+                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular '>
+                            <p>Tree Canopies</p>
+                            <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
+                        </div>
+                        <div className='my-[0.25rem] h-5 bg-[#335d68]'>
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>Covered by trees</p>
+                        </div>
+                    </div>
+                }
+                {
+                    datasetName.value === "Cool Roofs" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular '>
+                            <p>Cool Roofs</p>
+                            <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
+                        </div>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-[50%] h-full bg-gradient-to-r bg-[#DBDBDB]'></div>
+                            <div className='w-[50%] h-full bg-gradient-to-r bg-[#4d5766]'></div>
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>Dark Roofs</p>
+                            <p>Cool Roofs</p>
+                        </div>
+                    </div>
+                }
+                {
+                    datasetName.value === "Permeable Surfaces" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular text-[#F4F4F4]'>
+                            <p>Permeable Surfaces</p>
+                            <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
+                        </div>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-[100%] h-full bg-gradient-to-r from-[#f3d9b1] via-[#dabb8b,#c19d65,#a87e3e] to-[#8f6018]'></div>
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>10%</p>
+                            <p>71%</p>
+                        </div>
+                    </div>
+                }
+
             </div>
         )
     }

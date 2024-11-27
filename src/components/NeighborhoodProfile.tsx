@@ -1,8 +1,13 @@
-import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, InformationCircleIcon } from "@heroicons/react/24/outline"
+import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
-import { isNeighborhoodProfileExpanded, neighborhoodProfileData, map, previousClickCor } from "../pages/MapPage"
+import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, neighborhoodProfileData, map, previousClickCor, clickedNeighborhoodInfo, clickedNeighborhoodPopup } from "../pages/MapPage"
+import { datasets, initializeView } from "../utils/datasets"
+import { viewWeatherStations } from "../utils/viewWeatherStations"
+
+import InformationCircle from './InformationCircle'
+
 
 
 
@@ -26,11 +31,29 @@ const NeighborhoodProfile = () => {
             map.value!.flyTo({
                 center: [-73.913, 40.763],
                 zoom: 11,
-                essential: true, 
+                essential: true,
                 duration: 2000,
-                easing: (t) => t 
+                easing: (t) => t
             })
         }
+    }
+
+
+    const profileChangeClickHandler = () => {
+        isNeighborhoodProfileExpanded.value = false
+        isWeatherStationProfileExpanded.value = true
+        selectedDataset.value = datasets[6]
+
+        if (!datasets[6].currentView) {
+            datasets[6].currentView = 'points'
+        }
+
+        initializeView(datasets[6], map.value).then(dataset => {
+            console.log("Updated dataset:", dataset);
+            selectedDataset.value = { ...dataset }
+        })
+
+        clickedNeighborhoodPopup.value?.remove()
     }
 
     // const { currentFeature, allFeatures } = ntaneighborhoodProfileData
@@ -65,8 +88,8 @@ const NeighborhoodProfile = () => {
             <div className={`printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:gap-8 md:h-[30%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
-                        <h2 className="text-regular md:text-subheadline text-gray_six">{neighborhoodProfileData.value?.boroname}</h2>
-                        <h1 className="md:mb-4 font-semibold text-subheadline md:text-headline text-gray_six">{neighborhoodProfileData.value?.ntaname}</h1>
+                        <h2 className="text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro}</h2>
+                        <h1 className="md:mb-4 font-semibold text-subheadline md:text-headline text-gray_six">{clickedNeighborhoodInfo.value?.nta}</h1>
                         {
                             isTablet &&
                             <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-scroll">
@@ -87,7 +110,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Air Temperature</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircleIcon width={14} height={14} className="text-[#BDBDBD]" />
+                                    <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -102,7 +125,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Mean Radiant Temperature</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircleIcon width={14} height={14} className="text-[#BDBDBD]" />
+                                    <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -117,7 +140,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Tree Canopy</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircleIcon width={14} height={14} className="text-[#BDBDBD]" />
+                                    <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -132,7 +155,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Cool Roofs</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircleIcon width={14} height={14} className="text-[#BDBDBD]" />
+                                    <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -147,7 +170,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Premeable Surfaces</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircleIcon width={14} height={14} className="text-[#BDBDBD]" />
+                                    <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
@@ -181,7 +204,7 @@ const NeighborhoodProfile = () => {
                         </button>
                         {isTablet &&
                             <div className="flex items-center">
-                                <button className="p-[0.625rem] text-regular text-[#E0E0E0] ">View the closest weather station</button> :
+                                <button className="p-[0.625rem] text-regular text-[#E0E0E0]" onClick={profileChangeClickHandler}>View the closest weather station</button> :
                                 <ArrowLongRightIcon width={24} height={24} className="text-white" />
                             </div>
                         }
