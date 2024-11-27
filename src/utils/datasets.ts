@@ -150,7 +150,7 @@ export const datasets: Dataset[] = [
           { label: "48%", value: "#c68165" },
           { label: "63%", value: "#b8613f" },
         ],
-        init: function (map, options) {
+        init: function (map) {
           return createNtaLayer(
             map,
             "NTA_PCT_MRT_Less_Than_110",

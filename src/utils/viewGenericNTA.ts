@@ -44,6 +44,7 @@ export function createNtaLayer(
   const layerFillId = metric + "_FILL";
   const layerOutlineId = metric + "_OUTLINE";
   const layerBasicOutlineId = metric + "_BASICOUTLINE";
+  console.log(layerName)
 
   let popup = new Popup({
     closeButton: true,
