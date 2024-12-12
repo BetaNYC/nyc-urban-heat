@@ -109,8 +109,9 @@ const WeatherStationProfile = () => {
 
 
     clickedWeatherStationNeighborhoodID.value = weatherStaions.features.find(w => w.properties.address === clickedAddress.value)?.properties.nearestNTA!
-        //@ts-ignore
+    //@ts-ignore
     const clickedWeatherStationNeighborhoodFeature = nta.features.find(n => n.properties.ntacode === clickedWeatherStationNeighborhoodID.value)
+    //@ts-ignore
     const clickedWeatherStationNeighborhoodCentroid = turf.centroid(clickedWeatherStationNeighborhoodFeature).geometry.coordinates
     const clickedWeatherStationNeighborhoodBoro = clickedWeatherStationNeighborhoodFeature?.properties?.boroname
     const clickedWeatherStationNeighborhoodName = clickedWeatherStationNeighborhoodFeature?.properties?.ntaname
@@ -127,15 +128,15 @@ const WeatherStationProfile = () => {
             selectedDataset.value = { ...dataset }
         })
 
-        
+
 
         map.value!.setFeatureState(
             {
-              source: "HEAT_VULNERABILITY_SOURCE",
-              id: clickedWeatherStationNeighborhoodID.value!,
+                source: "HEAT_VULNERABILITY_SOURCE",
+                id: clickedWeatherStationNeighborhoodID.value!,
             },
             { clicked: true }
-          );
+        );
 
         clickedWeatherStationPopup.value?.remove()
 
@@ -148,8 +149,8 @@ const WeatherStationProfile = () => {
 
 
         clickedNeighborhoodInfo.value = {
-            boro: clickedWeatherStationNeighborhoodBoro,
-            nta: clickedWeatherStationNeighborhoodName
+            boro: clickedWeatherStationNeighborhoodBoro || "Unknown Boro",
+            nta: clickedWeatherStationNeighborhoodName || "Unknown NTA"
         }
 
         const offsetLat = 0.005

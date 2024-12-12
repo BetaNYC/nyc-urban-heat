@@ -34,6 +34,7 @@ const DatasetSelections = () => {
   }
 
   const handleViewChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
+    console.log('aa')
     e.stopPropagation()
     // swap views
     if (dataset.currentView) {
@@ -53,7 +54,7 @@ const DatasetSelections = () => {
   }
   // ${!isDataSelectionExpanded.value ? "h-[3.5rem] overflow-hidden" : " max-h-[60%] overflow-y-auto"}
   return (
-    <div className={`absolute left-6 top-[4.625rem] ${isDataSelectionExpanded.value && "pb-4"} w-[20rem]  bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
+    <div className={`absolute left-6 top-[4.625rem] ${isDataSelectionExpanded.value && "pb-4"} w-[20rem]  bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[9] cursor-pointer`}    >
       <div className='flex justify-between items-center px-5 h-[3.5rem]' onClick={() => isDataSelectionExpanded.value = !isDataSelectionExpanded.value}>
         <div className="flex items-center gap-3 ">
           {
