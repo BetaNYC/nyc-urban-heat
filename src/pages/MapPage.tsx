@@ -35,6 +35,9 @@ export const clickedNeighborhoodInfo = signal<{
   nta: "West Village"
 })
 
+export const clickedWeatherStationNeighborhoodID = signal<string | null>(null)
+export const clickedNeighborhoodNearestStationAddress = signal<string | null>(null)
+
 
 const MapPage = () => {
   const mapContainer = useRef<HTMLDivElement>(null);

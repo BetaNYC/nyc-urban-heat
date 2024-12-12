@@ -205,15 +205,15 @@ const AirTemperatureLineChart = ({ data }: Props) => {
                 .style('top', `${yPos}px`)
                 .style('display', 'block')
                 .html(`
-                <div style="">
+                <div>
                     <div style="padding:4px 8px 4px 8px; font-weight:medium; font-size:10px; color: #f2f2f2; border-bottom: 1px solid #F2F2F2; border-radius: 12px 12px 0 0">${d3.timeFormat('%b %d, %Y')(closestDataPoint.datetime!)}</div>
                     <div style="margin: 8px; padding:0">
                         <div style="display:flex; align-items: flex-start; gap: 15px; margin-bottom: 12px">
-                            <div style="font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.tempmax)} °F</div>
+                            <div style="width: 40px;font-weight:bold; font-size: 14px;color: #F76D52;">${Math.round(closestDataPoint.tempmax)} °F</div>
                             <div style="">
                                 <h3 style="font-weight: 500; font-size:12px; color:#F2F2F2">Maximum Air Temperature</h3>
-                                <div style="display: flex; gap:8px">
-                                    <p class="max-difference" style="font-weight: bold; font-size: 12px; letter-spacing: -1px;" >
+                                <div style="display: flex; gap:8px;">
+                                    <p class="max-difference" style="width: 28px; font-weight: bold; font-size: 12px; letter-spacing: -1px;" >
                                         ${isAboveHistoricalMax ? "+" : "-"}
                                         ${tempMaxDifference}°
                                     </p>
@@ -222,11 +222,11 @@ const AirTemperatureLineChart = ({ data }: Props) => {
                             </div>
                         </div> 
                         <div style="display:flex; gap: 15px; align-items: flex-start;">
-                            <div style="font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.tempmin)} °F</div>
+                            <div style="width: 40px; font-weight:bold; font-size: 14px;color: #5298AA;">${Math.round(closestDataPoint.tempmin)} °F</div>
                             <div style="">
                                 <h3 style="font-weight: 500; font-size:12px; color:#F2F2F2">Minimum Air Temperature</h3>
-                                <div style="display: flex; gap:8px">
-                                    <p class='min-difference' style="font-weight: bold; font-size: 12px; letter-spacing: -1px;">
+                                <div style="display: flex; gap:8px;">
+                                    <p class='min-difference' style="width: 28px; font-weight: bold; font-size: 12px; letter-spacing: -1px;">
                                         ${isAboveHistoricalMin ? "+" : "-"}
                                         ${tempMinDifference}°
                                     </p>

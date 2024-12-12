@@ -30,9 +30,9 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
           "interpolate",
           ["linear"], 
           ["raster-value"],
-          0,
-          "#BDBDBD",
           1/255,
+          "#BDBDBD",
+          2/255,
           "#4d5766"
         ],
       },
@@ -43,9 +43,8 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
       console.log(source);
     }
 
-    map.on("click", "cool_roofs", (e) => {
-      console.log(e)
-    })
+    // map.on("click", "cool_roofs", (e) => {
+    // })
   });
 
   return function onDestory() {

@@ -13,14 +13,15 @@ import {
   isDataSelectionExpanded,
   previousClickCor,
   clickedNeighborhoodInfo,
+  clickedWeatherStationNeighborhoodID,
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
 import { centerOfMass } from "@turf/turf";
+import { useEffect } from "react";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
-let previousLayerId: null | string = null;
 
 function getDataset(metric: string) {
   return nta_dataset_info.value.find((dataset) => dataset.metric === metric);
@@ -44,15 +45,12 @@ export function createNtaLayer(
   const layerFillId = metric + "_FILL";
   const layerOutlineId = metric + "_OUTLINE";
   const layerBasicOutlineId = metric + "_BASICOUTLINE";
-  console.log(layerName)
 
   let popup = new Popup({
     closeButton: true,
   });
 
   const data = getDataset(metric);
-
-  console.log(breakpoints)
 
   // merge in data with nta
   const features = GeoJSONTransformHandler(
@@ -365,6 +363,13 @@ export function createNtaLayer(
       );
     }
 
+    if (clickedWeatherStationNeighborhoodID !== null) {
+      map.setFeatureState(
+        { source: sourceId, id: clickedWeatherStationNeighborhoodID.value! },
+        { clicked: false }
+      );
+    }
+
     clickedNtacode = ntacode;
     map.setFeatureState({ source: sourceId, id: ntacode }, { clicked: true });
   });
@@ -397,4 +402,3 @@ export function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
     }
   }
 }
-

@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 
-import infoIcon from "/icons/info.svg"
-
 interface Props {
   isActive?: boolean;
   clickHandler?: (e: React.MouseEvent<SVGSVGElement>) => void
@@ -17,7 +15,8 @@ const InformationCircle = ({ isActive, clickHandler, size }: Props) => {
     <div
       className={`relative ${sizeClass} ${isActive
         ? "text-[#4F4F4F]"
-        : "text-[#BDBDBD] hover:text-[#F2F2F2]"} `}
+        : "text-[#BDBDBD] hover:text-[#F2F2F2]"} z-[9999999999]`}
+        
     >
       <svg
         viewBox="0 0 24 24"

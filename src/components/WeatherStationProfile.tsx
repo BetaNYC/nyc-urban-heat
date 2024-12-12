@@ -1,9 +1,6 @@
 import { useState, Dispatch, SetStateAction, useEffect } from "react"
-
-import * as d3 from 'd3';
-
-import mapboxgl from "mapbox-gl";
-
+import mapboxgl, { Popup } from "mapbox-gl";
+import * as turf from "@turf/turf";
 
 import { useMediaQuery } from "react-responsive"
 
@@ -12,27 +9,26 @@ import AirTemperatureLineChart from "./AirTemperatureLineChart";
 
 import { ChevronLeftIcon, ChevronRightIcon, InformationCircleIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid'
 
-import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, clickedAddress, clickedWeatherStationName, map, weatherStationProfileData, previousClickCor, clickedWeatherStationPopup } from "../pages/MapPage";
+import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, clickedAddress, clickedWeatherStationName, map, weatherStationProfileData, clickedNeighborhoodInfo, clickedWeatherStationPopup, clickedNeighborhoodPopup, clickedWeatherStationNeighborhoodID } from "../pages/MapPage";
 
-import { datasets,initializeView } from "../utils/datasets"
+import { datasets, initializeView } from "../utils/datasets"
 
 import { WeatherStationData } from "../types";
 
 import { fetchWeatherStationData } from "../utils/api";
 
 
+import nta from "../data/nta.geo.json"
+import weatherStaions from "../data/stations.geo.json"
+
+
 import InformationCircle from "./InformationCircle";
-
-
-
 
 const WeatherStationProfile = () => {
 
     const currentYear = selectedDataset.value?.currentYear || 2023;
     const currentAddress = clickedAddress.value
     const currentWeatherStationName = clickedWeatherStationName.value
-
-
 
     const [weatherStationData, setWeatherStationData] = useState<WeatherStationData[]>([]);
 
@@ -112,6 +108,14 @@ const WeatherStationProfile = () => {
     };
 
 
+    clickedWeatherStationNeighborhoodID.value = weatherStaions.features.find(w => w.properties.address === clickedAddress.value)?.properties.nearestNTA!
+    const clickedWeatherStationNeighborhoodFeature = nta.features.find(n => n.properties.ntacode === clickedWeatherStationNeighborhoodID.value)
+    const clickedWeatherStationNeighborhoodCentroid = turf.centroid(clickedWeatherStationNeighborhoodFeature).geometry.coordinates
+    const clickedWeatherStationNeighborhoodBoro = clickedWeatherStationNeighborhoodFeature.properties.boroname
+    const clickedWeatherStationNeighborhoodName = clickedWeatherStationNeighborhoodFeature.properties.ntaname
+
+
+
     const profileChangeClickHandler = () => {
         isNeighborhoodProfileExpanded.value = true
         isWeatherStationProfileExpanded.value = false
@@ -122,30 +126,68 @@ const WeatherStationProfile = () => {
             selectedDataset.value = { ...dataset }
         })
 
+        
+
+        map.value!.setFeatureState(
+            {
+              source: "HEAT_VULNERABILITY_SOURCE",
+              id: clickedWeatherStationNeighborhoodID.value!,
+            },
+            { clicked: true }
+          );
+
+        clickedWeatherStationPopup.value?.remove()
 
         const bounds = map.value!.getBounds();
-
         const centerCoordinates = map.value!.getCenter();
         const centerLng = centerCoordinates.lng;
-
         const mapWidth = bounds.getEast() - bounds.getWest();
-
         const targetLng = bounds.getWest() + mapWidth * 0.175;
+        const newLng = centerLng + (clickedWeatherStationNeighborhoodCentroid[0] - targetLng) * 0.65;
 
-        const newLng = centerLng + (previousClickCor.value[0] - targetLng) * 0.65;
 
-        const offsetLat = 0.005;
-        const tooltipLat = previousClickCor.value[1] + offsetLat;
+        clickedNeighborhoodInfo.value = {
+            boro: clickedWeatherStationNeighborhoodBoro,
+            nta: clickedWeatherStationNeighborhoodName
+        }
+
+        const offsetLat = 0.005
+        const tooltipLat = clickedWeatherStationNeighborhoodCentroid[1] + offsetLat;
+
+        if (clickedNeighborhoodPopup) {
+            clickedNeighborhoodPopup.value?.remove();
+            clickedNeighborhoodPopup.value = null;
+        }
+
+        clickedNeighborhoodPopup.value = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "clicked-popup",
+        })
+            .setLngLat([clickedWeatherStationNeighborhoodCentroid[0], tooltipLat])
+            .setHTML(`<div class='clicked-nta'>${clickedWeatherStationNeighborhoodName}</div>`)
+            .addTo(map.value!);
+
+        // if (clickedWeatherStationNeighborhoodID !== null) {
+        //     clickedNeighborhoodID.value = clickedWeatherStationNeighborhoodID!
+        //     console.log(clickedWeatherStationNeighborhoodID)
+        //     map.value!.setFeatureState(
+        //         { source: "HEAT_VULNERABILITY_SOURCE", id: clickedWeatherStationNeighborhoodID },
+        //         { clicked: false }
+        //     );
+        // }
+
+
+
 
         map.value!.flyTo({
-            center: [newLng, previousClickCor.value[1]],
+            center: [newLng, clickedWeatherStationNeighborhoodCentroid[1]],
             zoom: map.value!.getZoom(),
             essential: true,
             duration: 2000,
             easing: (t) => t * (2.5 - t),
-          });
+        });
 
-        clickedWeatherStationPopup.value?.remove()
 
     }
 
@@ -219,7 +261,7 @@ const WeatherStationProfile = () => {
                                 <div className="">
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
-                                        <InformationCircle size="small"/>
+                                        <InformationCircle size="small" />
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Extreme Heat days in {currentYear}</h2>
                                     <div className="">
@@ -240,7 +282,7 @@ const WeatherStationProfile = () => {
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
-                                        <InformationCircle size="small"/>
+                                        <InformationCircle size="small" />
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular"> Days Exceeding Historic Normal in {currentYear}</h2>
                                     <div className="">
@@ -301,12 +343,12 @@ const WeatherStationProfile = () => {
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#EE745D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Max Daily Temperature</p>
-                                                <InformationCircle size="small"/>
+                                                <InformationCircle size="small" />
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#49808D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Min Daily Temperature</p>
-                                                <InformationCircle size="small"/>
+                                                <InformationCircle size="small" />
                                             </div>
                                         </div>
                                         {
@@ -316,17 +358,17 @@ const WeatherStationProfile = () => {
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#823E35]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
-                                                        <InformationCircle size="small"/>
+                                                        <InformationCircle size="small" />
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#A46338]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
-                                                        <InformationCircle size="small"/>
+                                                        <InformationCircle size="small" />
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#AD844A]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NYC Heat Event</p>
-                                                        <InformationCircle size="small"/>
+                                                        <InformationCircle size="small" />
                                                     </div>
                                                 </div> :
                                                 <div>
@@ -346,7 +388,7 @@ const WeatherStationProfile = () => {
                                                             </svg>
                                                         </div>
                                                         <p className="w-[14.5rem] font-regular text-xsmall text-[#999]">Historical Normal Maximum Daily Temperature</p>
-                                                        <InformationCircle size="small"/>
+                                                        <InformationCircle size="small" />
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="">
@@ -363,7 +405,7 @@ const WeatherStationProfile = () => {
                                                             </svg>
                                                         </div>
                                                         <p className="w-[14.5rem] font-regular text-xsmall text-[#999]">Historical Normal Minimum Daily Temperature</p>
-                                                        <InformationCircle size="small"/>
+                                                        <InformationCircle size="small" />
                                                     </div>
                                                 </div>
                                         }

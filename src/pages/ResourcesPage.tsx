@@ -1,4 +1,5 @@
 import Nav from "../components/Nav"
+import Banner from "../components/Banner"
 import ResourceCard from "../components/ResourceCard"
 import AdvocacyGroupsCard from "../components/AdvocacyGroupsCard"
 
@@ -7,9 +8,10 @@ const ResourcesPage = () => {
   return (
     <div className="w-full">
       <Nav />
+      <Banner title="Resources" tags={["Understanding the NYC  Urban Heat Data Portal", "NYC Extreme Heat Resources", "Directory of Urban Heat Advocacy Groups"]} />
       <div className="flex justify-center ">
         <div className="px-5 py-[2.5rem] container">
-          <div className="pb-[4.5rem] border-b-[1px] border-[#C6C6C6]">
+          {/* <div className="pb-[4.5rem] border-b-[1px] border-[#C6C6C6]">
             <h1 className="mb-8 font-semibold text-headline">NYC Extreme Heat Resources</h1>
             <div className="grid grid-col-1 md:grid-cols-2 lg:grid-cols-3 gap-[2.5rem]">
               <ResourceCard title="NYC Cool Options">
@@ -39,8 +41,8 @@ const ResourcesPage = () => {
                 <a href="https://a816-dohbesp.nyc.gov/IndicatorPublic/data-features/hvi/" className="underline font-light text-small hover:text-[#EB583B]">https://a816-dohbesp.nyc.gov/IndicatorPublic/data-features/hvi/</a>
               </ResourceCard>
             </div>
-          </div>
-          <div className="pt-[2.5rem]">
+          </div> */}
+          {/* <div className="pt-[2.5rem]">
             <h1 className="mb-8 font-semibold text-headline">Directory of Urban Heat Advocacy Groups</h1>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               <AdvocacyGroupsCard
@@ -83,7 +85,7 @@ const ResourcesPage = () => {
                 url="https://www.weact.org/"
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

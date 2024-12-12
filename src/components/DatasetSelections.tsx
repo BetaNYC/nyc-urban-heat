@@ -51,9 +51,9 @@ const DatasetSelections = () => {
       })
     }
   }
-
+  // ${!isDataSelectionExpanded.value ? "h-[3.5rem] overflow-hidden" : " max-h-[60%] overflow-y-auto"}
   return (
-    <div className={`absolute left-6 top-[4.625rem] w-[20rem] ${!isDataSelectionExpanded.value ? "h-[3.5rem] overflow-hidden" : "pb-4 max-h-[60%] overflow-y-auto"} bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
+    <div className={`absolute left-6 top-[4.625rem] ${isDataSelectionExpanded.value && "pb-4"} w-[20rem]  bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
       <div className='flex justify-between items-center px-5 h-[3.5rem]' onClick={() => isDataSelectionExpanded.value = !isDataSelectionExpanded.value}>
         <div className="flex items-center gap-3 ">
           {
@@ -67,8 +67,7 @@ const DatasetSelections = () => {
       {
         isDataSelectionExpanded.value && (
           <>
-            <div className='h-[calc(100%_-_7.25rem)] overflow-y-auto overflow-hidden scrollbar'>
-
+            <div className='max-h-[calc(60vh_-_3.5rem)] overflow-y-auto overflow-hidden scrollbar'>
               {Array.from(groupedDataset).map(([category, values]) => (
                 <div key={`ds-cat-${category}`}>
                   {category !== '' ?

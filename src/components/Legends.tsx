@@ -43,7 +43,14 @@ const Legends = () => {
         }
     })
 
+    legend.hasOwnProperty("label") && (legend.value!.sort(
+        (a, b) => parseInt(a.label) - parseInt(b.label)
+    ))
+
+
     const date = selectedDataset.value?.currentDate!
+
+    const isAreaUnit = ["Tree Canopy", "Cool Roofs", "Permeable Surfaces"].includes(datasetName.value!);
 
 
     if (!isLegendExpanded) {
@@ -64,15 +71,20 @@ const Legends = () => {
                         legend.value[0] &&
                         legend.value[0].hasOwnProperty('label') &&
                         legend.value[0].hasOwnProperty('value')
-                    ) && viewName.value == 'nta' && <div className='p-5 w-[20rem] bg-[#1B1B1B] rounded-[0.5rem]'>
-                        <div className='flex gap-2 mb-2 items-center justify-between font-medium'>
-                            <h3 className='text-regular text-[#F4F4F4]'>{datasetName.value}</h3>
+                    ) && viewName.value == 'nta' && <div className='p-4 w-[20rem] bg-[#1B1B1B] rounded-[0.5rem]'>
+                        <div className='flex gap-2 items-center justify-between font-medium'>
+                            <h3 className='text-regular text-[#F4F4F4]'>{isAreaUnit ? datasetName.value + ' Area' : datasetName.value}</h3>
                             <XMarkIcon width={18} height={18} className='text-[#BDBDBD] cursor-pointer' onClick={handleClick} />
                         </div>
-                        <div className='flex items-center'>
+                        <div className='flex justify-between mb-1 w-full'>
+                            <div className='text-small text-[#F4F4F4]'>{isAreaUnit ? 'less' : "low"}</div>
+                            <div className='text-small text-[#F4F4F4]'>{isAreaUnit ? 'more' : "high"}</div>
+                        </div>
+                        <div className='relative flex items-center'>
+                            <div className='absolute top-5 left-0 text-xsmall text-[#F4F4F4]'>0</div>
                             {legend.value?.map((item: any) => (
-                                <div key={`legend-${item.label}`} className='flex flex-col items-center gap-1 text-xsmall text-[#F4F4F4]'>
-                                    <span className="w-[3.5rem] h-4 block " style={{ backgroundColor: item.value }} />
+                                <div key={`legend-${item.label}`} className='flex flex-col items-end gap-1 text-xsmall text-[#F4F4F4]'>
+                                    <span className="w-[3.6rem] h-4 block " style={{ backgroundColor: item.value }} />
                                     {item.label}
                                 </div>
                             ))}
@@ -87,26 +99,26 @@ const Legends = () => {
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
-                                    <InformationCircle size='big'/>
+                                    <InformationCircle size='big' />
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
-                                    <InformationCircle size='big'/>
+                                    <InformationCircle size='big' />
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
-                                    <InformationCircle size='big'/>
+                                    <InformationCircle size='big' />
                                 </div>
                             </div>
                         </div>
                     </div>
                 }
                 {
-                    datasetName.value === "Mean Radiant Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Mean Radiant Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p>Mean Radiant Temperature</p>
+                            <p className='font-medium'>Mean Radiant Temperature</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
@@ -122,9 +134,9 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p>Surface Temperature</p>
+                            <p className='font-medium'>Surface Temperature</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
@@ -139,9 +151,9 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular '>
-                            <p>Tree Canopies</p>
+                            <p className='font-medium'>Tree Canopy Area</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
                         <div className='my-[0.25rem] h-5 bg-[#335d68]'>
@@ -152,25 +164,28 @@ const Legends = () => {
                     </div>
                 }
                 {
-                    datasetName.value === "Cool Roofs" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Cool Roofs" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular '>
-                            <p>Cool Roofs</p>
+                            <p className='font-medium'>Cool Roofs Area</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
-                        <div className='flex my-1 h-5'>
-                            <div className='w-[50%] h-full bg-gradient-to-r bg-[#DBDBDB]'></div>
-                            <div className='w-[50%] h-full bg-gradient-to-r bg-[#4d5766]'></div>
-                        </div>
-                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
-                            <p>Dark Roofs</p>
-                            <p>Cool Roofs</p>
+                        <div className='flex w-full gap-2 text-xsmall text-[#F4F4F4]'>
+                            <div className='w-[50%]'>
+                                <div className='my-1 h-5 bg-gradient-to-r bg-[#DBDBDB]'></div>
+                                <p>Dark Roofs</p>
+                            </div>
+                            <div className='w-[50%]'>
+                                <div className='my-1 h-5 bg-gradient-to-r bg-[#4d5766]'></div>
+                                <p>Cool Roofs</p>
+                            </div>
+
                         </div>
                     </div>
                 }
                 {
-                    datasetName.value === "Permeable Surfaces" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                    datasetName.value === "Permeable Surfaces" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p>Permeable Surfaces</p>
+                            <p className='font-medium'>Permeable Surfaces Area</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>

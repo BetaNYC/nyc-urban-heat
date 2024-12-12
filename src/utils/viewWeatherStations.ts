@@ -17,6 +17,7 @@ import {
   isDataSelectionExpanded,
   previousClickCor,
   clickedWeatherStationPopup,
+  clickedNeighborhoodNearestStationAddress,
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
@@ -51,25 +52,25 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
       });
     }
 
-    if (!map?.getSource("nta_layer")) {
-      map?.addSource("nta_layer", {
-        type: "geojson",
-        //@ts-ignore
-        data: ntaFeatureCollection,
-      });
-    }
+    // if (!map?.getSource("nta_layer")) {
+    //   map?.addSource("nta_layer", {
+    //     type: "geojson",
+    //     //@ts-ignore
+    //     data: ntaFeatureCollection,
+    //   });
+    // }
 
-    map.addLayer({
-      id: "nta_layer",
-      type: "line",
-      source: "nta_layer",
-      layout: {},
-      paint: {
-        "line-color": "#000",
-        "line-width": 1,
-        "line-opacity": 0,
-      },
-    });
+    // map.addLayer({
+    //   id: "nta_layer",
+    //   type: "line",
+    //   source: "nta_layer",
+    //   layout: {},
+    //   paint: {
+    //     "line-color": "#000",
+    //     "line-width": 1,
+    //     "line-opacity": 0,
+    //   },
+    // });
 
     // console.log(weatherStationsDataYear);
 
@@ -218,6 +219,13 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           );
         }
 
+        map.setFeatureState(
+          {
+            source: "weather_stations",
+            id: clickedNeighborhoodNearestStationAddress.value!,
+          },
+          { clicked: false }
+        );
 
         clickedWeatherStationAddress = address;
         map.setFeatureState(
@@ -243,7 +251,6 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           address,
           name,
         } = event.features[0].properties;
-        console.log(address);
 
         const contents = `
           <div class="px-[1rem] py-[0.5rem] bg-[#1B1B1B]">
@@ -329,7 +336,6 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
     map.removeLayer("weather_stations_heat_advisory");
     map.removeLayer("weather_stations_heat_excessive");
     map.removeSource("weather_stations");
-
   };
 }
 

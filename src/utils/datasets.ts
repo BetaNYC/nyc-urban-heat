@@ -20,6 +20,7 @@ import { nta_dataset_info } from "../App";
 import { viewMRT } from "./viewMRT";
 import { viewCoolRoofs } from "./viewCoolRoofs";
 import { viewPremeableSurface } from "./viewPremeableSurface";
+import { format } from "d3";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -140,6 +141,24 @@ export const datasets: Dataset[] = [
     group: "Static Factors",
     icon: meanRadiantTemperature,
     currentView: null,
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === "MRT")
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+        return urls
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
@@ -210,12 +229,12 @@ export const datasets: Dataset[] = [
           const relative_url = dataset.downloads_2;
           return [
             ...urls,
-            { name: "Raw", url: raw_url, date: dataset.date, format: "raw" },
+            // { name: "Raw", url: raw_url, date: dataset.date, format: "tiff" },
             {
               name: "Relative",
               url: relative_url,
               date: dataset.date,
-              format: "relative",
+              format: "tiff",
             },
           ];
         }, []);
@@ -237,6 +256,7 @@ export const datasets: Dataset[] = [
           { label: "94.4", value: "#a37a76" },
           { label: "95.7", value: "#7a4645" },
           { label: "98.8", value: "#511314" },
+          // 
         ],
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
@@ -251,9 +271,7 @@ export const datasets: Dataset[] = [
               "#a37a76",
               ["<=", ["get", date], 95.7],
               "#7a4645",
-              ["<=", ["get", date], 98.8],
               "#511314",
-              "#000000", // Default color if no match
             ],
           });
         },
@@ -287,6 +305,24 @@ export const datasets: Dataset[] = [
     icon: treeCanopy,
     info: "Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution.",
     currentView: null,
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === 'PCT_TREES')
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+        return urls
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
@@ -340,15 +376,33 @@ export const datasets: Dataset[] = [
     icon: coolRoofs,
     info: "Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
     currentView: null,
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === 'PCT_AREA_COOLROOF')
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads_2;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+        return urls
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
         legend: [
           { label: "3%", value: "#d3d5d9" },
-          { label: "21%", value: "#a6abb3" },
-          { label: "39%", value: "#7a818c" },
-          { label: "58%", value: "#4d5766" },
-          { label: "77%", value: "#212d40" },
+          { label: "15%", value: "#a6abb3" },
+          { label: "45%", value: "#7a818c" },
+          { label: "60%", value: "#4d5766" },
+          { label: "76%", value: "#212d40" },
         ],
         init: function (map) {
           return createNtaLayer(
@@ -398,6 +452,24 @@ export const datasets: Dataset[] = [
     group: "Static Factors",
     icon: premeableSurface,
     currentView: null,
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === 'PCT_PERMEABLE')
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+        return urls
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
@@ -410,20 +482,20 @@ export const datasets: Dataset[] = [
         ],
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, this.legend!, {
-           "fill-color": [
-                "case",
-                ["<=", ["get", "PCT_PERMEABLE"], 10],
-                "#f3d9b1",
-                ["<=", ["get", "PCT_PERMEABLE"], 20],
-                "#dabb8b",
-                ["<=", ["get", "PCT_PERMEABLE"], 30],
-                "#c19d65",
-                ["<=", ["get", "PCT_PERMEABLE"], 40],
-                "#a87e3e",
-                ["<=", ["get", "PCT_PERMEABLE"], 71],
-                "#8f6018",
-                "#000000", // Default color if no match
-              ],
+            "fill-color": [
+              "case",
+              ["<=", ["get", "PCT_PERMEABLE"], 10],
+              "#f3d9b1",
+              ["<=", ["get", "PCT_PERMEABLE"], 20],
+              "#dabb8b",
+              ["<=", ["get", "PCT_PERMEABLE"], 30],
+              "#c19d65",
+              ["<=", ["get", "PCT_PERMEABLE"], 40],
+              "#a87e3e",
+              ["<=", ["get", "PCT_PERMEABLE"], 71],
+              "#8f6018",
+              "#000000", // Default color if no match
+            ],
           });
         },
       },
@@ -497,10 +569,7 @@ export async function initializeView(
   dataset: Dataset,
   map: mapboxgl.Map | null
 ) {
-
-
   if (!dataset.currentView || !map) return dataset;
-
 
   // remove the previous view
   try {
@@ -531,6 +600,14 @@ export async function initializeView(
     }
 
     destroyCallback = view.init(map, options);
+
+    await new Promise<void>((resolve) => {
+      map.on("sourcedata", (e) => {
+        if (e.sourceId === "weather_stations" && e.isSourceLoaded) {
+          resolve();
+        }
+      });
+    });
   } else {
     console.error(
       `${dataset.name}, ${dataset.currentView} doesn't have an init func`

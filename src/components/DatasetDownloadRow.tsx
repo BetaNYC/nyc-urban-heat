@@ -6,9 +6,10 @@ import { formatDateString } from "../utils/format"
 
 type Props = {
     dataset: Dataset | undefined
+    hasDate?: boolean
 }
 
-const DatasetDownloadRow = ({ dataset }: Props) => {
+const DatasetDownloadRow = ({ dataset, hasDate }: Props) => {
     const [urls, setUrls] = useState<DownloadUrl[]>([])
     const [selectedDate, setSelectedDate] = useState('')
     const [selectedFormat, setSelectedFormat] = useState('')
@@ -18,6 +19,8 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         return parseInt(b.date ?? '') - parseInt(a.date ?? '');
     }).map(d => d.date).filter(d => d))]
 
+    console.log(dateOptions)
+
     // get unique file formats
     const formatOptions = [...new Set(urls.map(d => d.format))]
 
@@ -26,6 +29,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
     useEffect(() => {
         if(dataset.getDownloadUrls){
             dataset.getDownloadUrls().then(downloadUrls => {
+                console.log(downloadUrls)
                 setUrls(downloadUrls)
             })
         }
@@ -37,22 +41,12 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         setSelectedFormat(formatOptions.at(0) ?? '')
     },[urls])
 
-    // const isDesktop = useMediaQuery({
-    //     query: '(min-width: 1280px)'
-    // })
-    // const isTablet = useMediaQuery({
-    //     query: '(min-width: 768px)'
-    // })
-
-    // const isMobile = useMediaQuery({
-    //     query: '(max-width: 768px)'
-    // })
 
 
     const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, filename?: string) => {
         console.log(urls, selectedDate, selectedFormat)
         const download = urls.find((url: any) => {
-            if(selectedDate){
+            if(selectedDate !== ''){
                 // compare dates and format
                 return url.date === String(selectedDate) && url.format === selectedFormat
             }else{
@@ -82,7 +76,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
     // datasets that are external 
     if (dataset.externalUrl) {
         return (
-            <div className={`md:flex mb-10 `}>
+            <div className={`md:flex mb-5 `}>
                 <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
                     <div className="w-[120px] h-[120px] text-center bg-[#DCDCDC]"></div>
                     <div className="flex-1">
@@ -100,10 +94,11 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
     }
 
     return (
-        <div className={`md:flex mb-10 `}>
+        <div className={`md:flex mb-5 `}>
             <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
-                <div className="w-[120px] h-[120px] text-center">
-                    <img src={dataset.icon} alt="" className="w-[120px] h-[120px] text-[#BDBDBD]" />
+                <div className="w-[170px] h-[124px] text-center bg-[#BDBDBD]">
+                    {/* <img src={dataset.icon} alt="" className="w-[120px] h-[120px] text-[#BDBDBD]" /> */}
+
                 </div>
                 <div className="flex-1">
                     <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
@@ -117,7 +112,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
             </div>
             <div className="flex-1 flex md:justify-end gap-[1.875rem] ">
                 {
-                    dateOptions &&
+                    dateOptions.length > 0 &&
                     <div className="md:w-[40%]">
                         <h3 className="mb-2  font-semibold text-small">Date</h3>
                         <div className="relative">

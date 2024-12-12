@@ -1,11 +1,12 @@
 import Nav from "../components/Nav"
-
+import Banner from "../components/Banner"
 
 const AboutPage = () => {
   return (
     <>
       <Nav />
-      <div className="flex justify-center pt-5">
+      <Banner title="About" tags={[]}/>
+      <div className="flex justify-center pt-9">
         <div className="px-5 container">
           <div className="mb-12">
             <h1 className="mb-2 font-semibold text-headline">About the project</h1>

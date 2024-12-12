@@ -24,7 +24,6 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
         if(isDatasetSelected) return selectedDataset.value?.currentView
     });
     const viewNames = Object.keys(dataset.views);
-    console.log(viewNames)
 
     return (
         <div

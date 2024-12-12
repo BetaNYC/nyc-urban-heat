@@ -2,11 +2,17 @@ import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, InformationCircl
 import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
-import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, neighborhoodProfileData, map, previousClickCor, clickedNeighborhoodInfo, clickedNeighborhoodPopup } from "../pages/MapPage"
+import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, neighborhoodProfileData, map, previousClickCor, clickedNeighborhoodInfo, clickedNeighborhoodPopup, clickedWeatherStationPopup, clickedAddress, clickedWeatherStationName, clickedNeighborhoodNearestStationAddress } from "../pages/MapPage"
 import { datasets, initializeView } from "../utils/datasets"
 import { viewWeatherStations } from "../utils/viewWeatherStations"
+import { fetchStationHeatStats } from "../utils/api";
+import nta from "../data/nta.geo.json"
+import weatherStaions from "../data/stations.geo.json"
+import weatherStationName from "../data/weather_station_name.json"
 
 import InformationCircle from './InformationCircle'
+
+import mapboxgl, { Popup } from "mapbox-gl";
 
 
 
@@ -25,6 +31,7 @@ const NeighborhoodProfile = () => {
         window.print();
     }
 
+
     const clickHandler = () => {
         isNeighborhoodProfileExpanded.value = !isNeighborhoodProfileExpanded.value
         if (isNeighborhoodProfileExpanded.value === false) {
@@ -39,21 +46,74 @@ const NeighborhoodProfile = () => {
     }
 
 
+    clickedNeighborhoodNearestStationAddress.value = nta.features.find(n => n.properties.ntaname === clickedNeighborhoodInfo.value?.nta).properties.nearestStation
+    const clickedNeighborhoodNearestStationFeature = weatherStaions.features.find(w => w.properties.address === clickedNeighborhoodNearestStationAddress.value)
+    const clickedNeighborhoodNearestStationProperties = clickedNeighborhoodNearestStationFeature?.properties
+    const clickedNeighborhoodNearestStationCoordinates = clickedNeighborhoodNearestStationFeature?.geometry.coordinates
+
+
     const profileChangeClickHandler = () => {
         isNeighborhoodProfileExpanded.value = false
         isWeatherStationProfileExpanded.value = true
-        selectedDataset.value = datasets[6]
+        selectedDataset.value = datasets[1]
 
-        if (!datasets[6].currentView) {
-            datasets[6].currentView = 'points'
+        if (!datasets[1].currentView) {
+            datasets[1].currentView = 'points'
         }
 
-        initializeView(datasets[6], map.value).then(dataset => {
-            console.log("Updated dataset:", dataset);
+        clickedAddress.value = clickedNeighborhoodNearestStationAddress.value!
+        clickedWeatherStationName.value = weatherStationName.find(w => w.address === clickedNeighborhoodNearestStationAddress.value)!.name
+
+        initializeView(datasets[1], map.value).then(dataset => {
             selectedDataset.value = { ...dataset }
+
+            map.value!.setFeatureState(
+                { source: "weather_stations", id: clickedNeighborhoodNearestStationAddress.value! },
+                { clicked: true }
+            );
         })
 
+
+
         clickedNeighborhoodPopup.value?.remove()
+
+        const bounds = map.value!.getBounds();
+        const centerCoordinates = map.value!.getCenter();
+        const centerLng = centerCoordinates.lng;
+        const mapWidth = bounds.getEast() - bounds.getWest();
+        const targetLng = bounds.getWest() + mapWidth * 0.175;
+        const newLng = centerLng + (clickedNeighborhoodNearestStationCoordinates![0] - targetLng) * 0.65;
+
+
+
+
+        map.value!.flyTo({
+            center: [newLng, clickedNeighborhoodNearestStationCoordinates![1]],
+            zoom: map.value!.getZoom(),
+            essential: true,
+            duration: 2000,
+            easing: (t) => t * (2.5 - t),
+        })
+
+
+        const offsetLat = 0.005
+        const tooltipLat = clickedNeighborhoodNearestStationCoordinates![1] + offsetLat;
+
+        if (clickedWeatherStationPopup) {
+            clickedWeatherStationPopup.value?.remove();
+        }
+
+        clickedWeatherStationPopup.value = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "clicked-popup",
+        })
+            .setLngLat([clickedNeighborhoodNearestStationCoordinates![0], tooltipLat])
+            .setHTML(`<div class='clicked-nta'>${clickedNeighborhoodNearestStationAddress}</div>`)
+            .addTo(map.value!);
+
+
+
     }
 
     // const { currentFeature, allFeatures } = ntaneighborhoodProfileData
@@ -205,7 +265,7 @@ const NeighborhoodProfile = () => {
                         {isTablet &&
                             <div className="flex items-center">
                                 <button className="p-[0.625rem] text-regular text-[#E0E0E0]" onClick={profileChangeClickHandler}>View the closest weather station</button> :
-                                <ArrowLongRightIcon width={24} height={24} className="text-white" />
+                                <ArrowLongRightIcon width={20} height={20} className="text-white" />
                             </div>
                         }
                     </div>
@@ -215,7 +275,6 @@ const NeighborhoodProfile = () => {
     )
 }
 
-//     return (<></>)
-// }
+
 
 export default NeighborhoodProfile
