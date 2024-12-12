@@ -15,7 +15,8 @@ function App() {
     // ${import.meta.env.BASE_URL}
     csv(`/datasets.csv`).then(rows => {
       nta_dataset_info.value = rows
-      console.log(rows)
+      // ${import.meta.env.BASE_URL}
+      // console.log(rows)
     })
 
 

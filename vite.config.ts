@@ -3,7 +3,7 @@ import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
-// urbanheat.nyc
+// nyc-urban-heat
 export default defineConfig({
   base: "/",
   plugins: [
