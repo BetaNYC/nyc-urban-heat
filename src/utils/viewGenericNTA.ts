@@ -37,7 +37,6 @@ function getNTAInfo(nta: string) {
 export function createNtaLayer(
   map: mapboxgl.Map,
   metric: string,
-  layerName: string,
   breakpoints: { label: string; value: string }[],
   fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" }
 ) {

@@ -109,10 +109,11 @@ const WeatherStationProfile = () => {
 
 
     clickedWeatherStationNeighborhoodID.value = weatherStaions.features.find(w => w.properties.address === clickedAddress.value)?.properties.nearestNTA!
+        //@ts-ignore
     const clickedWeatherStationNeighborhoodFeature = nta.features.find(n => n.properties.ntacode === clickedWeatherStationNeighborhoodID.value)
     const clickedWeatherStationNeighborhoodCentroid = turf.centroid(clickedWeatherStationNeighborhoodFeature).geometry.coordinates
-    const clickedWeatherStationNeighborhoodBoro = clickedWeatherStationNeighborhoodFeature.properties.boroname
-    const clickedWeatherStationNeighborhoodName = clickedWeatherStationNeighborhoodFeature.properties.ntaname
+    const clickedWeatherStationNeighborhoodBoro = clickedWeatherStationNeighborhoodFeature?.properties?.boroname
+    const clickedWeatherStationNeighborhoodName = clickedWeatherStationNeighborhoodFeature?.properties?.ntaname
 
 
 

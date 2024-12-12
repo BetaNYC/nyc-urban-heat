@@ -9,7 +9,7 @@ type Props = {
     hasDate?: boolean
 }
 
-const DatasetDownloadRow = ({ dataset, hasDate }: Props) => {
+const DatasetDownloadRow = ({ dataset }: Props) => {
     const [urls, setUrls] = useState<DownloadUrl[]>([])
     const [selectedDate, setSelectedDate] = useState('')
     const [selectedFormat, setSelectedFormat] = useState('')

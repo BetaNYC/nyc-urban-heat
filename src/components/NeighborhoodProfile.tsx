@@ -45,7 +45,7 @@ const NeighborhoodProfile = () => {
         }
     }
 
-
+    //@ts-ignore
     clickedNeighborhoodNearestStationAddress.value = nta.features.find(n => n.properties.ntaname === clickedNeighborhoodInfo.value?.nta).properties.nearestStation
     const clickedNeighborhoodNearestStationFeature = weatherStaions.features.find(w => w.properties.address === clickedNeighborhoodNearestStationAddress.value)
     const clickedNeighborhoodNearestStationProperties = clickedNeighborhoodNearestStationFeature?.properties
