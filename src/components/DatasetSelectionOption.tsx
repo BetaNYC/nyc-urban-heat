@@ -20,10 +20,12 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
     };
 
     const isDatasetSelected = computed(() => selectedDataset.value?.name === dataset.name);
-    const currentViewSelected =  computed(() => {
-        if(isDatasetSelected) return selectedDataset.value?.currentView
-    });
+    const currentViewSelected = computed(() => { return selectedDataset.value?.currentView });
+
     const viewNames = Object.keys(dataset.views);
+
+    const ViewSelected = computed(() => selectedDataset.value?.currentView === viewNames[0]);
+
 
     return (
         <div
@@ -36,7 +38,7 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
                     <h3 className={`text-regular ${isDatasetSelected.value ? "font-semibold" : ''}`}>{dataset.name}</h3>
                 </div>
                 {/* <ExclamationCircleIcon width={20} height={20}  onClick={handleInfoChange}/> */}
-                <InformationCircle isActive={isDatasetSelected.value} clickHandler={handleInfoChange} size="big"/>
+                {/* <InformationCircle isActive={isDatasetSelected.value} clickHandler={handleInfoChange} size="big"/> */}
             </div>
             {isDatasetSelected.value && isInfoExpanded && (
                 <div
@@ -64,9 +66,3 @@ const DatasetSelectionOption: React.FC<Props> = ({ dataset, handleDatasetChange,
 };
 
 export default DatasetSelectionOption
-
-
-
-
-
-{/* <InformationCircle isActive={isDatasetSelected.value} clickHandler={handleInfoChange} size="big"/> */}

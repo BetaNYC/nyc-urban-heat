@@ -76,7 +76,7 @@ export const datasets: Dataset[] = [
     name: "Outdoor Heat Exposure Index",
     group: "",
     icon: outdoorHeatExposureIndex,
-    info: "The Outdoor Heat Exposure Index is a measure of the risk of heat-related illnesses for people spending time outdoors.",
+    info: "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments. This index combines mean radiant temperature (MRT), surface temperature.",
     currentView: "nta",
     views: {
       nta: {
@@ -120,6 +120,7 @@ export const datasets: Dataset[] = [
     name: "Weather Stations",
     group: "",
     icon: weatherStations,
+    info:"VisualCrossing weather station locations that measure weather indicators including air temperature and humidity.",
     currentView: null,
     getYears: async (): Promise<number[]> => {
       const data = await fetchStationHeatStats();
@@ -140,6 +141,7 @@ export const datasets: Dataset[] = [
     name: "Mean Radiant Temperature",
     group: "Static Factors",
     icon: meanRadiantTemperature,
+    info:"The area-weighted mean temperature of all the objects surrounding the body (e.g. buildings, vegetation, environment).",
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
@@ -216,7 +218,7 @@ export const datasets: Dataset[] = [
     name: "Surface Temperature",
     group: "Static Factors",
     icon: surfaceTemperature,
-    info: `Surface Temperature indicates how hot the "surface" of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report.`,
+    info: `The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating.`,
     currentView: null,
     dates: [],
     currentDate: null,
@@ -303,7 +305,7 @@ export const datasets: Dataset[] = [
     name: "Tree Canopy",
     group: "Static Factors",
     icon: treeCanopy,
-    info: "Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution.",
+    info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above.",
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
@@ -374,7 +376,7 @@ export const datasets: Dataset[] = [
     name: "Cool Roofs",
     group: "Static Factors",
     icon: coolRoofs,
-    info: "Cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
+    info: "Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.",
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
@@ -451,6 +453,7 @@ export const datasets: Dataset[] = [
     name: "Permeable Surfaces",
     group: "Static Factors",
     icon: premeableSurface,
+    info:"Porous or pervious surfaces have materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
@@ -510,7 +513,7 @@ export const datasets: Dataset[] = [
     name: "Air Temperature",
     group: "Dynamic Factors",
     icon: airTemperature,
-    info: "Air temperature is a measure of how hot or cold the air is. It is the most commonly measured weather parameter.",
+    info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter.",
     currentView: null,
     views: {
       nta: { name: "NTA Aggregated" },
@@ -521,7 +524,7 @@ export const datasets: Dataset[] = [
     name: "Air Heat Index",
     group: "Dynamic Factors",
     icon: airHeatIndex,
-    info: "Air Heat Index is what the temperature feels like to the human body when relative humidity is combined with the air temperature.  This has important considerations for the human body's comfort.",
+    info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort.",
     currentView: null,
     views: {
       nta: { name: "NTA Aggregated" },
@@ -602,11 +605,14 @@ export async function initializeView(
     destroyCallback = view.init(map, options);
 
     await new Promise<void>((resolve) => {
-      map.on("sourcedata", (e) => {
-        if (e.sourceId === "weather_stations" && e.isSourceLoaded) {
+      const source = map.getSource("weather_stations");
+      if (source && map.isSourceLoaded("weather_stations")) {
+        resolve();
+      } else {
+        map.once("sourcedata", () => {
           resolve();
-        }
-      });
+        });
+      }
     });
   } else {
     console.error(

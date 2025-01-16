@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
+import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, ChevronDownIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
 import { useState } from "react"
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
@@ -14,22 +14,86 @@ import InformationCircle from './InformationCircle'
 
 import mapboxgl, { Popup } from "mapbox-gl";
 
+import { nta_dataset_info } from '../App'
 
+import NeighborhoodProfileBarChart from "../components/NeighborhoodProfileBarChart"
 
+type Borough = "Brooklyn" | "Queens" | "Manhattan" | "Staten Island" | "Bronx"
+type Metrics = "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE"
 
 // ntaneighborhoodProfileData 
 const NeighborhoodProfile = () => {
-    const [clickedIndex, setClickedIndex] = useState("cool_roofs")
+    const [clickedMetric, setClickedMetric] = useState<Metrics>("PCT_TREES")
 
-    const isDesktop = useMediaQuery({
-        query: '(min-width: 1024px)'
-    })
     const isTablet = useMediaQuery({
         query: '(min-width: 768px)'
     })
     const printPage = () => {
         window.print();
     }
+
+    let barChartData
+
+    let valueAverage = {
+        NY: 0,
+        boro: 0
+    }
+    const options = ["Brooklyn", "Queens", "Manhattan", "Staten Island", "Bronx"];
+
+
+    const [isBoroSelectionOpen, setIsBoroSelectionOpen] = useState(false);
+    const [selectedBoro, setSelectedBoro] = useState<Borough>("Brooklyn");
+    // const [nyAverage , setNyAverage] = useState(0)
+    // const [boroAverage, setBoroAverage] = useState(0)
+
+    const toggleDropdown = () => setIsBoroSelectionOpen((prev) => !prev);
+
+    const handleOptionClick = (option: Borough) => {
+        setSelectedBoro(option);
+        setIsBoroSelectionOpen(false);
+    };
+
+
+    const selectedMetricBarChartRawData = nta_dataset_info.value.filter(d => d.metric === clickedMetric)
+    if (selectedMetricBarChartRawData && Array.isArray(selectedMetricBarChartRawData)) {
+        // .filter(([key]) => key.toLowerCase().startsWith(selectedBoro === "Manhattan" ? 'mn' : selectedBoro === "Brooklyn" ? 'bk' : selectedBoro === "Queens" ? "qn" : selectedBoro === "Bronx" ? 'bx' : 'si'))
+        const selectedMetricBarChartData = selectedMetricBarChartRawData.map(item => {
+            if (item && typeof item === 'object') {
+                return Object.entries(item)
+                    .map(([key, value]) => {
+                        const numericValue = isNaN(Number(value)) ? 0 : Number(value);
+                        return { [key]: numericValue };
+                    });
+            }
+            return [];
+        });
+
+
+        const selectedBoroPrefix = selectedBoro === "Manhattan" ? 'mn' :
+            selectedBoro === "Brooklyn" ? 'bk' :
+                selectedBoro === "Queens" ? 'qn' :
+                    selectedBoro === "Bronx" ? 'bx' :
+                        'si';
+
+
+
+        barChartData = selectedMetricBarChartData.flat().map(d => {
+            const neighborhood = Object.keys(d)[0];
+            const value = d[neighborhood];
+            return { neighborhood, value };
+        })
+
+        valueAverage.NY = parseFloat((barChartData.reduce((sum, d) => sum + d.value, 0) / barChartData.length).toFixed(1));
+
+        barChartData = barChartData.filter(d => d.neighborhood.toLowerCase().startsWith(selectedBoroPrefix)).sort((a, b) => a.value - b.value);
+
+        valueAverage.boro = parseFloat((barChartData.reduce((sum, d) => sum + d.value, 0) / barChartData.length).toFixed(1))
+
+
+
+    }
+
+
 
 
     const clickHandler = () => {
@@ -116,6 +180,9 @@ const NeighborhoodProfile = () => {
 
     }
 
+
+
+
     // const { currentFeature, allFeatures } = ntaneighborhoodProfileData
     // if (Object.keys(currentFeature).length === 0) {
     //     // no feature is selected
@@ -127,7 +194,7 @@ const NeighborhoodProfile = () => {
     //                 </div>
     //             }
     //             <div className={`printable-white-bg px-4 lg:px-8 pt-12 py-6 lg:grid lg:grid-cols-6 lg:grid-rows-10  w-[100vw] lg:w-[75vw] xl:w-[65vw] h-[56vh] lg:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] lg:rounded-[0] overflow-y-auto `}>
-    //                 <OverviewProfileChart allFeatures={allFeatures} clickedIndex={clickedIndex} />
+    //                 <OverviewProfileChart allFeatures={allFeatures} clickedMetric={clickedMetric} />
     //             </div>
     //         </div>
     //     )
@@ -247,16 +314,51 @@ const NeighborhoodProfile = () => {
                 </div>
 
                 <div className="md:flex md:flex-col md:gap-6 w-full md:h-[55%]">
-                    <div className="w-full h-[16rem] md:h-[90%] bg-[#333] rounded-[0.75rem]">
-                        {/* {
+                    <div className="flex flex-col w-full h-[16rem] md:h-[90%] rounded-[0.75rem]">
+                        {
                             isTablet &&
                             <div className="flex">
-                                <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "heat_vulnerability" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("heat_vulnerability")}>Heat Vulnerability Index</button>
-                                <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "cool_roofs" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("cool_roofs")}>Cool Roofs</button>
-                                <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "tree_canopies" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("tree_canopies")}>Tree Canopies</button>
-                                <button className={`pt-1 px-2 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedIndex === "cooling_centers" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#828282"} `} onClick={() => setClickedIndex("cooling_centers")}>Cooling Centers</button>
+                                <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_TREES" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333] "}`} onClick={() => setClickedMetric("PCT_TREES")}>Tree Canopy</button>
+                                <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_AREA_COOLROOF" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"}`} onClick={() => setClickedMetric("PCT_AREA_COOLROOF")}>Cool Roofs</button>
+                                <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_PERMEABLE" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"}`} onClick={() => setClickedMetric("PCT_PERMEABLE")}>Permeable Surfaces</button>
                             </div>
-                        } */}
+                        }
+                        <div className='flex-1 w-full rounded-[12px] rounded-tl-[0px] bg-[#333]'>
+                            <div className='flex justify-between items-center px-5 w-full h-[20%]'>
+                                <h2 className='font-semibold text-[21px] text-white'>Area of Tree Canopy in Brooklyn</h2>
+                                <div className="relative inline-block text-left">
+                                    {/* Dropdown Trigger */}
+                                    <div
+                                        className="flex gap-[6px] py-1 px-3 border-2 border-[#787878] rounded-[20px] cursor-pointer"
+                                        onClick={toggleDropdown}
+                                    >
+                                        <p className="font-medium text-sm text-[#787878]">{selectedBoro}</p>
+                                        <ChevronDownIcon
+                                            width={20}
+                                            height={20}
+                                            className={`text-[#787878] transform transition-transform ${isBoroSelectionOpen ? "rotate-180" : "rotate-0"
+                                                }`}
+                                        />
+                                    </div>
+
+                                    {/* Dropdown Menu */}
+                                    {isBoroSelectionOpen && (
+                                        <ul className="absolute left-0 mt-2 w-full bg-[#333] border border-[#787878] rounded-lg shadow-lg z-10">
+                                            {options.map((option) => (
+                                                <li
+                                                    key={option}
+                                                    className="px-3 py-2 text-sm text-[#787878] hover:bg-gray-100 rounded-lg cursor-pointer"
+                                                    onClick={() => handleOptionClick(option)}
+                                                >
+                                                    {option}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+                            <NeighborhoodProfileBarChart data={barChartData} valueAverage={valueAverage} boro={selectedBoro}  metric={clickedMetric}/>
+                        </div>
                     </div>
                     <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
                         <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">

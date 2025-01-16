@@ -39,9 +39,9 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
     });
 
     const source = map.getSource("cool_roofs");
-    if (source) {
-      console.log(source);
-    }
+    // if (source) {
+    //   console.log(source);
+    // }
 
     // map.on("click", "cool_roofs", (e) => {
     // })

@@ -50,7 +50,7 @@ export function createNtaLayer(
     closeButton: true,
   });
 
-  console.log(layerName)
+  // console.log(layerName)
   const data = getDataset(metric);
 
   // merge in data with nta

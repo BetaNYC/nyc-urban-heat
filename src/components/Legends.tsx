@@ -118,7 +118,7 @@ const Legends = () => {
                 {
                     datasetName.value === "Mean Radiant Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p className='font-medium'>Mean Radiant Temperature</p>
+                            <p className='font-medium'>Mean Radiant Temperature (MRT)</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
@@ -136,7 +136,7 @@ const Legends = () => {
                 {
                     datasetName.value === "Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p className='font-medium'>Surface Temperature</p>
+                            <p className='font-medium'>Surface temperature (°F)</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>
@@ -153,7 +153,7 @@ const Legends = () => {
                 {
                     datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular '>
-                            <p className='font-medium'>Tree Canopy Area</p>
+                            <p className='font-medium'>Area of tree canopy</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
                         <div className='my-[0.25rem] h-5 bg-[#335d68]'>
@@ -166,7 +166,7 @@ const Legends = () => {
                 {
                     datasetName.value === "Cool Roofs" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular '>
-                            <p className='font-medium'>Cool Roofs Area</p>
+                            <p className='font-medium'>Buildings with cool roofs</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer text-[#F4F4F4]' onClick={handleClick} />
                         </div>
                         <div className='flex w-full gap-2 text-xsmall text-[#F4F4F4]'>
@@ -185,7 +185,7 @@ const Legends = () => {
                 {
                     datasetName.value === "Permeable Surfaces" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular text-[#F4F4F4]'>
-                            <p className='font-medium'>Permeable Surfaces Area</p>
+                            <p className='font-medium'>Permeable surfaces</p>
                             <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex my-1 h-5'>

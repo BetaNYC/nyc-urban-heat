@@ -11,10 +11,7 @@ import InformationCircle from './InformationCircle';
 
 const groupedDataset = group(datasets, d => d.group)
 
-
-
 const DatasetSelections = () => {
-  // const [isDataSelectionExpanded, setExpanded] = useState(true)
   const destroyCallbackRef = useRef<any>(null);
 
   const handleDatasetChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
@@ -34,28 +31,27 @@ const DatasetSelections = () => {
   }
 
   const handleViewChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
-    console.log('aa')
     e.stopPropagation()
     // swap views
     if (dataset.currentView) {
       const views = Object.keys(dataset.views)
       const currentViewIndex = views.indexOf(dataset.currentView)
       if (currentViewIndex < views.length - 1) {
-        dataset.currentView = views[currentViewIndex + 1]
+        dataset.currentView = views[1]
       } else {
         dataset.currentView = views[0]
       }
 
-
       initializeView(dataset, map.value).then(dataset => {
+        console.log(dataset.currentView)
         selectedDataset.value = { ...dataset }
       })
     }
   }
-  // ${!isDataSelectionExpanded.value ? "h-[3.5rem] overflow-hidden" : " max-h-[60%] overflow-y-auto"}
+
   return (
-    <div className={`absolute left-6 top-[4.625rem] ${isDataSelectionExpanded.value && "pb-4"} w-[20rem]  bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[9] cursor-pointer`}    >
-      <div className='flex justify-between items-center px-5 h-[3.5rem]' onClick={() => isDataSelectionExpanded.value = !isDataSelectionExpanded.value}>
+    <div className={`absolute left-6 top-[4.625rem] w-[20rem] ${!isDataSelectionExpanded.value ? "h-[3.5rem] overflow-hidden" : "max-h-[60%] overflow-y-auto"} bg-[#1B1B1B] rounded-lg drop-shadow-lg z-[999] cursor-pointer`}    >
+      <div className='flex justify-between items-center px-5 h-[3.5rem] sticky top-0 bg-[#1B1B1B] z-[1000]' onClick={() => isDataSelectionExpanded.value = !isDataSelectionExpanded.value}>
         <div className="flex items-center gap-3 ">
           {
             selectedDataset.value && <img src={selectedDataset.value?.icon} alt="" className="w-6 h-6 text-[#BDBDBD]" />
@@ -68,13 +64,14 @@ const DatasetSelections = () => {
       {
         isDataSelectionExpanded.value && (
           <>
-            <div className='max-h-[calc(60vh_-_3.5rem)] overflow-y-auto overflow-hidden scrollbar'>
+            <div className='h-[calc(100%_-_7.25rem)] overflow-y-auto overflow-hidden scrollbar'>
+
               {Array.from(groupedDataset).map(([category, values]) => (
                 <div key={`ds-cat-${category}`}>
                   {category !== '' ?
                     <div className='px-5 w-[20rem] flex justify-between items-center'>
                       <h3 className="pt-3 pb-1 text-regular text-[#BDBDBD]">{category}</h3>
-                      <InformationCircle size='big'/>
+                      {/* <InformationCircle size='big'/> */}
                     </div>
 
                     : ''}
@@ -90,10 +87,13 @@ const DatasetSelections = () => {
               ))}
 
             </div>
-            <div className='flex justify-between items-center mt-3 px-2 py-6 m-auto w-[calc(100%_-_40px)] h-8 bg-[#4F4F4F] rounded-[0.25rem] cursor-pointer' onClick={() => isDataSelectionExpanded.value = true}>
-              <div className='font-bold text-regular text-[#F2F2F2]'>Download dataset(s)</div>
-              <ArrowDownTrayIcon width={18} height={18} className='text-[#F2F2F2]' />
+            <div className='sticky bottom-0 py-4  w-full  bg-[#1B1B1B]'>
+              <div className='flex justify-between items-center px-2 py-6 m-auto w-[calc(100%_-_40px)] h-8 bg-[#4F4F4F] rounded-[0.25rem] cursor-pointer ' onClick={() => isDataSelectionExpanded.value = true}>
+                <div className='font-bold text-regular text-[#F2F2F2]'>Download dataset(s)</div>
+                <ArrowDownTrayIcon width={18} height={18} className='text-[#F2F2F2]' />
+              </div>
             </div>
+
           </>
         )
       }
