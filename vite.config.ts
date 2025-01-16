@@ -3,8 +3,9 @@ import { viteCommonjs } from '@originjs/vite-plugin-commonjs'
 import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
+// nyc-urban-heat
 export default defineConfig({
-  base: "/nyc-urban-heat",
+  base: "/",
   plugins: [
     react({
       babel: {
