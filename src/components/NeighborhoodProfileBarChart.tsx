@@ -11,11 +11,12 @@ type Props = {
         boro: number
     },
     boro: "Brooklyn" | "Queens" | "Manhattan" | "Staten Island" | "Bronx",
-    metric: "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE"
+    metric: "NTA_PCT_MRT_Less_Than_110" | "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE"
 };
 
 const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props) => {
     const svgRef = useRef<SVGSVGElement>(null);
+
 
     useEffect(() => {
         if (!svgRef.current) return;
@@ -26,7 +27,6 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
 
-        // 清空之前的圖形
         d3.select(svgRef.current).selectAll("*").remove();
 
         const svg = d3
@@ -34,7 +34,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("width", width)
             .attr("height", height);
 
-        // 標題
+
         svg
             .append("text")
             .attr("x", margin.left)
@@ -69,7 +69,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         const yScale = d3
             .scaleLinear()
-            .domain([0, 60])
+            .domain([0, 80])
             .nice()
             .range([innerHeight, 0]);
 
@@ -82,19 +82,45 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("fill", "#ababab")
             .text("Percentage area of tree canopy");
 
+            let colorPalette, colorDomain;
 
-        const colorPalette = metric === "PCT_TREES" ? ["#cadde1", "#93b8c4", "#739aa4"] : metric === "PCT_AREA_COOLROOF" ? ["#CCD2DD", "#9FAABB", "#4F6990"] : ['#ECC48A', '#E7B263', '#C78C30']
+            switch (metric) {
+                case "NTA_PCT_MRT_Less_Than_110":
+                  colorPalette = ["#B8613F", "#C68165", "#D4A08C", "#E3C0B2", "#F1DFD9"]; 
+                  colorDomain = [27, 30, 34, 44, 62]; 
+                  break;
+                case "PCT_TREES":
+                  colorPalette = ["#3F7481", "#5A828E", "#859EA4", "#ADBEC3", "#D6DFE1"]; 
+                  colorDomain = [14, 17, 20, 24, 50]; 
+                  break;
+                case "PCT_AREA_COOLROOF":
+                  colorPalette = ["#2D5185", "#526B8F", "#818FA4", "#A4ADBA", "#D2D6DC"]; 
+                  colorDomain = [20, 37, 47, 55, 76]; 
+                  break;
+                case "PCT_PERMEABLE":
+                  colorPalette = ["#8F6018", "#C8892B", "#E7B263", "#EDC58A", "#F3D9B1"]; 
+                  colorDomain = [4, 6, 10, 20, 71];
+                  break;
+                default:
+                  colorPalette = ["#841F21", "#8E4B4A", "#A87E7A", "#CBADA6", "#F4E0D7"]; 
+                  colorDomain = [93.3, 92.1, 80, 94.4, 95.7]; 
+                  break;
+              }
+
+
+
+
 
         const colorScale = d3
             .scaleThreshold()
-            .domain([10, 19.3])
+            .domain(colorDomain)
             //@ts-ignore
             .range(colorPalette);
 
 
         chart
             .append("g")
-            .call(d3.axisLeft(yScale).tickValues([0, 10, 20, 30, 40, 50, 60]).tickFormat((d) => d + "%"))
+            .call(d3.axisLeft(yScale).tickValues([0, 10, 20, 30, 40, 50, 60, 70, 80]).tickFormat((d) => d + "%"))
             .selectAll("text")
             .style("font-size", "10px")
             .style("fill", "#ababab");
@@ -145,7 +171,6 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         const thresholdValues = [valueAverage.NY, valueAverage.boro];
 
-        console.log(valueAverage.boro)
         thresholdValues.forEach((value) => {
             chart
                 .append("line")

@@ -28,9 +28,11 @@ export const previousClickCor = signal<[number, number]>([0, 0])
 export const clickedWeatherStationPopup = signal<mapboxgl.Popup | null>(null)
 export const clickedNeighborhoodPopup = signal<mapboxgl.Popup | null>(null)
 export const clickedNeighborhoodInfo = signal<{
+  code:string
   boro: string,
   nta: string
 }>({
+  code: 'MN23',
   boro: "Manhattan",
   nta: "West Village"
 })

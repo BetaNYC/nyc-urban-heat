@@ -308,7 +308,9 @@ export function createNtaLayer(
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode, ntaname, boroname } = e.features![0].properties as any;
 
+    console.log(ntacode)
     clickedNeighborhoodInfo.value = {
+      code: ntacode,
       boro: boroname,
       nta: ntaname,
     };

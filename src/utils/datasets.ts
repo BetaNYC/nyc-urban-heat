@@ -37,6 +37,7 @@ export interface LegendItem {
 export interface View {
   name: string;
   legend?: LegendItem[];
+  legendLastNumber?: string,
   init?: (map: Map, options?: ViewOptions) => () => void;
 }
 
@@ -165,12 +166,13 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "3%", value: "#f1dfd9" },
-          { label: "18%", value: "#e3c0b2" },
-          { label: "33%", value: "#d4a08c" },
-          { label: "48%", value: "#c68165" },
-          { label: "63%", value: "#b8613f" },
+          { label: "62%", value: "#f1dfd9" },
+          { label: "44%", value: "#e3c0b2" },
+          { label: "34%", value: "#d4a08c" },
+          { label: "30%", value: "#c68165" },
+          { label: "27%", value: "#b8613f" },
         ],
+        legendLastNumber: "3%",
         init: function (map) {
           return createNtaLayer(
             map,
@@ -181,15 +183,15 @@ export const datasets: Dataset[] = [
               "fill-color": [
                 "case",
                 ["<=", ["get", "NTA_PCT_MRT_Less_Than_110"], 3],
-                "#f1dfd9",
+                "#b8613f",
                 ["<=", ["get", "NTA_PCT_MRT_Less_Than_110"], 18],
-                "#e3c0b2",
+                "#c68165",
                 ["<=", ["get", "NTA_PCT_MRT_Less_Than_110"], 33],
                 "#d4a08c",
                 ["<=", ["get", "NTA_PCT_MRT_Less_Than_110"], 48],
-                "#c68165",
+                "#e3c0b2",
                 ["<=", ["get", "NTA_PCT_MRT_Less_Than_110"], 63],
-                "#b8613f",
+                "#f1dfd9",
                 "#000000", // Default color if no match
               ],
             }
@@ -253,13 +255,14 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "92.1", value: "#f4e0d7" },
-          { label: "93.3", value: "#cbada6" },
-          { label: "94.4", value: "#a37a76" },
-          { label: "95.7", value: "#7a4645" },
-          { label: "98.8", value: "#511314" },
+          { label: "80.8", value: "#f4e0d7" },
+          { label: "92.1", value: "#cbada6" },
+          { label: "93.3", value: "#a37a76" },
+          { label: "94.4", value: "#7a4645" },
+          { label: "95.7", value: "#511314" },
           // 
         ],
+        legendLastNumber: "98.8 °F",
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
           return createNtaLayer(map, date, this.name, this.legend!, {
@@ -329,26 +332,27 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "10%", value: "#d6dfe1" },
-          { label: "20%", value: "#adbec3" },
-          { label: "30%", value: "#859ea4" },
-          { label: "40%", value: "#5c7d86" },
-          { label: "50%", value: "#335d68" },
+          { label: "50%", value: "#d6dfe1" },
+          { label: "24%", value: "#adbec3" },
+          { label: "20%", value: "#859ea4" },
+          { label: "17%", value: "#5c7d86" },
+          { label: "14%", value: "#335d68" },
         ],
+        legendLastNumber: "2%",
         init: function (map) {
           return createNtaLayer(map, "PCT_TREES", this.name, this.legend!, {
             "fill-color": [
               "case",
-              ["<=", ["get", "PCT_TREES"], 10],
-              "#d6dfe1",
-              ["<=", ["get", "PCT_TREES"], 20],
-              "#adbec3",
-              ["<=", ["get", "PCT_TREES"], 30],
-              "#859ea4",
-              ["<=", ["get", "PCT_TREES"], 40],
-              "#5c7d86",
-              ["<=", ["get", "PCT_TREES"], 50],
+              ["<=", ["get", "PCT_TREES"], 14],
               "#335d68",
+              ["<=", ["get", "PCT_TREES"], 17],
+              "#5c7d86",
+              ["<=", ["get", "PCT_TREES"], 20],
+              "#859ea4",
+              ["<=", ["get", "PCT_TREES"], 24],
+              "#adbec3",
+              ["<=", ["get", "PCT_TREES"], 50],
+              "#d6dfe1",
               "#000000", // Default color if no match
             ],
           });
@@ -400,12 +404,13 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "3%", value: "#d3d5d9" },
-          { label: "15%", value: "#a6abb3" },
-          { label: "45%", value: "#7a818c" },
-          { label: "60%", value: "#4d5766" },
-          { label: "76%", value: "#212d40" },
+          { label: "76%", value: "#d3d5d9" },
+          { label: "55%", value: "#a6abb3" },
+          { label: "47%", value: "#7a818c" },
+          { label: "37%", value: "#4d5766" },
+          { label: "20%", value: "#212d40" },
         ],
+        legendLastNumber: "3%",
         init: function (map) {
           return createNtaLayer(
             map,
@@ -415,16 +420,16 @@ export const datasets: Dataset[] = [
             {
               "fill-color": [
                 "case",
-                ["<=", ["get", "PCT_AREA_COOLROOF"], 3],
-                "#d3d5d9",
-                ["<=", ["get", "PCT_AREA_COOLROOF"], 15],
-                "#a6abb3",
-                ["<=", ["get", "PCT_AREA_COOLROOF"], 45],
-                "#7a818c",
-                ["<=", ["get", "PCT_AREA_COOLROOF"], 60],
-                "#4d5766",
-                ["<=", ["get", "PCT_AREA_COOLROOF"], 76],
+                ["<=", ["get", "PCT_AREA_COOLROOF"], 20],
                 "#212d40",
+                ["<=", ["get", "PCT_AREA_COOLROOF"], 37],
+                "#4d5766",
+                ["<=", ["get", "PCT_AREA_COOLROOF"], 47],
+                "#7a818c",
+                ["<=", ["get", "PCT_AREA_COOLROOF"], 55],
+                "#a6abb3",
+                ["<=", ["get", "PCT_AREA_COOLROOF"], 76],
+                "#d3d5d9",
                 "#000000", // Default color if no match
               ],
             }
@@ -477,26 +482,27 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legend: [
-          { label: "10%", value: "#f3d9b1" },
+          { label: "71%", value: "#f3d9b1" },
           { label: "20%", value: "#dabb8b" },
-          { label: "30%", value: "#c19d65" },
-          { label: "40%", value: "#a87e3e" },
-          { label: "71%", value: "#8f6018" },
+          { label: "10%", value: "#c19d65" },
+          { label: "6%", value: "#a87e3e" },
+          { label: "4%", value: "#8f6018" },
         ],
+        legendLastNumber: '1%',
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, this.legend!, {
             "fill-color": [
               "case",
+              ["<=", ["get", "PCT_PERMEABLE"], 4],
+              "#8f6018",
+              ["<=", ["get", "PCT_PERMEABLE"], 6],
+              "#a87e3e",
               ["<=", ["get", "PCT_PERMEABLE"], 10],
-              "#f3d9b1",
+              "#c19d65",
               ["<=", ["get", "PCT_PERMEABLE"], 20],
               "#dabb8b",
-              ["<=", ["get", "PCT_PERMEABLE"], 30],
-              "#c19d65",
-              ["<=", ["get", "PCT_PERMEABLE"], 40],
-              "#a87e3e",
               ["<=", ["get", "PCT_PERMEABLE"], 71],
-              "#8f6018",
+              "#f3d9b1",
               "#000000", // Default color if no match
             ],
           });

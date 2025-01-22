@@ -43,6 +43,9 @@ const Legends = () => {
         }
     })
 
+    //@ts-ignore
+    const legendLastNum = selectedDataset.value?.views[selectedDataset.value.currentView].legendLastNumber
+
     legend.hasOwnProperty("label") && (legend.value!.sort(
         (a, b) => parseInt(a.label) - parseInt(b.label)
     ))
@@ -50,7 +53,9 @@ const Legends = () => {
 
     const date = selectedDataset.value?.currentDate!
 
-    const isAreaUnit = ["Tree Canopy", "Cool Roofs", "Permeable Surfaces"].includes(datasetName.value!);
+    const isArea = ["Tree Canopy", "Permeable Surfaces"].includes(datasetName.value!);
+    const isCoolRoofs = ["Cool Roofs"].includes(datasetName.value!);
+    const isthermalComfort = ["Mean Radiant Temperature"].includes(datasetName.value!);
 
 
     if (!isLegendExpanded) {
@@ -73,21 +78,21 @@ const Legends = () => {
                         legend.value[0].hasOwnProperty('value')
                     ) && viewName.value == 'nta' && <div className='p-4 w-[20rem] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex gap-2 items-center justify-between font-medium'>
-                            <h3 className='text-regular text-[#F4F4F4]'>{isAreaUnit ? datasetName.value + ' Area' : datasetName.value}</h3>
+                            <h3 className='text-regular text-[#F4F4F4]'>{isArea ? datasetName.value + ' Area' : datasetName.value}</h3>
                             <XMarkIcon width={18} height={18} className='text-[#BDBDBD] cursor-pointer' onClick={handleClick} />
                         </div>
                         <div className='flex justify-between mb-1 w-full'>
-                            <div className='text-small text-[#F4F4F4]'>{isAreaUnit ? 'less' : "low"}</div>
-                            <div className='text-small text-[#F4F4F4]'>{isAreaUnit ? 'more' : "high"}</div>
+                            <div className='text-small text-[#F4F4F4]'>{isArea ? 'more area' : isCoolRoofs ? "more cool roofs" : isthermalComfort ? <span>more <br/> thermal comfort</span> : "low"}</div>
+                            <div className='text-small text-[#F4F4F4]'>{isArea ? 'less area' : isCoolRoofs ? "less cool roofs" : isthermalComfort ? <span>less <br/> thermal comfort</span> : "more"}</div>
                         </div>
                         <div className='relative flex items-center'>
-                            <div className='absolute top-5 left-0 text-xsmall text-[#F4F4F4]'>0</div>
                             {legend.value?.map((item: any) => (
-                                <div key={`legend-${item.label}`} className='flex flex-col items-end gap-1 text-xsmall text-[#F4F4F4]'>
+                                <div key={`legend-${item.label}`} className='flex flex-col items-start gap-1 text-xsmall text-[#F4F4F4]'>
                                     <span className="w-[3.6rem] h-4 block " style={{ backgroundColor: item.value }} />
                                     {item.label}
                                 </div>
                             ))}
+                            <div className='absolute top-5 right-0 text-xsmall text-[#F4F4F4]'>{legendLastNum}</div>
                         </div>
                     </div>
                 }

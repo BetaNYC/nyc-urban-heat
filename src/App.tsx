@@ -12,8 +12,8 @@ export const nta_dataset_info = signal<any[]>([])
 function App() {
   useEffect(() => {
     document.title = 'NYC Urban Heat Portal'
-    // ${import.meta.env.BASE_URL}
-    csv(`/datasets.csv`).then(rows => {
+    // 
+    csv(`${import.meta.env.BASE_URL}/datasets.csv`).then(rows => {
       nta_dataset_info.value = rows
     })
 

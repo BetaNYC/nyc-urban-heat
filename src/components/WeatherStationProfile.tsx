@@ -149,6 +149,7 @@ const WeatherStationProfile = () => {
 
 
         clickedNeighborhoodInfo.value = {
+            code: clickedWeatherStationNeighborhoodID.value || "Unknow NTA Code",
             boro: clickedWeatherStationNeighborhoodBoro || "Unknown Boro",
             nta: clickedWeatherStationNeighborhoodName || "Unknown NTA"
         }
