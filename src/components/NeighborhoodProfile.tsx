@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon, ArrowLongRightIcon, ChevronDownIcon, InformationCircleIcon } from '@heroicons/react/20/solid'
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import * as turf from "@turf/turf";
 import { useMediaQuery } from "react-responsive"
 import OverviewProfileChart from "./OverviewProfileChart"
@@ -15,53 +15,36 @@ import InformationCircle from './InformationCircle'
 
 import mapboxgl, { Popup } from "mapbox-gl";
 
-import { nta_dataset_info } from '../App'
+import { nta_dataset_info, out_door_heat_index } from '../App'
 
 import NeighborhoodProfileBarChart from "../components/NeighborhoodProfileBarChart"
 
+
 type Borough = "Brooklyn" | "Queens" | "Manhattan" | "Staten Island" | "Bronx"
-type Metrics = "NTA_PCT_MRT_Less_Than_110" | "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE"
+type Metrics = "NTA_PCT_MRT_Less_Than_110" | "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE" | 'Outdooor_Heat_Volnerability_Index' | "SURFACETEMP"
 
-// ntaneighborhoodProfileData 
 const NeighborhoodProfile = () => {
-    const [clickedMetric, setClickedMetric] = useState<Metrics>("NTA_PCT_MRT_Less_Than_110")
+    const [clickedMetric, setClickedMetric] = useState<Metrics>('Outdooor_Heat_Volnerability_Index')
 
-    let selectedNeighbohoodMetricValues = {
-        "NTA_PCT_MRT_Less_Than_110": 0,
-        "PCT_TREES": 0,
-        "PCT_AREA_COOLROOF": 0,
-        "PCT_PERMEABLE": 0,
-    }
 
-    let selectedNeighbohoodMetricScores = {
-        "NTA_PCT_MRT_Less_Than_110": 0,
-        "PCT_TREES": 0,
-        "PCT_AREA_COOLROOF": 0,
-        "PCT_PERMEABLE": 0,
-    }
+    let clickedOutDoorHeatIndexClass = 0
+    let clickedMRTClass = 0
+    let clickedTreeCanopyClass = 0
+    let clickedSurfaceTemperatureClass = 0
+    let clickedCoolRoofsClass = 0
+    let clickedPermeableSurfaceClass = 0
 
-    if (clickedNeighborhoodInfo.value !== null && nta_dataset_info.value.length > 0) {
+    if (clickedNeighborhoodInfo.value !== null && out_door_heat_index.value.length > 0) {
         const clickedNeighbohoodCode = clickedNeighborhoodInfo.value.code
-        const clickedNeighbohoodMRT = nta_dataset_info.value.filter(d => d.metric === "NTA_PCT_MRT_Less_Than_110")[0]
-        const clickedNeighbohoodTreeCanopy = nta_dataset_info.value.filter(d => d.metric === "PCT_TREES")[0]
-        const clickedNeighbohoodCoolRoofs = nta_dataset_info.value.filter(d => d.metric === "PCT_AREA_COOLROOF")[0]
-        const clickedNeighbohoodPermeableSurface = nta_dataset_info.value.filter(d => d.metric === "PCT_PERMEABLE")[0]
-
-        selectedNeighbohoodMetricValues = {
-            "NTA_PCT_MRT_Less_Than_110": +clickedNeighbohoodMRT[clickedNeighbohoodCode] * 100,
-            "PCT_TREES": +clickedNeighbohoodTreeCanopy[clickedNeighbohoodCode],
-            "PCT_AREA_COOLROOF": +clickedNeighbohoodCoolRoofs[clickedNeighbohoodCode],
-            "PCT_PERMEABLE": +clickedNeighbohoodPermeableSurface[clickedNeighbohoodCode],
-        }
-
-        selectedNeighbohoodMetricScores = {
-            "NTA_PCT_MRT_Less_Than_110": +clickedNeighbohoodMRT[clickedNeighbohoodCode] * 100 > 44 ? 5 : +clickedNeighbohoodMRT[clickedNeighbohoodCode] * 100 > 34 ? 4 : +clickedNeighbohoodMRT[clickedNeighbohoodCode] * 100 > 30 ? 3 : +clickedNeighbohoodMRT[clickedNeighbohoodCode] * 100 > 27 ? 2 : 1,
-            "PCT_TREES": +clickedNeighbohoodTreeCanopy[clickedNeighbohoodCode] > 24 ? 5 : +clickedNeighbohoodTreeCanopy[clickedNeighbohoodCode] > 20 ? 4 : +clickedNeighbohoodTreeCanopy[clickedNeighbohoodCode] > 17 ? 3 : +clickedNeighbohoodTreeCanopy[clickedNeighbohoodCode] > 14 ? 2 : 1,
-            "PCT_AREA_COOLROOF": +clickedNeighbohoodCoolRoofs[clickedNeighbohoodCode] > 55 ? 5 : +clickedNeighbohoodCoolRoofs[clickedNeighbohoodCode] > 47 ? 4 : +clickedNeighbohoodCoolRoofs[clickedNeighbohoodCode] > 37 ? 3 : +clickedNeighbohoodCoolRoofs[clickedNeighbohoodCode] > 20 ? 2 : 1,
-            "PCT_PERMEABLE": +clickedNeighbohoodPermeableSurface[clickedNeighbohoodCode] > 20 ? 5 : +clickedNeighbohoodPermeableSurface[clickedNeighbohoodCode] > 10 ? 4 : +clickedNeighbohoodPermeableSurface[clickedNeighbohoodCode] > 6 ? 3 : +clickedNeighbohoodPermeableSurface[clickedNeighbohoodCode] > 4 ? 2 : 1,
-        }
-
-        console.log(selectedNeighbohoodMetricValues["PCT_PERMEABLE"])
+        const clickedNeighbohoodNTAMetrics = out_door_heat_index.value.filter(d => d.ntacode === clickedNeighbohoodCode)[0]
+        // console.log(clickedNeighbohoodNTAMetrics)
+            //@ts-ignore
+        clickedOutDoorHeatIndexClass = (+clickedNeighbohoodNTAMetrics["Outdooor_Heat_Volnerability_Index"]).toFixed(1)
+        clickedMRTClass = +clickedNeighbohoodNTAMetrics["MRT_class"]
+        clickedTreeCanopyClass = +clickedNeighbohoodNTAMetrics["pct_tree_class"]
+        clickedSurfaceTemperatureClass = +clickedNeighbohoodNTAMetrics['RelativeST_class']
+        clickedCoolRoofsClass = +clickedNeighbohoodNTAMetrics["cool_roof_class"]
+        clickedPermeableSurfaceClass = +clickedNeighbohoodNTAMetrics['Permeable_class']
 
     }
 
@@ -85,8 +68,6 @@ const NeighborhoodProfile = () => {
 
     const [isBoroSelectionOpen, setIsBoroSelectionOpen] = useState(false);
     const [selectedBoro, setSelectedBoro] = useState<Borough>("Brooklyn");
-    // const [nyAverage , setNyAverage] = useState(0)
-    // const [boroAverage, setBoroAverage] = useState(0)
 
     const toggleDropdown = () => setIsBoroSelectionOpen((prev) => !prev);
 
@@ -126,16 +107,13 @@ const NeighborhoodProfile = () => {
         })
 
         if (clickedMetric === "NTA_PCT_MRT_Less_Than_110") barChartData.forEach((data) => data.value = data.value * 100)
-
+        barChartData = barChartData.filter((data) => data.value !== 0)
         valueAverage.NY = parseFloat((barChartData.reduce((sum, d) => sum + d.value, 0) / barChartData.length).toFixed(1));
-
         barChartData = barChartData.filter(d => d.neighborhood.toLowerCase().startsWith(selectedBoroPrefix)).sort((a, b) => a.value - b.value);
-
         valueAverage.boro = parseFloat((barChartData.reduce((sum, d) => sum + d.value, 0) / barChartData.length).toFixed(1))
 
-
-
     }
+
 
 
 
@@ -222,8 +200,6 @@ const NeighborhoodProfile = () => {
             .setHTML(`<div class='clicked-nta'>${clickedNeighborhoodNearestStationAddress}</div>`)
             .addTo(map.value!);
 
-
-
     }
 
 
@@ -234,8 +210,24 @@ const NeighborhoodProfile = () => {
             clickedDataset.currentView = Object.keys(clickedDataset.views)[0]
         }
         selectedDataset.value = clickedDataset
-        initializeView(clickedDataset, map.value).then(dataset => selectedDataset.value = { ...dataset })
         setClickedMetric(metric)
+        initializeView(clickedDataset, map.value).then(dataset => selectedDataset.value = { ...dataset })
+
+
+        //@ts-ignore
+        const clickedWeatherStationNeighborhoodFeature = nta.features.find(n => n.properties.ntacode === clickedNeighborhoodInfo.value.code)
+        //@ts-ignore
+        const clickedWeatherStationNeighborhoodCentroid = turf.centroid(clickedWeatherStationNeighborhoodFeature).geometry.coordinates
+
+
+
+        map.value!.setFeatureState(
+            {
+                source: `${metric}_SOURCE`,
+                id: clickedNeighborhoodInfo.value.code,
+            },
+            { clicked: true }
+        );
 
 
         const bounds = map.value!.getBounds();
@@ -243,9 +235,53 @@ const NeighborhoodProfile = () => {
         const centerLng = centerCoordinates.lng;
         const mapWidth = bounds.getEast() - bounds.getWest();
         const targetLng = bounds.getWest() + mapWidth * 0.175;
-        // const newLng = centerLng + (clickedWeatherStationNeighborhoodCentroid[0] - targetLng) * 0.65;
+        const newLng = centerLng + (clickedWeatherStationNeighborhoodCentroid[0] - targetLng) * 0.65;
+
+
+        const offsetLat = 0.005
+        const tooltipLat = clickedWeatherStationNeighborhoodCentroid[1] + offsetLat;
+
+        if (clickedNeighborhoodPopup) {
+            clickedNeighborhoodPopup.value?.remove();
+            clickedNeighborhoodPopup.value = null;
+        }
+
+        clickedNeighborhoodPopup.value = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "clicked-popup",
+        })
+            .setLngLat([clickedWeatherStationNeighborhoodCentroid[0], tooltipLat])
+            .setHTML(`<div class='clicked-nta'>${clickedNeighborhoodInfo.value.nta}</div>`)
+            .addTo(map.value!);
+
+
+
+        map.value!.flyTo({
+            center: [newLng, clickedWeatherStationNeighborhoodCentroid[1]],
+            zoom: map.value!.getZoom(),
+            essential: true,
+            duration: 2000,
+            easing: (t) => t * (2.5 - t),
+        });
     }
 
+
+    useEffect(() => {
+        if (selectedDataset.value?.name === "Mean Radiant Temperature") {
+            setClickedMetric("NTA_PCT_MRT_Less_Than_110");
+        } else if (selectedDataset.value?.name === "Surface Temperature") {
+            setClickedMetric("SURFACETEMP");
+        } else if (selectedDataset.value?.name === "Tree Canopy") {
+            setClickedMetric("PCT_TREES");
+        } else if (selectedDataset.value?.name === "Cool Roofs") {
+            setClickedMetric("PCT_AREA_COOLROOF");
+        } else if (selectedDataset.value?.name === "Permeable Surfaces") {
+            setClickedMetric("PCT_PERMEABLE");
+        } else {
+            setClickedMetric("Outdooor_Heat_Volnerability_Index");
+        }
+    }, [selectedDataset.value]);
 
     return (
         <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
@@ -271,54 +307,39 @@ const NeighborhoodProfile = () => {
                         <div className="flex justify-between md:h-[35%]">
                             <h2 className="font-semibold w-[50%] min-w-[4rem] text-regular md:text-[1rem] lg:text-subheadline text-gray_six">Outdoor Heat Exposure Index</h2>
                             <div className="flex flex-col">
-                                <h1 className="font-bold text-[2.5rem] lg:text-[3.5rem] text-gray_six leading-tight lg:leading-none ">4.0</h1>
+                                <h1 className="font-bold text-[2.5rem] lg:text-[3.5rem] text-gray_six leading-tight lg:leading-none ">{clickedOutDoorHeatIndexClass}</h1>
                                 <h3 className="font-regular text-regular lg:text-[1rem] text-[#BDBDBD]">Medium High</h3>
                             </div>
                         </div>
                         <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-scroll">
-                            <div className="flex justify-between items-center gap-4">
-                                <h3 className="text-small text-gray_six min-w-20">Air Temperature</h3>
-                                <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
-                                    <div className="text-small text-[#C5C5C5]">Score</div>
-                                    <div className="flex gap-1">
-                                        <div className="w-7 h-2 rounded-l-[20px] bg-[#D9D9D9]"></div>
-                                        <div className="w-7 h-2 bg-[#D9D9D9]"></div>
-                                        <div className="w-7 h-2 bg-[#D9D9D9]"></div>
-                                        <div className="w-7 h-2 bg-[#D9D9D9]"></div>
-                                        <div className="w-7 h-2 rounded-r-[20px] bg-[#D9D9D9]"></div>
-                                    </div>
-                                    <div className="text-small text-[#C5C5C5]">5</div>
-                                </div>
-                            </div>
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Mean Radiant Temperature</h3>
                                 <div className="flex items-center gap-2.5">
                                     <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
-                                        <div className={`w-7 h-2 rounded-l-[20px] ${selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"] >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"] >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"] >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} b`}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"] >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 rounded-r-[20px] ${selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"] >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-l-[20px] ${clickedMRTClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedMRTClass >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedMRTClass >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"}`}></div>
+                                        <div className={`w-7 h-2 ${clickedMRTClass >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-r-[20px] ${clickedMRTClass >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
                                     </div>
-                                    <div className="text-small text-[#C5C5C5]">{selectedNeighbohoodMetricScores["NTA_PCT_MRT_Less_Than_110"]}</div>
+                                    <div className="text-small text-[#C5C5C5]">{clickedMRTClass}</div>
                                 </div>
                             </div>
                             <div className="flex justify-between items-center gap-4">
-                                <h3 className="text-small text-gray_six min-w-20">Tree Canopy</h3>
+                                <h3 className="text-small text-gray_six min-w-20">Surface Temperature</h3>
                                 <div className="flex items-center gap-2.5">
                                     <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
-                                        <div className={`w-7 h-2 rounded-l-[20px] ${selectedNeighbohoodMetricScores["PCT_TREES"] >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_TREES"] >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_TREES"] >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} b`}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_TREES"] >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 rounded-r-[20px] ${selectedNeighbohoodMetricScores["PCT_TREES"] >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-l-[20px] ${clickedSurfaceTemperatureClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedSurfaceTemperatureClass >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedSurfaceTemperatureClass >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"}`}></div>
+                                        <div className={`w-7 h-2 ${clickedSurfaceTemperatureClass >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-r-[20px] ${clickedSurfaceTemperatureClass >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
                                     </div>
-                                    <div className="text-small text-[#C5C5C5]">{selectedNeighbohoodMetricScores["PCT_TREES"]}</div>
+                                    <div className="text-small text-[#C5C5C5]">{clickedSurfaceTemperatureClass}</div>
                                 </div>
                             </div>
                             <div className="flex justify-between items-center gap-4">
@@ -327,28 +348,44 @@ const NeighborhoodProfile = () => {
                                     <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
-                                        <div className={`w-7 h-2 rounded-l-[20px] ${selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"] >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"] >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"] >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} b`}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"] >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 rounded-r-[20px] ${selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"] >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-l-[20px] ${clickedCoolRoofsClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedCoolRoofsClass >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedCoolRoofsClass >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"}`}></div>
+                                        <div className={`w-7 h-2 ${clickedCoolRoofsClass >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-r-[20px] ${clickedCoolRoofsClass >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
                                     </div>
-                                    <div className="text-small text-[#C5C5C5]">{selectedNeighbohoodMetricScores["PCT_AREA_COOLROOF"]}</div>
+                                    <div className="text-small text-[#C5C5C5]">{clickedCoolRoofsClass}</div>
                                 </div>
                             </div>
+                            <div className="flex justify-between items-center gap-4">
+                                <h3 className="text-small text-gray_six min-w-20">Tree Canopy</h3>
+                                <div className="flex items-center gap-2.5">
+                                    <InformationCircle size="small" />
+                                    <div className="text-small text-[#C5C5C5]">Score</div>
+                                    <div className="flex gap-1">
+                                        <div className={`w-7 h-2 rounded-l-[20px] ${clickedTreeCanopyClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedTreeCanopyClass >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"}`}></div>
+                                        <div className={`w-7 h-2 ${clickedTreeCanopyClass >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"}`}></div>
+                                        <div className={`w-7 h-2 ${clickedTreeCanopyClass >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-r-[20px] ${clickedTreeCanopyClass >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                    </div>
+                                    <div className="text-small text-[#C5C5C5]">{clickedTreeCanopyClass}</div>
+                                </div>
+                            </div>
+
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Premeable Surfaces</h3>
                                 <div className="flex items-center gap-2.5">
                                     <InformationCircle size="small" />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
-                                        <div className={`w-7 h-2 rounded-l-[20px] ${selectedNeighbohoodMetricScores["PCT_PERMEABLE"] >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_PERMEABLE"] >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_PERMEABLE"] >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 ${selectedNeighbohoodMetricScores["PCT_PERMEABLE"] >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
-                                        <div className={`w-7 h-2 rounded-r-[20px] ${selectedNeighbohoodMetricScores["PCT_PERMEABLE"] >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-l-[20px] ${clickedPermeableSurfaceClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedPermeableSurfaceClass >= 2 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedPermeableSurfaceClass >= 3 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 ${clickedPermeableSurfaceClass >= 4 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
+                                        <div className={`w-7 h-2 rounded-r-[20px] ${clickedPermeableSurfaceClass >= 5 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
                                     </div>
-                                    <div className="text-small text-[#C5C5C5]">{selectedNeighbohoodMetricScores["PCT_PERMEABLE"]}</div>
+                                    <div className="text-small text-[#C5C5C5]">{clickedPermeableSurfaceClass}</div>
                                 </div>
                             </div>
                         </div>
@@ -360,7 +397,9 @@ const NeighborhoodProfile = () => {
                         {
                             isTablet &&
                             <div className="flex">
+                                <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "Outdooor_Heat_Volnerability_Index" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333] "}`} onClick={() => tabLayerClickHandler("Outdoor Heat Exposure Index", "Outdooor_Heat_Volnerability_Index")}>Outdoor Heat Exposure Index</button>
                                 <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "NTA_PCT_MRT_Less_Than_110" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333] "}`} onClick={() => tabLayerClickHandler('Mean Radiant Temperature', "NTA_PCT_MRT_Less_Than_110")}>Mean Radiant Temperature</button>
+                                <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "SURFACETEMP" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333] "}`} onClick={() => tabLayerClickHandler('Surface Temperature', "SURFACETEMP")}>Surface Temperature</button>
                                 <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_TREES" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333] "}`} onClick={() => tabLayerClickHandler('Tree Canopy', "PCT_TREES")}>Tree Canopy</button>
                                 <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_AREA_COOLROOF" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"}`} onClick={() => tabLayerClickHandler('Cool Roofs', "PCT_AREA_COOLROOF")}>Cool Roofs</button>
                                 <button className={`flex justify-center items-center py-1 px-3 font-medium text-small border-[1px] border-b-0 rounded-t-[1.125rem] ${clickedMetric === "PCT_PERMEABLE" ? "text-white bg-[#333] border-none " : "text-[#828282] border-[#333]"}`} onClick={() => tabLayerClickHandler('Permeable Surfaces', "PCT_PERMEABLE")}>Permeable Surfaces</button>
@@ -407,9 +446,9 @@ const NeighborhoodProfile = () => {
                         </div>
                     </div>
                     <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
-                        <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">
+                        {/* <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">
                             Print profile
-                        </button>
+                        </button> */}
                         {isTablet &&
                             <div className="flex items-center">
                                 <button className="p-[0.625rem] text-regular text-[#E0E0E0]" onClick={profileChangeClickHandler}>View the closest weather station</button> :

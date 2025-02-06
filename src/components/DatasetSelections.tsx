@@ -10,21 +10,18 @@ import InformationCircleIcon from '@heroicons/react/20/solid';
 import InformationCircle from './InformationCircle';
 
 const groupedDataset = group(datasets, d => d.group)
-// console.log(datasets)
 
 const DatasetSelections = () => {
   const destroyCallbackRef = useRef<any>(null);
 
   const handleDatasetChange = (e: React.MouseEvent<HTMLDivElement>, dataset: Dataset) => {
     e.stopPropagation()
-    // set current view to be the first one, if it is null
     if (!dataset.currentView) {
       dataset.currentView = Object.keys(dataset.views)[0]
     }
 
     selectedDataset.value = dataset
     isNeighborhoodProfileExpanded.value = false
-    // console.log(selectedDataset.value)
 
     initializeView(dataset, map.value).then(dataset => {
       selectedDataset.value = { ...dataset }

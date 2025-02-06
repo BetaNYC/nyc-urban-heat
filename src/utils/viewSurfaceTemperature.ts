@@ -10,7 +10,7 @@ export function viewSurfaceTemperature(
   //@ts-ignore
   mapboxgl.Style.setSourceType(SOURCE_TYPE, PmTilesSource);
 
-  const PMTILES_URL = `https://urban-heat-portal-tiles.s3.amazonaws.com/ST_Clipped_${date}.pmtiles`;
+  const PMTILES_URL = `https://urban-heat-portal-tiles.s3.amazonaws.com/ST_RelativeAvlues_${date}.pmtiles`;
   PmTilesSource.getHeader(PMTILES_URL).then((header) => {
     const bounds = [header.minLon, header.minLat, header.maxLon, header.maxLat];
     map.addSource("surface_temperature", {
@@ -33,17 +33,17 @@ export function viewSurfaceTemperature(
           "interpolate",
           ["linear"],
           ["raster-value"],
-          0,
+          -15/255,
           "#5e4fa2",
-          0.315,
+          -1.4/255,
           "#98c1d9",
-          0.375,
+          12.2/255,
           "#ffe6a8",
-          0.4,
+          25.8/255,
           "#ffbba8",
-          0.45,
+          39.4/255,
           "#d66852",
-          0.55,
+          53/255,
           "#511113",
           // 0.0055, '#1f2c3f',
           // 0.0201, '#98c1d9',

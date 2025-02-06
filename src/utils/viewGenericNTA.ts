@@ -5,7 +5,7 @@ import { FeatureCollection } from "geojson";
 import { GeoJSONTransformHandler } from "./geojson";
 
 import { format } from "d3-format";
-import { nta_dataset_info } from "../App";
+import { nta_dataset_info, out_door_heat_index } from "../App";
 import {
   isNeighborhoodProfileExpanded,
   neighborhoodProfileData,
@@ -37,6 +37,7 @@ function getNTAInfo(nta: string) {
 export function createNtaLayer(
   map: mapboxgl.Map,
   metric: string,
+      //@ts-ignore
   layerName: string,
   breakpoints: { label: string; value: string }[],
   fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" }
@@ -45,12 +46,10 @@ export function createNtaLayer(
   const layerFillId = metric + "_FILL";
   const layerOutlineId = metric + "_OUTLINE";
   const layerBasicOutlineId = metric + "_BASICOUTLINE";
-
   let popup = new Popup({
     closeButton: true,
   });
 
-  // console.log(layerName)
   const data = getDataset(metric);
 
   // merge in data with nta
@@ -75,14 +74,6 @@ export function createNtaLayer(
         feature.properties[metric] &&
         !feature.properties.ntaname.includes("park-cemetery")
     );
-
-  // const mrtValues = features.map(
-  //   (feature) => feature.properties.metric
-  // );
-  // const maxValue = Math.max(...mrtValues);
-  // const minValue = Math.min(...mrtValues);
-
-  // console.log(maxValue, minValue)
 
   // create layers
   map.addSource(sourceId, {
@@ -165,8 +156,20 @@ export function createNtaLayer(
         }
       );
 
-      const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
+      const selectedPermeableSurfaveValue = (+out_door_heat_index.value.filter(
+        (d) => d.ntacode === ntacode
+      )[0]["pct_permeable"]).toFixed(0);
+      const selctedTreeCanopyValue = (+out_door_heat_index.value.filter(
+        (d) => d.ntacode === ntacode
+      )[0]["pct_trees"]).toFixed(0);
+      const selectedCoolRoofsValue = (+out_door_heat_index.value.filter(
+        (d) => d.ntacode === ntacode
+      )[0]["pct_Area_coolRoof"]).toFixed(0);
+      const selectedSTValue = (+out_door_heat_index.value.filter(
+        (d) => d.ntacode === ntacode
+      )[0]["Relative_ST_Average"]).toFixed(0);
 
+      const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
       const textColor =
         selectedMetric > parseInt(sortedBreakpoints[2].label)
           ? "text-[#FFF]"
@@ -243,6 +246,43 @@ export function createNtaLayer(
                   }
               </div>`;
 
+      const outdoorHeatExposureIndexTitle = `
+      <div class="flex justify-between items-center px-[1rem] py-[0.5rem] ${textColor} rounded-t-[0.75rem]" style="${backgroundColor}">
+                              <div>
+                                  <h1 class='font-bold text-[1.125rem]'>${ntaname}</h1>
+                                  <h1 class='font-medium text-[0.75rem]'>${boroname}</h1>
+                              </div>
+                              <div class="font-bold text-[36px] ">${selectedMetric.toFixed(
+                                1
+                              )}</div>
+                          </div>
+      `;
+
+      const outdoorHeatExposureIndexDetails = `
+                    <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] font-regular text-white bg-[#333] rounded-b-[0.75rem]">
+                              <div class="flex items-center gap-4">
+                              <div class="flex justify-center items-center w-[40px] h-8 font-medium text-[1rem] text-black bg-[#C68165] border-[1px] border-white">0°F</div>
+                              <div class="text-[14px] text-white">Average Mean Radiant Temperature</div>
+                              </div>
+                              <div class="flex items-center gap-4">
+                              <div class="flex justify-center items-center w-[40px] h-8 font-semibold text-[14px] text-black bg-[#F4E0D7] border-[1px] border-white">${selectedSTValue}°F</div>
+                              <div class="text-[14px] text-white">Average Surface Temperature</div>
+                              </div>
+                              <div class="flex items-center gap-4">
+                              <div class="flex justify-center items-center w-[40px] h-8 font-semibold text-[14px] text-black bg-[#D2D4D8] border-[1px] border-white">${selectedCoolRoofsValue}%</div>
+                              <div class="text-[14px] text-white">Area of buildings with cool roofs</div>
+                              </div>
+                              <div class="flex items-center gap-4">
+                              <div class="flex justify-center items-center w-[40px] h-8 font-semibold text-[14px] text-white bg-[#5C7D86] border-[1px] border-white">${selctedTreeCanopyValue}%</div>
+                              <div class="text-[14px] text-white">Area covered by tree canopy</div>
+                              </div>
+                              <div class="flex items-center gap-4">
+                              <div class="flex justify-center items-center w-[40px] h-8 font-semibold text-[14px] text-black bg-[#F3D9B1] border-[1px] border-white">${selectedPermeableSurfaveValue}°F</div>
+                              <div class="text-[14px] text-white">Area with permeable surfaces</div>
+                              </div>
+                    </div>
+      `;
+
       //   <div class="flex items-start gap-[1.375rem]">
       //   <div class="font-semibold text-[1rem] text-white">120℉</div>
       //   <div class="font-medium text-[1rem] text-white">Average Mean Radiant Temperature</div>
@@ -250,7 +290,7 @@ export function createNtaLayer(
 
       const divElement = document.createElement("div");
 
-      divElement.innerHTML = title + details;
+      divElement.innerHTML = metric === "Outdooor_Heat_Volnerability_Index" ? outdoorHeatExposureIndexTitle + outdoorHeatExposureIndexDetails : title + details;
       divElement.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
       divElement.style.borderRadius = "8px";
 
@@ -308,7 +348,7 @@ export function createNtaLayer(
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
     const { ntacode, ntaname, boroname } = e.features![0].properties as any;
 
-    console.log(ntacode)
+
     clickedNeighborhoodInfo.value = {
       code: ntacode,
       boro: boroname,

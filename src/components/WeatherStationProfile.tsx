@@ -128,11 +128,12 @@ const WeatherStationProfile = () => {
             selectedDataset.value = { ...dataset }
         })
 
+        console.log(clickedWeatherStationNeighborhoodID.value)
 
 
         map.value!.setFeatureState(
             {
-                source: "HEAT_VULNERABILITY_SOURCE",
+                source: "Outdooor_Heat_Volnerability_Index_SOURCE",
                 id: clickedWeatherStationNeighborhoodID.value!,
             },
             { clicked: true }
