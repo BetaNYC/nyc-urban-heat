@@ -49,8 +49,6 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
             .domain([30, 120])
             .range([height - margin.bottom, margin.top]);
 
-
-
         const tickDates = Array.from({ length: 6 }, (_, i) => parseDate(`${currentYear}-${String(i + 5).padStart(2, '0')}-01`));
 
         svg.append('text')
@@ -140,8 +138,8 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
             .filter(date => date instanceof Date);
 
         const calculateTickWidth = (date: Date) => {
-            const oneDay = d3.timeDay.offset(date, -1);
-            const nextDay = d3.timeDay.offset(date, 1);
+            const oneDay = d3.timeDay.offset(date, -1.005);
+            const nextDay = d3.timeDay.offset(date, 1.005);
 
             const xPositionPrev = x(oneDay);
             const xPositionNext = x(nextDay);
@@ -171,7 +169,8 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
                         .attr("width", partWidth)
                         .attr("height", rectangleHeight)
                         .attr("fill", color)
-                        .attr("stroke-width", 0)
+                        .attr("stroke-width", 0.25)
+                        .attr("stroke", "rgba(0,0,0,0.25)")
                         .on('mousemove', () => {
                             tooltipDiv.style('background', color)
                             tooltipDiv.select('#heat-event') // Use `select` to target the existing div

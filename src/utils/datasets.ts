@@ -275,7 +275,7 @@ export const datasets: Dataset[] = [
       return urls;
     },
     getDates: async () => {
-      console.log()
+      console.log();
       return nta_dataset_info.value
         .filter((dataset) => dataset.type === "surface_temp")
         .map((d: any) => d.date)
@@ -296,16 +296,37 @@ export const datasets: Dataset[] = [
         legendLastNumber: "98.8",
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
+          );
+          const values = Object.entries(data)
+            .filter(([key, _]) => /^[A-Z]{2}\d{2}$/.test(key as string)) // 只保留符合地區代碼格式的鍵
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          // 轉換成浮點數
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+
+          // 3. 計算四個等距的數字
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+
           return createNtaLayer(map, date, this.name, this.legend!, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], 92.1],
+              ["<=", ["get", date], +bins[1]],
               "#f4e0d7",
-              ["<=", ["get", date], 93.3],
+              ["<=", ["get", date], +bins[2]],
               "#cbada6",
-              ["<=", ["get", date], 94.4],
+              ["<=", ["get", date], +bins[3]],
               "#a37a76",
-              ["<=", ["get", date], 95.7],
+              ["<=", ["get", date], +bins[4]],
               "#7a4645",
               "#511314",
             ],
@@ -344,7 +365,7 @@ export const datasets: Dataset[] = [
       citation:
         "Heris, M., George, R., Flohr, T., Avila, A. New York City Cool Roofs. Hunter College City University of New York, Penn State University, and the Mayor's Office of Climate and Environmental Justice of New York.",
       year: "2024",
-      href:"https://storymaps.arcgis.com/stories/0cdc24592f85480ebaa094037b47a767.",
+      href: "https://storymaps.arcgis.com/stories/0cdc24592f85480ebaa094037b47a767.",
     },
     currentView: null,
     getDownloadUrls: async () => {
@@ -429,7 +450,7 @@ export const datasets: Dataset[] = [
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution.",
       year: "September 23, 2022",
-      href:"https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
+      href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
     },
     currentView: null,
     getDownloadUrls: async () => {
@@ -509,7 +530,7 @@ export const datasets: Dataset[] = [
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution",
       year: "September 23, 2022.",
-      href:"https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns."
+      href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
     },
     currentView: null,
     getDownloadUrls: async () => {

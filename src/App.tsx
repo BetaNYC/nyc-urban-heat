@@ -64,9 +64,11 @@ function App() {
 
       Object.keys(ntaRows[0]).forEach(ntacode => {
         if (!["", "metric", "date", "type", "downloads", "downloads_2"].includes(ntacode)) {
+              //@ts-ignore
           OutDoorHeatIndexData[ntacode] = +heatVulnerabilityMap.get(ntacode) || null;
         }
         if (!["", "metric", "date", "type", "downloads", "downloads_2"].includes(ntacode)) {
+              //@ts-ignore
           relativeSurfaceTemperatureData[ntacode] = +relativeSurfaceTemperatureMap.get(ntacode) || null;
         }
 

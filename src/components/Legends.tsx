@@ -4,6 +4,10 @@ import { selectedDataset } from '../pages/MapPage'
 import { computed } from '@preact/signals-react'
 import InformationCircle from "./InformationCircle";
 
+import { surfaceTemperatureRelativeValues } from '../utils/viewSurfaceTemperature';
+import { nta_dataset_info } from '../App';
+
+
 const Legends = () => {
     const [isLegendExpanded, setIsLegendExpanded] = useState(true)
     const [surfaceTemperatureAverage, setSurfaceTemperatureAverage] = useState({
@@ -42,6 +46,7 @@ const Legends = () => {
             return selectedDataset.value?.views[selectedDataset.value.currentView].legendTitle
         }
     })
+
     const legend = computed(() => {
         if (selectedDataset.value?.currentView) {
 
@@ -56,12 +61,29 @@ const Legends = () => {
             }
 
             if (selectedDataset.value?.name === "Surface Temperature") {
+                const date = `ST_${selectedDataset.value.currentDate || "20230902"}`
+                const data = nta_dataset_info.value.find(
+                    (dataset) => dataset.metric === date
+                );
+                const values = Object.entries(data)
+                    .filter(([key, _]) => /^[A-Z]{2}\d{2}$/.test(key as string))  // 只保留符合地區代碼格式的鍵
+                    .map(([_, value]) => parseFloat(value as string).toFixed(1));
+                // 轉換成浮點數
+                //@ts-ignore
+                const minValue = Math.min(...values);
+                //@ts-ignore
+                const maxValue = Math.max(...values);
+                const step = (maxValue - minValue) / 5;
+                const bins = Array.from({ length: 6 }, (_, i) =>
+                    (minValue + step * i).toFixed(2)
+                );
+
                 return [
-                    { label: "80.8", value: "#f4e0d7" },
-                    { label: "92.1", value: "#cbada6" },
-                    { label: "93.3", value: "#a37a76" },
-                    { label: "94.4", value: "#7a4645" },
-                    { label: "95.7", value: "#511314" },
+                    { label: bins[0], value: "#f4e0d7" },
+                    { label: bins[1], value: "#cbada6" },
+                    { label: bins[2], value: "#a37a76" },
+                    { label: bins[3], value: "#7a4645" },
+                    { label: bins[4], value: "#511314" },
 
                 ]
             }
@@ -196,9 +218,9 @@ const Legends = () => {
                             {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
-                            {/* <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] - 30).toFixed(1)}℉</p>
-                            <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage]).toFixed(1)}℉</p>
-                            <p>{(surfaceTemperatureAverage[date as keyof typeof surfaceTemperatureAverage] + 70).toFixed(1)}℉</p> */}
+                            <p>{surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][0]}℉</p>
+                            <p>{((surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][0] + (surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][5])) / 2).toFixed(1)}℉</p>
+                            <p>{(surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][5])}℉</p>
                         </div>
                     </div>
                 }
