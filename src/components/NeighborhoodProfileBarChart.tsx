@@ -127,8 +127,10 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         chart
             .append("g")
+            //@ts-ignore
             .call(d3.axisLeft(yScale).tickValues(
                 metric === 'Outdooor_Heat_Volnerability_Index' ? [0, 1, 2, 3, 4, 5] : metric === 'SURFACETEMP' ? [80, 84, 88, 92, 96, 100] : [0, 10, 20, 30, 40, 50, 60, 70, 80]
+                 //@ts-ignore
             ).tickFormat((d) => metric === 'Outdooor_Heat_Volnerability_Index' ? d : metric === 'SURFACETEMP' ? d + "°F" : d + "%"))
             .selectAll("text")
             .style("font-size", "10px")

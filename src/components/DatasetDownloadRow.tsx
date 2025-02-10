@@ -82,6 +82,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
                     <div className="flex-1">
                         <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
                         <div className="font-light text-small">
+                            {/* @ts-ignore */}
                             <a href={dataset.externalUrl}>{dataset.externalSource}</a><br />
                             <p className="">
                                 {dataset.info}
