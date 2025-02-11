@@ -64,19 +64,24 @@ const Legends = () => {
                 const date = `ST_${selectedDataset.value.currentDate || "20230902"}`
                 const data = nta_dataset_info.value.find(
                     (dataset) => dataset.metric === date
-                );
-                const values = Object.entries(data)
-                    .filter(([key, _]) => /^[A-Z]{2}\d{2}$/.test(key as string))  // 只保留符合地區代碼格式的鍵
+                  );
+                  const values = Object.entries(data)
+                    .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "") // 只保留符合地區代碼格式的鍵
                     .map(([_, value]) => parseFloat(value as string).toFixed(1));
-                // 轉換成浮點數
-                //@ts-ignore
-                const minValue = Math.min(...values);
-                //@ts-ignore
-                const maxValue = Math.max(...values);
-                const step = (maxValue - minValue) / 5;
-                const bins = Array.from({ length: 6 }, (_, i) =>
-                    (minValue + step * i).toFixed(2)
-                );
+                  //@ts-ignore
+                  const minValue = Math.min(...values).toFixed(1);
+                  //@ts-ignore
+                  const maxValue = Math.max(...values).toFixed(1);
+                  // 3. 計算四個等距的數字
+                  const step = (
+                    (parseFloat(maxValue) - parseFloat(minValue)) /
+                    5
+                  ).toFixed(1);
+                  const bins = Array.from({ length: 6 }, (_, i) =>
+                    (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+                  );
+                  
+                selectedDataset.value.views.nta.legendLastNumber = bins[5]
 
                 return [
                     { label: bins[0], value: "#f4e0d7" },

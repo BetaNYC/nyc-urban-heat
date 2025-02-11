@@ -80,7 +80,7 @@ function App() {
 
 
 
-      // console.log("NTA Dataset:", nta_dataset_info.value);
+      console.log("NTA Dataset:", nta_dataset_info.value);
 
 
       // 這裡可以執行合併數據的邏輯

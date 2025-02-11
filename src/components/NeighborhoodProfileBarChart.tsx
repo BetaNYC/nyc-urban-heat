@@ -177,8 +177,6 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("y", (d) => yScale(d.value)) // 最终状态：柱子的顶部在正确的 y 位置
             .attr("height", (d) => innerHeight - yScale(d.value)) // 最终高度为正确值
 
-
-        console.log(sortedData)
         chart
             .selectAll(".bar_text")
             .data(sortedData)
