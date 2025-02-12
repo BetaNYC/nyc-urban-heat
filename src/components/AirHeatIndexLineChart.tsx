@@ -225,8 +225,10 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
             .style('border-radius', '12px')
             .style('display', 'none');
 
+        let animationFrameId: number | null = null
+
         svg.on('mousemove', (event) => {
-            
+
             const [xPos, yPos] = d3.pointer(event, svgRef.current);
             const xDate = x.invert(xPos);
             const xOffset = 15
@@ -291,7 +293,7 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
     }, [data]);
 
     return (
-        <div className='relative w-full h-[80%]'>
+        <div className='relative w-full h-[80%] overflow-x-hidden'>
             <svg ref={svgRef} className='w-full h-full'></svg>
             <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
         </div>

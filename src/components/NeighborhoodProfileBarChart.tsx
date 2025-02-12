@@ -130,7 +130,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             //@ts-ignore
             .call(d3.axisLeft(yScale).tickValues(
                 metric === 'Outdooor_Heat_Volnerability_Index' ? [0, 1, 2, 3, 4, 5] : metric === 'SURFACETEMP' ? [80, 84, 88, 92, 96, 100] : [0, 10, 20, 30, 40, 50, 60, 70, 80]
-                 //@ts-ignore
+                //@ts-ignore
             ).tickFormat((d) => metric === 'Outdooor_Heat_Volnerability_Index' ? d : metric === 'SURFACETEMP' ? d + "°F" : d + "%"))
             .selectAll("text")
             .style("font-size", "10px")
@@ -208,7 +208,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
         chart
             .append("text")
             .attr("x", 12)
-            .attr("y", (valueAverage.NY) > (valueAverage.boro)
+            .attr("y", (valueAverage.NY) > (valueAverage.boro) || (valueAverage.NY) === (valueAverage.boro)
                 ? yScale(valueAverage.NY) - 8
                 : yScale(valueAverage.NY) + 14)
             .style("font-size", "12px")

@@ -37,7 +37,7 @@ function getNTAInfo(nta: string) {
 export function createNtaLayer(
   map: mapboxgl.Map,
   metric: string,
-      //@ts-ignore
+  //@ts-ignore
   layerName: string,
   breakpoints: { label: string; value: string }[],
   fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" }
@@ -170,6 +170,7 @@ export function createNtaLayer(
       )[0]["Relative_ST_Average"]).toFixed(0);
 
       const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
+      
       const textColor =
         selectedMetric > parseInt(sortedBreakpoints[2].label)
           ? "text-[#FFF]"
@@ -290,7 +291,10 @@ export function createNtaLayer(
 
       const divElement = document.createElement("div");
 
-      divElement.innerHTML = metric === "Outdooor_Heat_Volnerability_Index" ? outdoorHeatExposureIndexTitle + outdoorHeatExposureIndexDetails : title + details;
+      divElement.innerHTML =
+        metric === "Outdooor_Heat_Volnerability_Index"
+          ? outdoorHeatExposureIndexTitle + outdoorHeatExposureIndexDetails
+          : title + details;
       divElement.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
       divElement.style.borderRadius = "8px";
 
@@ -346,8 +350,16 @@ export function createNtaLayer(
   });
 
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
-    const { ntacode, ntaname, boroname } = e.features![0].properties as any;
 
+    if (clickedNeighborhoodInfo.value.code !== null) {
+      map.setFeatureState(
+        { source: sourceId, id: clickedNeighborhoodInfo.value.code},
+        { clicked: false }
+      );
+    }
+
+
+    const { ntacode, ntaname, boroname } = e.features![0].properties as any;
 
     clickedNeighborhoodInfo.value = {
       code: ntacode,

@@ -164,17 +164,17 @@ const Legends = () => {
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
-                                    <InformationCircle size='big' />
+                                    <InformationCircle size='big' positionRight={true} content='Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F.'/>
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
-                                    <InformationCircle size='big' />
+                                    <InformationCircle size='big' positionRight={true} content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F."/>
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
-                                    <InformationCircle size='big' />
+                                    <InformationCircle size='big' positionRight={true} content='Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days.'/>
                                 </div>
                             </div>
                         </div>

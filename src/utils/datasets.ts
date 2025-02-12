@@ -303,12 +303,10 @@ export const datasets: Dataset[] = [
             .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "") // 只保留符合地區代碼格式的鍵
             .map(([_, value]) => parseFloat(value as string).toFixed(1));
           // 轉換成浮點數
-          console.log(date, data)
           //@ts-ignore
           const minValue = Math.min(...values).toFixed(1);
           //@ts-ignore
           const maxValue = Math.max(...values).toFixed(1);
-          console.log(minValue)
           // 3. 計算四個等距的數字
           const step = (
             (parseFloat(maxValue) - parseFloat(minValue)) /
@@ -317,8 +315,6 @@ export const datasets: Dataset[] = [
           const bins = Array.from({ length: 6 }, (_, i) =>
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
-
-          console.log(bins)
 
           return createNtaLayer(map, date, this.name, this.legend!, {
             "fill-color": [

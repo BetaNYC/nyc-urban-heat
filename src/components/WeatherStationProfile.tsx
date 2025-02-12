@@ -265,7 +265,7 @@ const WeatherStationProfile = () => {
                                 <div className="">
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
-                                        <InformationCircle size="small" />
+                                        <InformationCircle size="small" content="Number of days per year when the air heat index temperature meets NWS and NYC extreme heat advisory criteria."/>
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Extreme Heat days in {currentYear}</h2>
                                     <div className="">
@@ -286,7 +286,7 @@ const WeatherStationProfile = () => {
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
-                                        <InformationCircle size="small" />
+                                        <InformationCircle size="small" content="Number of days per year when the minimum and maximum air temperature exceeds the historic normals between 1991-2020."/>
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular"> Days Exceeding Historic Normal in {currentYear}</h2>
                                     <div className="">
@@ -305,8 +305,11 @@ const WeatherStationProfile = () => {
                     </div>
                     <div className="md:flex-1 px-4 py-2 w-full h-full  border-[1px] border-[#333] rounded-[0.5rem] overflow-y-auto scrollbar">
                         <p className="text-regular text-[#D5D5D5]">
-                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora,
-                            sunt enim quos sapiente facere doloremque voluptate aspernatur sint eos debitis deserunt, quasi deleniti iste voluptatem aliquid voluptatibus, fuga assumenda. Eum?
+                            This weather station profile summarizes data collected between 2013-2023 from weather station {clickedAddress.value} in {currentWeatherStationName}. Data collected at each weather station reports the daily air temperature, relative humidity, and heat index values.
+                            <p className="my-2"></p>
+                            The air heat index chart shows the daily maximum and minimum air heat index temperatures between May-September and highlights the number of extreme heat days within a particular year.
+                            <p className="my-2"></p>
+                            The air temperature chart shows the daily maximum and minimum air temperature relative to the historic normal values. The historic normal baseline values are calculated from the New York City Central Park weather station values and aggregated between 1991-2020.
                         </p>
                         {
                             !isTablet &&
@@ -347,32 +350,32 @@ const WeatherStationProfile = () => {
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#EE745D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Max Daily Temperature</p>
-                                                <InformationCircle size="small" />
+                                                <InformationCircle size="small" content="Number of days per year when the maximum air temperature exceeds the historic normals between 1991-2020."/>
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#49808D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Min Daily Temperature</p>
-                                                <InformationCircle size="small" />
+                                                <InformationCircle size="small" content="Number of days per year when the minimum air temperature exceeds the historic normals between 1991-2020."/>
                                             </div>
                                         </div>
                                         {
                                             clickedIndex === "air_heat_index" ?
                                                 <div>
                                                     <p className="text-small text-[#CCC]">Extreme Heat Advisory</p>
-                                                    <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-2 ">
                                                         <div className="w-4 h-2 bg-[#823E35]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
-                                                        <InformationCircle size="small" />
+                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F."/>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#A46338]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
-                                                        <InformationCircle size="small" />
+                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F."/>
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#AD844A]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NYC Heat Event</p>
-                                                        <InformationCircle size="small" />
+                                                        <InformationCircle size="small" content="Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days."/>
                                                     </div>
                                                 </div> :
                                                 <div>

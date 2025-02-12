@@ -38,7 +38,7 @@ const NeighborhoodProfile = () => {
         const clickedNeighbohoodCode = clickedNeighborhoodInfo.value.code
         const clickedNeighbohoodNTAMetrics = out_door_heat_index.value.filter(d => d.ntacode === clickedNeighbohoodCode)[0]
         // console.log(clickedNeighbohoodNTAMetrics)
-            //@ts-ignore
+        //@ts-ignore
         clickedOutDoorHeatIndexClass = (+clickedNeighbohoodNTAMetrics["Outdooor_Heat_Volnerability_Index"]).toFixed(1)
         clickedMRTClass = +clickedNeighbohoodNTAMetrics["MRT_class"]
         clickedTreeCanopyClass = +clickedNeighbohoodNTAMetrics["pct_tree_class"]
@@ -67,14 +67,10 @@ const NeighborhoodProfile = () => {
 
 
     const [isBoroSelectionOpen, setIsBoroSelectionOpen] = useState(false);
-    const [selectedBoro, setSelectedBoro] = useState<Borough>("Brooklyn");
 
     const toggleDropdown = () => setIsBoroSelectionOpen((prev) => !prev);
 
-    const handleOptionClick = (option: Borough) => {
-        setSelectedBoro(option);
-        setIsBoroSelectionOpen(false);
-    };
+
 
 
     const selectedMetricBarChartRawData = nta_dataset_info.value.filter(d => d.metric === clickedMetric)
@@ -92,10 +88,10 @@ const NeighborhoodProfile = () => {
             return [];
         });
 
-        const selectedBoroPrefix = selectedBoro === "Manhattan" ? 'mn' :
-            selectedBoro === "Brooklyn" ? 'bk' :
-                selectedBoro === "Queens" ? 'qn' :
-                    selectedBoro === "Bronx" ? 'bx' :
+        const selectedBoroPrefix = clickedNeighborhoodInfo.value?.boro === "Manhattan" ? 'mn' :
+            clickedNeighborhoodInfo.value?.boro === "Brooklyn" ? 'bk' :
+                clickedNeighborhoodInfo.value?.boro === "Queens" ? 'qn' :
+                    clickedNeighborhoodInfo.value?.boro === "Bronx" ? 'bx' :
                         'si';
 
 
@@ -118,7 +114,7 @@ const NeighborhoodProfile = () => {
 
 
 
-    const clickHandler = () => {
+    const profileExpandedClickHandler = () => {
         isNeighborhoodProfileExpanded.value = !isNeighborhoodProfileExpanded.value
         if (isNeighborhoodProfileExpanded.value === false) {
             map.value!.flyTo({
@@ -267,6 +263,88 @@ const NeighborhoodProfile = () => {
     }
 
 
+    const boroOptionClickHandler = (option: Borough) => {
+
+        if (clickedNeighborhoodInfo.value.code !== null) {
+            map.value!.setFeatureState(
+              { source: `${clickedMetric}_SOURCE`, id: clickedNeighborhoodInfo.value.code},
+              { clicked: false }
+            );
+          }
+
+        clickedNeighborhoodInfo.value.boro = option
+
+        if (option === 'Manhattan') {
+            clickedNeighborhoodInfo.value.code = 'MN23'
+            clickedNeighborhoodInfo.value.nta = "West Village"
+        } else if (option === 'Brooklyn') {
+            clickedNeighborhoodInfo.value.code = 'BK90'
+            clickedNeighborhoodInfo.value.nta = "Williamsburg"
+        } else if (option === "Queens") {
+            clickedNeighborhoodInfo.value.code = 'QN71'
+            clickedNeighborhoodInfo.value.nta = "Astoria"
+        } else if (option === "Bronx") {
+            clickedNeighborhoodInfo.value.code = 'BX40'
+            clickedNeighborhoodInfo.value.nta = "Fordham South"
+        } else {
+            clickedNeighborhoodInfo.value.code = 'SI48'
+            clickedNeighborhoodInfo.value.nta = "Arden Heights"
+        }
+
+
+        map.value!.setFeatureState(
+            {
+                source: `${clickedMetric}_SOURCE`,
+                id: clickedNeighborhoodInfo.value.code,
+            },
+            { clicked: true }
+        );
+
+
+        //@ts-ignore
+        const clickedWeatherStationNeighborhoodFeature = nta.features.find(n => n.properties.ntacode === clickedNeighborhoodInfo.value.code)
+
+        //@ts-ignore
+        const clickedWeatherStationNeighborhoodCentroid = turf.centroid(clickedWeatherStationNeighborhoodFeature).geometry.coordinates
+
+        const bounds = map.value!.getBounds();
+        const centerCoordinates = map.value!.getCenter();
+        const centerLng = centerCoordinates.lng;
+        const mapWidth = bounds.getEast() - bounds.getWest();
+        const targetLng = bounds.getWest() + mapWidth * 0.175;
+        const newLng = centerLng + (clickedWeatherStationNeighborhoodCentroid[0] - targetLng) * 0.65;
+
+
+        const offsetLat = 0.005
+        const tooltipLat = clickedWeatherStationNeighborhoodCentroid[1] + offsetLat;
+
+        if (clickedNeighborhoodPopup) {
+            clickedNeighborhoodPopup.value?.remove();
+            clickedNeighborhoodPopup.value = null;
+        }
+
+
+        clickedNeighborhoodPopup.value = new mapboxgl.Popup({
+            closeButton: false,
+            closeOnClick: false,
+            className: "clicked-popup",
+        })
+            .setLngLat([clickedWeatherStationNeighborhoodCentroid[0], tooltipLat])
+            .setHTML(`<div class='clicked-nta'>${clickedNeighborhoodInfo.value.nta}</div>`)
+            .addTo(map.value!);
+
+        map.value!.flyTo({
+            center: [newLng, clickedWeatherStationNeighborhoodCentroid[1]],
+            zoom: map.value!.getZoom(),
+            essential: true,
+            duration: 2000,
+            // easing: (t) => t * (2.5 - t),
+        });
+
+        setIsBoroSelectionOpen(false);
+    };
+
+
     useEffect(() => {
         if (selectedDataset.value?.name === "Mean Radiant Temperature") {
             setClickedMetric("NTA_PCT_MRT_Less_Than_110");
@@ -286,11 +364,11 @@ const NeighborhoodProfile = () => {
     return (
         <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
             {
-                isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
+                isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={profileExpandedClickHandler}>
                     {isNeighborhoodProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
                 </div>
             }
-            <div className={`printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
+            <div className={`overflow-visible printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:gap-8 md:h-[30%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
                         <h2 className="text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro}</h2>
@@ -298,8 +376,9 @@ const NeighborhoodProfile = () => {
                         {
                             isTablet &&
                             <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-scroll">
-                                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempora,
-                                sunt enim quos sapiente facere doloremque voluptate aspernatur sint eos debitis deserunt, quasi deleniti iste voluptatem aliquid voluptatibus, fuga assumenda. Eum?
+                                This neighborhood profile summarizes Outdoor Heat Exposure Index (OHEI) data in {clickedNeighborhoodInfo.value?.nta}, {clickedNeighborhoodInfo.value?.boro} between 2013-2023. The OHEI measures the risk of exposure to higher temperatures in outdoor environments through the combination of static factors that do not change over time, including: Mean Radiant Temperature (MRT), Surface Temperature, Cool Roofs, Tree Canopy, and Permeable Surfaces.
+                                <p className="my-2"></p>
+                                The OHEI and the breakdown of each static factor within the OHEI is classified on a 1-5 index scale, where 1 indicates less outdoor heat exposure risk, and 5 indicates greater outdoor heat exposure risk. The data is distributed along an equal count scale (quantile), so each score bin represents 20% of the neighborhoods across New York City (i.e. a score of 5 means the top 20% of neighborhoods across NYC).
                             </p>
                         }
                     </div>
@@ -312,10 +391,10 @@ const NeighborhoodProfile = () => {
                             </div>
                         </div>
                         <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-scroll">
-                            <div className="flex justify-between items-center gap-4">
+                            <div className="flex justify-between items-center gap-4 ">
                                 <h3 className="text-small text-gray_six min-w-20">Mean Radiant Temperature</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
+                                    <InformationCircle size="small" content="The area-weighted mean temperature of all the objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement)." />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className={`w-7 h-2 rounded-l-[20px] ${clickedMRTClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
@@ -330,7 +409,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Surface Temperature</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
+                                    <InformationCircle size="small" content="The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating." />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className={`w-7 h-2 rounded-l-[20px] ${clickedSurfaceTemperatureClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
@@ -345,7 +424,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Cool Roofs</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
+                                    <InformationCircle size="small" content='Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.' />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className={`w-7 h-2 rounded-l-[20px] ${clickedCoolRoofsClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
@@ -360,7 +439,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Tree Canopy</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
+                                    <InformationCircle size="small" content='Areas where leaves, branches, and stems of trees cover the ground, when viewed from above. Tree canopy areas reduce urban heat island effect.' />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className={`w-7 h-2 rounded-l-[20px] ${clickedTreeCanopyClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
@@ -376,7 +455,7 @@ const NeighborhoodProfile = () => {
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Premeable Surfaces</h3>
                                 <div className="flex items-center gap-2.5">
-                                    <InformationCircle size="small" />
+                                    <InformationCircle size="small" content='Areas with porous surface materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.' />
                                     <div className="text-small text-[#C5C5C5]">Score</div>
                                     <div className="flex gap-1">
                                         <div className={`w-7 h-2 rounded-l-[20px] ${clickedPermeableSurfaceClass >= 1 ? "bg-[#D9D9D9]" : "bg-[#4F4F4F]"} `}></div>
@@ -414,7 +493,7 @@ const NeighborhoodProfile = () => {
                                         className="flex gap-[6px] py-1 px-3 border-2 border-[#787878] rounded-[20px] cursor-pointer"
                                         onClick={toggleDropdown}
                                     >
-                                        <p className="font-medium text-sm text-[#787878]">{selectedBoro}</p>
+                                        <p className="font-medium text-sm text-[#787878]">{clickedNeighborhoodInfo.value?.boro}</p>
                                         <ChevronDownIcon
                                             width={20}
                                             height={20}
@@ -431,7 +510,7 @@ const NeighborhoodProfile = () => {
                                                     key={option}
                                                     className="px-3 py-2 text-sm text-[#787878] hover:bg-gray-100 rounded-lg cursor-pointer"
                                                     //@ts-ignore
-                                                    onClick={() => handleOptionClick(option)}
+                                                    onClick={() => boroOptionClickHandler(option)}
                                                 >
                                                     {option}
                                                 </li>
@@ -442,7 +521,7 @@ const NeighborhoodProfile = () => {
                             </div>
                             {
                                 //@ts-ignore
-                                <NeighborhoodProfileBarChart data={barChartData} valueAverage={valueAverage} boro={selectedBoro} metric={clickedMetric} />}
+                                <NeighborhoodProfileBarChart data={barChartData} valueAverage={valueAverage} boro={clickedNeighborhoodInfo.value?.boro} metric={clickedMetric} />}
                         </div>
                     </div>
                     <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
