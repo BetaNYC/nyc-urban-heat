@@ -23,6 +23,14 @@
   display: none; /* Hides the arrow */
 }
 
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+  border-bottom-color: #333 !important;
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: #333 !important;
+}
+
 
 
 /* Your custom clicked-nta styling */

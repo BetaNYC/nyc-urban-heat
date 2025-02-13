@@ -11,7 +11,7 @@ type Props = {
         boro: number
     },
     boro: "Brooklyn" | "Queens" | "Manhattan" | "Staten Island" | "Bronx",
-    metric: "NTA_PCT_MRT_Less_Than_110" | "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE"
+    metric: "NTA_PCT_MRT_Less_Than_110" | "PCT_TREES" | "PCT_AREA_COOLROOF" | "PCT_PERMEABLE" | 'Outdooor_Heat_Volnerability_Index' | "SURFACETEMP"
 };
 
 const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props) => {
@@ -22,6 +22,9 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
         if (!svgRef.current) return;
 
         const { width, height } = svgRef.current.getBoundingClientRect();
+        const tooltip = document.getElementById("tooltip");
+
+
 
         const margin = { top: 10, right: 20, bottom: 50, left: 65 };
         const innerWidth = width - margin.left - margin.right;
@@ -33,7 +36,6 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .select(svgRef.current)
             .attr("width", width)
             .attr("height", height);
-
 
         svg
             .append("text")
@@ -69,7 +71,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         const yScale = d3
             .scaleLinear()
-            .domain([0, 80])
+            .domain(metric === 'Outdooor_Heat_Volnerability_Index' ? [0, 5] : metric === 'SURFACETEMP' ? [80, 105] : [0, 80])
             .nice()
             .range([innerHeight, 0]);
 
@@ -82,33 +84,38 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("fill", "#ababab")
             .text("Percentage area of tree canopy");
 
-            let colorPalette, colorDomain;
+        let colorPalette, colorDomain;
 
-            switch (metric) {
-                case "NTA_PCT_MRT_Less_Than_110":
-                  colorPalette = ["#B8613F", "#C68165", "#D4A08C", "#E3C0B2", "#F1DFD9"]; 
-                  colorDomain = [27, 30, 34, 44, 62]; 
-                  break;
-                case "PCT_TREES":
-                  colorPalette = ["#3F7481", "#5A828E", "#859EA4", "#ADBEC3", "#D6DFE1"]; 
-                  colorDomain = [14, 17, 20, 24, 50]; 
-                  break;
-                case "PCT_AREA_COOLROOF":
-                  colorPalette = ["#2D5185", "#526B8F", "#818FA4", "#A4ADBA", "#D2D6DC"]; 
-                  colorDomain = [20, 37, 47, 55, 76]; 
-                  break;
-                case "PCT_PERMEABLE":
-                  colorPalette = ["#8F6018", "#C8892B", "#E7B263", "#EDC58A", "#F3D9B1"]; 
-                  colorDomain = [4, 6, 10, 20, 71];
-                  break;
-                default:
-                  colorPalette = ["#841F21", "#8E4B4A", "#A87E7A", "#CBADA6", "#F4E0D7"]; 
-                  colorDomain = [93.3, 92.1, 80, 94.4, 95.7]; 
-                  break;
-              }
-
-
-
+        switch (metric) {
+            case "NTA_PCT_MRT_Less_Than_110":
+                colorPalette = ["#B8613F", "#C68165", "#D4A08C", "#E3C0B2", "#F1DFD9"];
+                colorDomain = [27, 30, 34, 44, 62];
+                break;
+            case "PCT_TREES":
+                colorPalette = ["#3F7481", "#5A828E", "#859EA4", "#ADBEC3", "#D6DFE1"];
+                colorDomain = [14, 17, 20, 24, 50];
+                break;
+            case "PCT_AREA_COOLROOF":
+                colorPalette = ["#2D5185", "#526B8F", "#818FA4", "#A4ADBA", "#D2D6DC"];
+                colorDomain = [20, 37, 47, 55, 76];
+                break;
+            case "PCT_PERMEABLE":
+                colorPalette = ["#8F6018", "#C8892B", "#E7B263", "#EDC58A", "#F3D9B1"];
+                colorDomain = [4, 6, 10, 20, 71];
+                break;
+            case "Outdooor_Heat_Volnerability_Index":
+                colorPalette = ["#faebc5", "#e8a98b", "#d66852", "#943d33", "#511314"]
+                colorDomain = [0, 1, 2, 3, 4]
+                break;
+            case "SURFACETEMP":
+                colorPalette = ["#f4e0d7", "#cbada6", "#a37a76", "#7a4645", "#511314"]
+                colorDomain = [80.8, 92.1, 93.3, 94.4, 95.7]
+                break;
+            default:
+                colorPalette = ["#841F21", "#8E4B4A", "#A87E7A", "#CBADA6", "#F4E0D7"];
+                colorDomain = [93.3, 92.1, 80, 94.4, 95.7];
+                break;
+        }
 
 
         const colorScale = d3
@@ -120,7 +127,11 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         chart
             .append("g")
-            .call(d3.axisLeft(yScale).tickValues([0, 10, 20, 30, 40, 50, 60, 70, 80]).tickFormat((d) => d + "%"))
+            //@ts-ignore
+            .call(d3.axisLeft(yScale).tickValues(
+                metric === 'Outdooor_Heat_Volnerability_Index' ? [0, 1, 2, 3, 4, 5] : metric === 'SURFACETEMP' ? [80, 84, 88, 92, 96, 100] : [0, 10, 20, 30, 40, 50, 60, 70, 80]
+                 //@ts-ignore
+            ).tickFormat((d) => metric === 'Outdooor_Heat_Volnerability_Index' ? d : metric === 'SURFACETEMP' ? d + "°F" : d + "%"))
             .selectAll("text")
             .style("font-size", "10px")
             .style("fill", "#ababab");
@@ -149,11 +160,22 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("width", barWidth)
             .attr("height", 0) // 初始高度为 0
             .attr("fill", (d) => colorScale(d.value))
+            .on("mousemove", (event) => {
+                tooltip!.innerHTML = `<strong>aaa</strong><br/>`;
+                tooltip!.style.left = `${event.offsetX + 10}px`;
+                tooltip!.style.top = `${event.offsetY + 10}px`;
+
+                tooltip!.classList.remove("hidden");
+            })
+            .on("mouseleave", () => {
+                document.getElementById("tooltip")?.classList.add("hidden");
+            })
+
             .transition() // 添加过渡动画
             .duration(800) // 动画持续时间（以毫秒为单位）
             .ease(d3.easeCubicOut) // 使用缓动函数
             .attr("y", (d) => yScale(d.value)) // 最终状态：柱子的顶部在正确的 y 位置
-            .attr("height", (d) => innerHeight - yScale(d.value)); // 最终高度为正确值
+            .attr("height", (d) => innerHeight - yScale(d.value)) // 最终高度为正确值
 
         chart
             .selectAll(".bar_text")
@@ -162,7 +184,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .append("text")
             .attr("class", "bar-label")
             .attr("y", (_, i) => innerWidth - (i + 1) * (barWidth + barSpacing) + barWidth * 0.8)// 将文本放置在柱的中间
-            .attr("x", -yScale(0) - 18)
+            .attr("x", metric === "SURFACETEMP" ? -yScale(80) - 18 : -yScale(0) - 18)
             .attr("transform", "rotate(-90)") // 按照你原来的要求旋转文本
             .style("font-size", "9px")
             .style("text-anchor", 'middle')
@@ -192,7 +214,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("font-size", "12px")
             .style("fill", "#cccccb")
             .style("font-weight", "semibold")
-            .text(`${valueAverage.NY}% New York City Average`);
+            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.NY} New York City Average` : `${valueAverage.NY}% New York City Average`);
 
         chart
             .append("text")
@@ -203,10 +225,18 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("font-size", "12px")
             .style("fill", "#cccccb")
             .style("font-weight", "semibold")
-            .text(`${valueAverage.boro}% ${boro} Average`);
+            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.boro} ${boro} Average` : `${valueAverage.boro}% ${boro} Average`);
     }, [data]);
 
-    return <svg className="w-full h-[80%]" ref={svgRef} />;
+    return (
+        <div className="relative w-full h-full">
+            <svg className="w-full h-[80%]" ref={svgRef} />;
+            <div id="tooltip" className="hidden absolute bg-white text-black text-xs px-2 py-1 rounded shadow-md pointer-events-none" />
+        </div>
+    )
+
+
+
 };
 
 export default NeighborhoodProfileBarChart;

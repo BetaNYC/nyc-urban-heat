@@ -38,7 +38,8 @@ export interface LegendItem {
 export interface View {
   name: string;
   legend?: LegendItem[];
-  legendLastNumber?: string,
+  legendTitle?: string;
+  legendLastNumber?: string;
   init?: (map: Map, options?: ViewOptions) => () => void;
 }
 
@@ -58,7 +59,11 @@ export interface Dataset {
   group: string;
   icon: IconType;
   info?: string;
-  externalSource?: string;
+  externalSource?: {
+    citation: string;
+    year: string;
+    href?: string;
+  };
   externalUrl?: string; // direct to the landing page of the external resource we don't own
   // in some cases we need to look up the csv, generate a custom urls to the supabase, or call an api to get the links
   getDownloadUrls?: (options?: any) => Promise<DownloadUrl[]>;
@@ -79,28 +84,35 @@ export const datasets: Dataset[] = [
     group: "",
     icon: outdoorHeatExposureIndex,
     info: "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments. This index combines mean radiant temperature (MRT), surface temperature.",
+    externalSource: {
+      citation:
+        "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Outdoor Heat Exposure Index. ",
+      year: "2025 ",
+    },
     currentView: "nta",
     views: {
       nta: {
         name: "NTA Aggregated",
+        legendTitle: "Outdoor Heat Exposure Index (OHEI)",
         legend: [
-          { label: "1", value: "#faebc5" },
-          { label: "2", value: "#e8a98b" },
-          { label: "3", value: "#d66852" },
-          { label: "4", value: "#943d33" },
-          { label: "5", value: "#511314" },
+          { label: "0", value: "#faebc5" },
+          { label: "1", value: "#e8a98b" },
+          { label: "2", value: "#d66852" },
+          { label: "3", value: "#943d33" },
+          { label: "4", value: "#511314" },
         ],
+        legendLastNumber: "5",
         init: function (map) {
           return createNtaLayer(
             map,
-            "HEAT_VULNERABILITY",
+            "Outdooor_Heat_Volnerability_Index",
             this.name,
             this.legend!,
             {
               "fill-color": [
                 "interpolate",
                 ["linear"],
-                ["get", "HEAT_VULNERABILITY"],
+                ["get", "Outdooor_Heat_Volnerability_Index"],
                 1,
                 "#faebc5",
                 2,
@@ -122,7 +134,12 @@ export const datasets: Dataset[] = [
     name: "Weather Stations",
     group: "",
     icon: weatherStations,
-    info:"VisualCrossing weather station locations that measure weather indicators including air temperature and humidity.",
+    info: "VisualCrossing weather station locations measure daily air temperature and relative humidity, and are aggregated to show the number of extreme heat days measured per year.",
+    externalSource: {
+      citation: "Visual Crossing. Timeline Weather Data.",
+      year: "2013 - 2023",
+      href: "https://www.visualcrossing.com/",
+    },
     currentView: null,
     getYears: async (): Promise<number[]> => {
       const data = await fetchStationHeatStats();
@@ -143,7 +160,12 @@ export const datasets: Dataset[] = [
     name: "Mean Radiant Temperature",
     group: "Static Factors",
     icon: meanRadiantTemperature,
-    info:"The area-weighted mean temperature of all the objects surrounding the body (e.g. buildings, vegetation, environment).",
+    info: "The area-weighted mean temperature of all the objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement). ",
+    externalSource: {
+      citation:
+        "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Mean Radiant Temperature.",
+      year: "2025",
+    },
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
@@ -161,11 +183,12 @@ export const datasets: Dataset[] = [
           ];
         }, []);
 
-        return urls
+      return urls;
     },
     views: {
       nta: {
         name: "NTA Aggregated",
+        legendTitle: "Percent area of outdoor spaces with thermal comfort",
         legend: [
           { label: "62%", value: "#f1dfd9" },
           { label: "44%", value: "#e3c0b2" },
@@ -259,6 +282,12 @@ export const datasets: Dataset[] = [
     group: "Static Factors",
     icon: surfaceTemperature,
     info: `The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating.`,
+    externalSource: {
+      citation:
+        "Earth Resources Observation and Science (EROS) Center. Landsat 8-9 Operational Land Imager / Thermal Infrared Sensor Level-2, Collection 2 [dataset]. U.S. Geological Survey",
+      year: "2020",
+      href: "https://doi.org/10.5066/P9OGBGM6.",
+    },
     currentView: null,
     dates: [],
     currentDate: null,
@@ -284,6 +313,7 @@ export const datasets: Dataset[] = [
       return urls;
     },
     getDates: async () => {
+      console.log();
       return nta_dataset_info.value
         .filter((dataset) => dataset.type === "surface_temp")
         .map((d: any) => d.date)
@@ -292,27 +322,52 @@ export const datasets: Dataset[] = [
     views: {
       nta: {
         name: "NTA Aggregated",
+        legendTitle: "Average surface temperature (°F)",
         legend: [
           { label: "80.8", value: "#f4e0d7" },
           { label: "92.1", value: "#cbada6" },
           { label: "93.3", value: "#a37a76" },
           { label: "94.4", value: "#7a4645" },
           { label: "95.7", value: "#511314" },
-          // 
+          //
         ],
-        legendLastNumber: "98.8 °F",
+        legendLastNumber: "98.8",
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
+          );
+          const values = Object.entries(data)
+            .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "") // 只保留符合地區代碼格式的鍵
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          // 轉換成浮點數
+          console.log(date, data)
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          console.log(minValue)
+          // 3. 計算四個等距的數字
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+
+          console.log(bins)
+
           return createNtaLayer(map, date, this.name, this.legend!, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], 92.1],
+              ["<=", ["get", date], +bins[1]],
               "#f4e0d7",
-              ["<=", ["get", date], 93.3],
+              ["<=", ["get", date], +bins[2]],
               "#cbada6",
-              ["<=", ["get", date], 94.4],
+              ["<=", ["get", date], +bins[3]],
               "#a37a76",
-              ["<=", ["get", date], 95.7],
+              ["<=", ["get", date], +bins[4]],
               "#7a4645",
               "#511314",
             ],
@@ -343,86 +398,20 @@ export const datasets: Dataset[] = [
     },
   },
   {
-    name: "Tree Canopy",
-    group: "Static Factors",
-    icon: treeCanopy,
-    info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above.",
-    currentView: null,
-    getDownloadUrls: async () => {
-      const urls = nta_dataset_info.value
-        .filter((dataset) => dataset.metric === 'PCT_TREES')
-        .reduce((urls: DownloadUrl[], dataset: any) => {
-          const tiff_url = dataset.downloads;
-          return [
-            ...urls,
-            {
-              name: "Tiff",
-              url: tiff_url,
-              date: "",
-              format: "tiff",
-            },
-          ];
-        }, []);
-
-        return urls
-    },
-    views: {
-      nta: {
-        name: "NTA Aggregated",
-        legend: [
-          { label: "50%", value: "#d6dfe1" },
-          { label: "24%", value: "#adbec3" },
-          { label: "20%", value: "#859ea4" },
-          { label: "17%", value: "#5c7d86" },
-          { label: "14%", value: "#335d68" },
-        ],
-        legendLastNumber: "2%",
-        init: function (map) {
-          return createNtaLayer(map, "PCT_TREES", this.name, this.legend!, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", "PCT_TREES"], 14],
-              "#335d68",
-              ["<=", ["get", "PCT_TREES"], 17],
-              "#5c7d86",
-              ["<=", ["get", "PCT_TREES"], 20],
-              "#859ea4",
-              ["<=", ["get", "PCT_TREES"], 24],
-              "#adbec3",
-              ["<=", ["get", "PCT_TREES"], 50],
-              "#d6dfe1",
-              "#000000", // Default color if no match
-            ],
-          });
-        },
-      },
-      raw: {
-        name: "Raw Data",
-        init: function (map) {
-          const ntaLayerCleanup = createNtaLayer(
-            map,
-            "PCT_TREES",
-            this.name,
-            this.legend!
-          );
-          const treeCanopyCleanup = viewTreeCanopy(map);
-          return function onDestroy() {
-            ntaLayerCleanup();
-            treeCanopyCleanup();
-          };
-        },
-      },
-    },
-  },
-  {
     name: "Cool Roofs",
     group: "Static Factors",
     icon: coolRoofs,
     info: "Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.",
+    externalSource: {
+      citation:
+        "Heris, M., George, R., Flohr, T., Avila, A. New York City Cool Roofs. Hunter College City University of New York, Penn State University, and the Mayor's Office of Climate and Environmental Justice of New York.",
+      year: "2024",
+      href: "https://storymaps.arcgis.com/stories/0cdc24592f85480ebaa094037b47a767.",
+    },
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
-        .filter((dataset) => dataset.metric === 'PCT_AREA_COOLROOF')
+        .filter((dataset) => dataset.metric === "PCT_AREA_COOLROOF")
         .reduce((urls: DownloadUrl[], dataset: any) => {
           const tiff_url = dataset.downloads_2;
           return [
@@ -436,11 +425,12 @@ export const datasets: Dataset[] = [
           ];
         }, []);
 
-        return urls
+      return urls;
     },
     views: {
       nta: {
         name: "NTA Aggregated",
+        legendTitle: "Area of buildings with cool roofs",
         legend: [
           { label: "76%", value: "#d3d5d9" },
           { label: "55%", value: "#a6abb3" },
@@ -493,14 +483,20 @@ export const datasets: Dataset[] = [
     },
   },
   {
-    name: "Permeable Surfaces",
+    name: "Tree Canopy",
     group: "Static Factors",
-    icon: premeableSurface,
-    info:"Porous or pervious surfaces have materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
+    icon: treeCanopy,
+    info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above. Tree canopy areas reduce urban heat island effect.",
+    externalSource: {
+      citation:
+        "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution.",
+      year: "September 23, 2022",
+      href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
+    },
     currentView: null,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
-        .filter((dataset) => dataset.metric === 'PCT_PERMEABLE')
+        .filter((dataset) => dataset.metric === "PCT_TREES")
         .reduce((urls: DownloadUrl[], dataset: any) => {
           const tiff_url = dataset.downloads;
           return [
@@ -514,11 +510,92 @@ export const datasets: Dataset[] = [
           ];
         }, []);
 
-        return urls
+      return urls;
     },
     views: {
       nta: {
         name: "NTA Aggregated",
+        legendTitle: "Area of tree canopy",
+        legend: [
+          { label: "50%", value: "#d6dfe1" },
+          { label: "24%", value: "#adbec3" },
+          { label: "20%", value: "#859ea4" },
+          { label: "17%", value: "#5c7d86" },
+          { label: "14%", value: "#335d68" },
+        ],
+        legendLastNumber: "2%",
+        init: function (map) {
+          return createNtaLayer(map, "PCT_TREES", this.name, this.legend!, {
+            "fill-color": [
+              "case",
+              ["<=", ["get", "PCT_TREES"], 14],
+              "#335d68",
+              ["<=", ["get", "PCT_TREES"], 17],
+              "#5c7d86",
+              ["<=", ["get", "PCT_TREES"], 20],
+              "#859ea4",
+              ["<=", ["get", "PCT_TREES"], 24],
+              "#adbec3",
+              ["<=", ["get", "PCT_TREES"], 50],
+              "#d6dfe1",
+              "#000000", // Default color if no match
+            ],
+          });
+        },
+      },
+      raw: {
+        name: "Raw Data",
+        init: function (map) {
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            "PCT_TREES",
+            this.name,
+            this.legend!
+          );
+          const treeCanopyCleanup = viewTreeCanopy(map);
+          return function onDestroy() {
+            ntaLayerCleanup();
+            treeCanopyCleanup();
+          };
+        },
+      },
+    },
+  },
+
+  {
+    name: "Permeable Surfaces",
+    group: "Static Factors",
+    icon: premeableSurface,
+    info: "Areas with porous surface materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
+    externalSource: {
+      citation:
+        "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution",
+      year: "September 23, 2022.",
+      href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
+    },
+    currentView: null,
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === "PCT_PERMEABLE")
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+      return urls;
+    },
+    views: {
+      nta: {
+        name: "NTA Aggregated",
+        legendTitle: "Area of permeable surfaces",
         legend: [
           { label: "71%", value: "#f3d9b1" },
           { label: "20%", value: "#dabb8b" },
@@ -526,7 +603,7 @@ export const datasets: Dataset[] = [
           { label: "6%", value: "#a87e3e" },
           { label: "4%", value: "#8f6018" },
         ],
-        legendLastNumber: '1%',
+        legendLastNumber: "1%",
         init: function (map) {
           return createNtaLayer(map, "PCT_PERMEABLE", this.name, this.legend!, {
             "fill-color": [
@@ -558,9 +635,17 @@ export const datasets: Dataset[] = [
     group: "Dynamic Factors",
     icon: airTemperature,
     info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter.",
+    externalSource: {
+      citation:
+        "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Temperature.",
+      year: "2025",
+    },
     currentView: null,
     views: {
-      nta: { name: "NTA Aggregated" },
+      nta: {
+        name: "NTA Aggregated",
+        legendTitle: "Average air temperature (°F)",
+      },
       raw: { name: "Raw Data" },
     },
   },
@@ -569,9 +654,17 @@ export const datasets: Dataset[] = [
     group: "Dynamic Factors",
     icon: airHeatIndex,
     info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort.",
+    externalSource: {
+      citation:
+        "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Heat Index",
+      year: "2025",
+    },
     currentView: null,
     views: {
-      nta: { name: "NTA Aggregated" },
+      nta: {
+        name: "NTA Aggregated",
+        legendTitle: "Average air heat index (°F)",
+      },
       raw: { name: "Raw Data" },
     },
   },

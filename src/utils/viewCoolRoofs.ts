@@ -31,9 +31,9 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
           ["linear"], 
           ["raster-value"],
           1/255,
-          "#BDBDBD",
+          "#A4ADBA",
           2/255,
-          "#4d5766"
+          "#2D5185"
         ],
       },
     });
