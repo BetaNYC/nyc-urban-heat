@@ -243,8 +243,9 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
                 .style('display', 'block');
 
             const svgWidth = (svg.node() as SVGSVGElement).getBoundingClientRect().width;
-            const tooltipWidth = (tooltipDiv.node() as HTMLElement).getBoundingClientRect().width;
-            const isNearRightEdge = xPos + tooltipWidth + xOffset > svgWidth;
+            const tooltipWidth = 200;
+            const threshold = svgWidth * 0.55;
+            const isNearRightEdge = xPos > threshold;
 
             tooltipDiv
                 .style('left', isNearRightEdge ? `${xPos - tooltipWidth - xOffset}px` : `${xPos + xOffset}px`)
@@ -292,8 +293,8 @@ const AirHeatIndexLineChart = ({ data }: Props) => {
 
     return (
         <div className='relative w-full h-[80%]'>
-            <svg ref={svgRef} className='w-full h-full'></svg>
-            <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
+            <svg ref={svgRef} className='w-full h-full overflow-x-hidden'></svg>
+            <div id='tooltip' style={{ width: '200px',  position: 'absolute', display: 'none', pointerEvents: 'none' }}></div>
         </div>
     );
 };
