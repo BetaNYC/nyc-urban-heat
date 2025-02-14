@@ -9,7 +9,7 @@ import MapDateSelections from '../components/MapDateSelections.js';
 import WeatherStationProfile from '../components/WeatherStationProfile.js';
 import Legends from '../components/Legends.js';
 import "./Map.css"
-import { signal } from '@preact/signals-react'
+import { effect, signal } from '@preact/signals-react'
 import { Dataset, datasets } from '../utils/datasets.js';
 import { NtaProfileData, WeatherStationData } from '../types.js';
 import { initializeView } from '../utils/datasets.js';
@@ -28,7 +28,7 @@ export const previousClickCor = signal<[number, number]>([0, 0])
 export const clickedWeatherStationPopup = signal<mapboxgl.Popup | null>(null)
 export const clickedNeighborhoodPopup = signal<mapboxgl.Popup | null>(null)
 export const clickedNeighborhoodInfo = signal<{
-  code:string
+  code: string
   boro: string,
   nta: string
 }>({
@@ -91,23 +91,42 @@ const MapPage = () => {
   }, []);
 
 
+  // Debounce map resize to avoid excessive updates when profiles change
+  effect(() => {
+    const debounced = setTimeout(() => {
+      if (map?.value) {
+        console.log('resize')
+        map.value.resize()
+      }
+      const _ = isNeighborhoodProfileExpanded.value && isWeatherStationProfileExpanded.value
+    }, 100)
+  
+    return () => clearTimeout(debounced)
+  })
 
   return (
     <div className='relative w-full h-full'>
       {/* <div className='absolute top-0 left-[17.5vw] w-[2px] h-[100vh] bg-[#fe8585] z-[100000]'></div>
       <div className='absolute top-1/2 left-1/2 w-[20px] h-[20px] bg-[#fe8585] z-[1000000] rounded-full transform -translate-x-1/2 -translate-y-1/2'></div> */}
       <Nav />
-      {
-        selectedDataset.value?.name === "Weather Stations" && <WeatherStationProfile />
-      }
-      {
-        selectedDataset.value?.name !== "Weather Stations" && <NeighborhoodProfile />
-      }
       <DatasetSelections />
       <MapDateSelections />
       <Legends />
-      <div className='w-full h-[calc(100%_-_3.125rem)]' ref={mapContainer} />
-    </div>
+
+      <div className="w-full h-[calc(100%_-_3.125rem)] flex flex-col md:flex-row"> 
+        <div className="flex-1 w-full h-full" ref={mapContainer} />
+          {isNeighborhoodProfileExpanded.value && selectedDataset?.value?.name !== "Weather Stations" && (
+            <div className="h-2/3 md:h-full md:w-8/12 relative">
+              <NeighborhoodProfile />
+            </div>
+          )}
+          {isWeatherStationProfileExpanded.value && selectedDataset?.value?.name === "Weather Stations" && (
+            <div className="h-2/3 md:h-full md:w-8/12 relative">
+              <WeatherStationProfile />
+            </div>
+          )}
+        </div>
+      </div>
   );
 };
 

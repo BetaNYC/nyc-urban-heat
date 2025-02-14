@@ -18,6 +18,7 @@ import mapboxgl, { Popup } from "mapbox-gl";
 import { nta_dataset_info, out_door_heat_index } from '../App'
 
 import NeighborhoodProfileBarChart from "../components/NeighborhoodProfileBarChart"
+import { BORO_EXTENTS } from '../utils/format';
 
 
 type Borough = "Brooklyn" | "Queens" | "Manhattan" | "Staten Island" | "Bronx"
@@ -283,14 +284,29 @@ const NeighborhoodProfile = () => {
         }
     }, [selectedDataset.value]);
 
+    // useEffect(()=>{
+    //     // when boro changes zoom into borough extent
+    //     const boro_extent = BORO_EXTENTS[selectedBoro]
+        
+    //     if(boro_extent && map.value){
+    //         // @ts-ignore
+    //         map.value.fitBounds(boro_extent.bounds, {
+    //             padding: 50,
+    //             duration: 200,
+    //         });
+    //     }
+    // },[selectedBoro])
+
     return (
-        <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
+        <div className="absolute w-full h-full bottom-0 top-0 flex items-center z-20">
+            <div className="relative">
             {
-                isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
+                isTablet && <div className="absolute flex md:-left-9 items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
                     {isNeighborhoodProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
                 </div>
             }
-            <div className={`printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
+            </div>
+            <div className={`w-full h-full printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 bg-[#1B1B1B] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:gap-8 md:h-[30%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
                         <h2 className="text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro}</h2>

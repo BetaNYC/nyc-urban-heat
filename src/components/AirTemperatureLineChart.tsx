@@ -191,8 +191,9 @@ const AirTemperatureLineChart = ({ data }: Props) => {
                 .style('display', 'block');
 
             const svgWidth = (svg.node() as SVGSVGElement).getBoundingClientRect().width;
-            const tooltipWidth = (tooltipDiv.node() as HTMLElement).getBoundingClientRect().width;
-            const isNearRightEdge = xPos + tooltipWidth + xOffset > svgWidth;
+            const tooltipWidth = 200;
+            const threshold = svgWidth * 0.55;
+            const isNearRightEdge = xPos > threshold;
 
             const isAboveHistoricalMax = Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0
             const isAboveHistoricalMin = Math.round(closestDataPoint.tempmax) - Math.round(closestDataPoint.Normal_Temp_Max) > 0
@@ -201,7 +202,7 @@ const AirTemperatureLineChart = ({ data }: Props) => {
             const tempMinDifference = Math.abs(Math.round(closestDataPoint.tempmin) - Math.round(closestDataPoint.Normal_Temp_Min))
 
             tooltipDiv
-                .style('left', isNearRightEdge ? `${xPos - tooltipWidth - xOffset}px` : `${xPos + xOffset}px`)
+                .style('left', isNearRightEdge ? `${xPos - tooltipWidth}px` : `${xPos + xOffset}px`)
                 .style('top', `${yPos}px`)
                 .style('display', 'block')
                 .html(`
@@ -267,7 +268,7 @@ const AirTemperatureLineChart = ({ data }: Props) => {
     return (
         <div className='relative w-full h-[80%]'>
             <svg ref={svgRef} className='w-full h-full'></svg>
-            <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
+            <div id='tooltip' style={{ width: '200px', position: 'absolute', display: 'none', pointerEvents: 'none' }}></div>
         </div>
     );
 };
