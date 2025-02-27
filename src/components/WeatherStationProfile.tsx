@@ -341,7 +341,7 @@ const WeatherStationProfile = () => {
                                 <div className="flex justify-between">
                                     <div className="font-semibold text-large text-white">
                                         {
-                                            clickedIndex === "air_heat_index" ? <p>Neighborhood Name ({clickedAddress}) <br /> Air Heat Index in {currentYear} </p> : <p>Neighborhood Name ({clickedAddress}) <br /> Daily Air Temperature in {currentYear}</p>
+                                            clickedIndex === "air_heat_index" ? <p>{currentWeatherStationName} ({clickedAddress}) <br /> Air Heat Index in {currentYear} </p> : <p>{currentWeatherStationName} ({clickedAddress}) <br /> Daily Air Temperature in {currentYear}</p>
                                         }
                                     </div>
                                     <div className="flex gap-8">

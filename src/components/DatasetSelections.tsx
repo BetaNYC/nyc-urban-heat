@@ -6,8 +6,6 @@ import { Dataset, ViewOptions, datasets, initializeView } from '../utils/dataset
 import { group } from 'd3-array';
 import { ChevronUpIcon, ChevronDownIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid'
 
-import InformationCircleIcon from '@heroicons/react/20/solid';
-import InformationCircle from './InformationCircle';
 
 const groupedDataset = group(datasets, d => d.group)
 

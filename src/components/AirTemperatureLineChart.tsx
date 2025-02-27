@@ -265,7 +265,7 @@ const AirTemperatureLineChart = ({ data }: Props) => {
     }, [data]); // Re-run when currentYear changes
 
     return (
-        <div className='relative w-full h-[80%] overflow-x-hidden'>
+        <div className='relative w-full h-[80%] A'>
             <svg ref={svgRef} className='w-full h-full'></svg>
             <div id='tooltip' style={{ position: 'absolute', display: 'none' }}></div>
         </div>

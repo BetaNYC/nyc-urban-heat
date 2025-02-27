@@ -9,6 +9,9 @@ import DownloadPage from './pages/DownloadPage';
 
 export const nta_dataset_info = signal<any[]>([])
 export const out_door_heat_index = signal<any[]>([])
+export const air_temp_nta = signal<any[]>([])
+// export const air_temp_raster = signal<any[]>([])
+
 
 function App() {
   useEffect(() => {
@@ -16,8 +19,54 @@ function App() {
     // ${import.meta.env.BASE_URL}
     Promise.all([
       csv("/datasets.csv"),
-      csv("/NTA_Outdoor_Heat_Index.csv")
-    ]).then(([ntaRows, heatIndexRows]) => {
+      csv("/NTA_Outdoor_Heat_Index.csv"),
+      csv("/air_temp_nta.csv"),
+      csv("/air_temp_raster.csv")
+    ]).then(([ntaRows, heatIndexRows, airTempNTA ]) => {
+
+
+      const ntaCodeMap = Object.fromEntries(
+        heatIndexRows.map(row => [row.NTA_Unq_ID, row.ntacode])
+      );
+
+      const ntaCodedAirTempNTA = airTempNTA.map(row => ({
+        ...row,
+        ntacode: ntaCodeMap[row.NTA_Unq_ID] || ""
+      }));
+
+      const aggregatedData: Record<string, Record<string, string>> = {};
+
+
+    ntaCodedAirTempNTA.forEach(ntaData => {
+        const ntacode = ntaData.ntacode; // 取得該 NTA 的 ntacode
+    
+        Object.entries(ntaData)
+            .filter(([key]) => key.startsWith("Air_temp_raster_") || key.startsWith("Air_Heat_Index_outputs"))
+            .forEach(([key, value]) => {
+                const type = key.startsWith("Air_temp_raster_") ? "air_temp" : "air_heat_index";
+                const date = key.replace("Air_temp_raster_", "").replace("Air_Heat_Index_outputs", "");
+    
+                // 如果這個 metric 尚未在 aggregatedData 創建，則初始化
+                if (!aggregatedData[key]) {
+                    aggregatedData[key] = {
+                        "": "10",
+                        metric: key,
+                        date,
+                        type,
+                        downloads: `https://urban-heat-files.s3.amazonaws.com/${key}.geotiff`,
+                        downloads_2: "tda"
+                    };
+                }
+    
+                // 把該 NTA 的值放到對應的 metric object
+                aggregatedData[key][ntacode] = value || "";
+            });
+    });
+    
+    const airTemperatureData = Object.values(aggregatedData);
+    console.log(airTemperatureData)
+    
+    
 
       out_door_heat_index.value = heatIndexRows;
 
@@ -74,16 +123,15 @@ function App() {
 
       });
 
-      ntaRows.push(OutDoorHeatIndexData, relativeSurfaceTemperatureData)
+      ntaRows.push(OutDoorHeatIndexData, relativeSurfaceTemperatureData, ...airTemperatureData);
       nta_dataset_info.value = ntaRows;
 
 
 
 
-      console.log("NTA Dataset:", nta_dataset_info.value);
+      // console.log("NTA Dataset:", nta_dataset_info.value);
 
 
-      // 這裡可以執行合併數據的邏輯
     });
 
 

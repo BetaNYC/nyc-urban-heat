@@ -52,11 +52,11 @@ const Legends = () => {
 
             if (selectedDataset.value?.name === "Outdoor Heat Exposure Index") {
                 return [
-                    { label: "0", value: "#faebc5" },
-                    { label: "1", value: "#e8a98b" },
-                    { label: "2", value: "#d66852" },
-                    { label: "3", value: "#943d33" },
-                    { label: "4", value: "#511314" },
+                    { label: "1", value: "#F9EBC5" },
+                    { label: "2", value: "#E7A98B" },
+                    { label: "3", value: "#D66852" },
+                    { label: "4", value: "#A33F34" },
+                    { label: "5", value: "#841F21" },
                 ]
             }
 
@@ -64,23 +64,23 @@ const Legends = () => {
                 const date = `ST_${selectedDataset.value.currentDate || "20230902"}`
                 const data = nta_dataset_info.value.find(
                     (dataset) => dataset.metric === date
-                  );
-                  const values = Object.entries(data)
-                    .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "") // 只保留符合地區代碼格式的鍵
+                );
+                const values = Object.entries(data)
+                    .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "")
                     .map(([_, value]) => parseFloat(value as string).toFixed(1));
-                  //@ts-ignore
-                  const minValue = Math.min(...values).toFixed(1);
-                  //@ts-ignore
-                  const maxValue = Math.max(...values).toFixed(1);
-                  // 3. 計算四個等距的數字
-                  const step = (
+                //@ts-ignore
+                const minValue = Math.min(...values).toFixed(1);
+                //@ts-ignore
+                const maxValue = Math.max(...values).toFixed(1);
+                // 3. 計算四個等距的數字
+                const step = (
                     (parseFloat(maxValue) - parseFloat(minValue)) /
                     5
-                  ).toFixed(1);
-                  const bins = Array.from({ length: 6 }, (_, i) =>
+                ).toFixed(1);
+                const bins = Array.from({ length: 6 }, (_, i) =>
                     (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
-                  );
-                  
+                );
+
                 selectedDataset.value.views.nta.legendLastNumber = bins[5]
 
                 return [
@@ -89,9 +89,73 @@ const Legends = () => {
                     { label: bins[2], value: "#a37a76" },
                     { label: bins[3], value: "#7a4645" },
                     { label: bins[4], value: "#511314" },
-
                 ]
             }
+
+            if (selectedDataset.value?.name === "Air Temperature") {
+                const date = `Air_temp_raster_${selectedDataset.value.currentDate || "20230902"}`;
+                const data = nta_dataset_info.value.find(
+                    (dataset) => dataset.metric === date
+                );
+                const values = Object.entries(data)
+                    .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "" && value !== "inf" && !isNaN(Number(value)))
+                    .map(([_, value]) => parseFloat(value as string).toFixed(1));
+                //@ts-ignore
+                const minValue = Math.min(...values).toFixed(1);
+                console.log(minValue)
+                //@ts-ignore
+                const maxValue = Math.max(...values).toFixed(1);
+                const step = (
+                    (parseFloat(maxValue) - parseFloat(minValue)) /
+                    5
+                ).toFixed(1);
+                const bins = Array.from({ length: 6 }, (_, i) =>
+                    (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+                );
+
+                selectedDataset.value.views.nta.legendLastNumber = bins[5]
+
+                return [
+                    { label: bins[0], value: "#F4D9CD" },
+                    { label: bins[1], value: "#EFC9A9" },
+                    { label: bins[2], value: "#EBBC85" },
+                    { label: bins[3], value: "#E6AE61" },
+                    { label: bins[4], value: "#E19F3D" },
+                ]
+            }
+
+            if (selectedDataset.value?.name === "Air Heat Index") {
+                const date = `Air_Heat_Index_outputs${selectedDataset.value.currentDate || "20230902"}`;
+                const data = nta_dataset_info.value.find(
+                    (dataset) => dataset.metric === date
+                );
+                const values = Object.entries(data)
+                    .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "" && value !== "inf" && !isNaN(Number(value)))
+                    .map(([_, value]) => parseFloat(value as string).toFixed(1));
+                //@ts-ignore
+                const minValue = Math.min(...values).toFixed(1);
+                //@ts-ignore
+                const maxValue = Math.max(...values).toFixed(1);
+                const step = (
+                    (parseFloat(maxValue) - parseFloat(minValue)) /
+                    5
+                ).toFixed(1);
+                const bins = Array.from({ length: 6 }, (_, i) =>
+                    (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+                );
+
+                selectedDataset.value.views.nta.legendLastNumber = bins[5]
+
+                return [
+                    { label: bins[0], value: "#F7E7D0" },
+                    { label: bins[1], value: "#EFC7B1" },
+                    { label: bins[2], value: "#E6A891" },
+                    { label: bins[3], value: "#DE8872" },
+                    { label: bins[4], value: "#D66852" },
+                ]
+            }
+
+
             return selectedDataset.value?.views[selectedDataset.value.currentView].legend
         }
     })
@@ -164,17 +228,17 @@ const Legends = () => {
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#823E35] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Excessive Heat</div>
-                                    <InformationCircle size='big' positionRight={true} content='Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F.'/>
+                                    <InformationCircle size='big' positionRight={true} content='Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F.' />
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E19869] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NWS Heat Advisory</div>
-                                    <InformationCircle size='big' positionRight={true} content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F."/>
+                                    <InformationCircle size='big' positionRight={true} content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F." />
                                 </div>
                                 <div className='flex items-center gap-3'>
                                     <div className='w-[0.625rem] h-[0.625rem] bg-[#E6B062] rounded-full'></div>
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
-                                    <InformationCircle size='big' positionRight={true} content='Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days.'/>
+                                    <InformationCircle size='big' positionRight={true} content='Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days.' />
                                 </div>
                             </div>
                         </div>
@@ -223,9 +287,35 @@ const Legends = () => {
                             {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
-                            <p>{surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][0]}℉</p>
-                            <p>{((surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][0] + (surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][5])) / 2).toFixed(1)}℉</p>
-                            <p>{(surfaceTemperatureRelativeValues[selectedDataset.value!.currentDate || "20230902"][5])}℉</p>
+                            {/* <div className='flex justify-between text-xsmall text-[#F4F4F4]'> */}
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][0] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][5] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            {/* </div> */}
                         </div>
                     </div>
                 }
@@ -270,6 +360,96 @@ const Legends = () => {
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
                             <p>Permeable surfaces</p>
+                        </div>
+                    </div>
+                }
+                {
+                    datasetName.value === "Air Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
+                        <div className='flex justify-between text-regular text-[#F4F4F4]'>
+                            <p className='font-medium'>Air Temperature</p>
+                            <XMarkIcon width={18} height={18} className='text-[#ffffff] cursor-pointer' onClick={handleClick} />
+                        </div>
+                        <div className='flex justify-between text-small text-[#F4F4F4]'>
+                            <span>low</span>
+                            <span>high</span>
+                        </div>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-full h-full bg-gradient-to-r from-[#F4D9CD] via-[#EFC9A9,#EBBC85,#E6AE61] to-[#E19F3D]'></div>
+                            {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][0] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][5] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                        </div>
+                    </div>
+                }
+                                {
+                    datasetName.value === "Air Heat Index" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
+                        <div className='flex justify-between text-regular text-[#F4F4F4]'>
+                            <p className='font-medium'>Air Heat Index</p>
+                            <XMarkIcon width={18} height={18} className='text-[#ffffff] cursor-pointer' onClick={handleClick} />
+                        </div>
+                        <div className='flex justify-between text-small text-[#F4F4F4]'>
+                            <span>low</span>
+                            <span>high</span>
+                        </div>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-full h-full bg-gradient-to-r from-[#F7E7D0] via-[#EFC7B1,#E6A891,#DE8872] to-[#D66852]'></div>
+                            {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][0] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
+                            <p>
+                                {(
+                                    surfaceTemperatureRelativeValues[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureRelativeValues || "20230902"
+                                    ][5] +
+                                    surfaceTemperatureAverage[
+                                    selectedDataset.value!.currentDate as keyof typeof surfaceTemperatureAverage || "20230902"
+                                    ]
+                                ).toFixed(1)}℉
+                            </p>
                         </div>
                     </div>
                 }

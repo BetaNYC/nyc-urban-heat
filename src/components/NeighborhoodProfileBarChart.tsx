@@ -18,7 +18,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
     const svgRef = useRef<SVGSVGElement>(null);
 
 
-    useEffect(() => {
+    const renderChart = () => {
         if (!svgRef.current) return;
 
         const { width, height } = svgRef.current.getBoundingClientRect();
@@ -149,6 +149,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("stroke-width", 1);  // 线的宽度
 
 
+
         chart
             .selectAll(".bar")
             .data(displayedBars)
@@ -156,11 +157,42 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .append("rect")
             .attr("class", "bar")
             .attr("x", (_, i) => innerWidth - (i + 1) * (barWidth + barSpacing)) // 从右到左排列
-            .attr("y", innerHeight) // 初始状态：柱子的顶部在 x 轴
+            .attr("y", innerHeight)
             .attr("width", barWidth)
-            .attr("height", 0) // 初始高度为 0
+            .attr("height", 0)
             .attr("fill", (d) => colorScale(d.value))
-            .on("mousemove", (event) => {
+            .on("mousemove", (event, index) => {
+                const ntacode = index.neighborhood
+                //     const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] ${textColor} rounded-t-[0.75rem]" style="${backgroundColor}">
+                //     <div class="flex flex-col justify-between items-center gap-2">
+                //         <div class="font-bold text-[32px] ">${metric === "PCT_AREA_COOLROOF"
+                //             ? hoveredCoolRoofsClass
+                //             : metric === "NTA_PCT_MRT_Less_Than_110"
+                //                 ? hoveredMRTClass
+                //                 : metric === "PCT_PERMEABLE"
+                //                     ? hoveredPermeableSurfaceClass
+                //                     : metric === "PCT_TREES"
+                //                         ? hoveredTreeCanopyClass
+                //                         : ""
+                //         }.0</div>
+                //         <div class="font-regular text-[10px] leading-none">
+                //           ${metric === "PCT_AREA_COOLROOF"
+                //             ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
+                //             : metric === "NTA_PCT_MRT_Less_Than_110"
+                //                 ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
+                //                 : metric === "PCT_PERMEABLE"
+                //                     ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
+                //                     : metric === "PCT_TREES"
+                //                         ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
+                //                         : ""
+                //         }
+                //         </div>
+                //       </div>
+                //     <div>
+                //         <h1 class='mb-1 font-bold text-[1rem] leading-tight'>${ntaname}</h1>
+                //         <h1 class='font-medium text-[0.75rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
+                //     </div>
+                // </div>`;
                 tooltip!.innerHTML = `<strong>aaa</strong><br/>`;
                 tooltip!.style.left = `${event.offsetX + 10}px`;
                 tooltip!.style.top = `${event.offsetY + 10}px`;
@@ -226,7 +258,19 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("fill", "#cccccb")
             .style("font-weight", "semibold")
             .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.boro} ${boro} Average` : `${valueAverage.boro}% ${boro} Average`);
+    }
+
+    useEffect(() => {
+        renderChart();
+
+        const handleResize = () => renderChart();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [data]);
+
 
     return (
         <div className="relative w-full h-full">

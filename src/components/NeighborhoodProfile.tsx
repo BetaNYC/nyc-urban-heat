@@ -267,10 +267,10 @@ const NeighborhoodProfile = () => {
 
         if (clickedNeighborhoodInfo.value.code !== null) {
             map.value!.setFeatureState(
-              { source: `${clickedMetric}_SOURCE`, id: clickedNeighborhoodInfo.value.code},
-              { clicked: false }
+                { source: `${clickedMetric}_SOURCE`, id: clickedNeighborhoodInfo.value.code },
+                { clicked: false }
             );
-          }
+        }
 
         clickedNeighborhoodInfo.value.boro = option
 
@@ -341,6 +341,7 @@ const NeighborhoodProfile = () => {
             // easing: (t) => t * (2.5 - t),
         });
 
+
         setIsBoroSelectionOpen(false);
     };
 
@@ -369,13 +370,13 @@ const NeighborhoodProfile = () => {
                 </div>
             }
             <div className={`overflow-visible printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
-                <div className="md:flex md:gap-8 md:h-[30%]">
+                <div className="md:flex md:gap-8 md:h-[35%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
-                        <h2 className="text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro}</h2>
-                        <h1 className="md:mb-4 font-semibold text-subheadline md:text-headline text-gray_six">{clickedNeighborhoodInfo.value?.nta}</h1>
+                        <h1 className="font-semibold text-subheadline md:text-headline text-gray_six">{clickedNeighborhoodInfo.value?.nta}</h1>
+                        <h2 className="md:mb-4 text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro} <span className="font-medium md:text-subheadline">{clickedNeighborhoodInfo.value?.code}</span></h2>
                         {
                             isTablet &&
-                            <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-scroll">
+                            <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-auto scrollbar">
                                 This neighborhood profile summarizes Outdoor Heat Exposure Index (OHEI) data in {clickedNeighborhoodInfo.value?.nta}, {clickedNeighborhoodInfo.value?.boro} between 2013-2023. The OHEI measures the risk of exposure to higher temperatures in outdoor environments through the combination of static factors that do not change over time, including: Mean Radiant Temperature (MRT), Surface Temperature, Cool Roofs, Tree Canopy, and Permeable Surfaces.
                                 <p className="my-2"></p>
                                 The OHEI and the breakdown of each static factor within the OHEI is classified on a 1-5 index scale, where 1 indicates less outdoor heat exposure risk, and 5 indicates greater outdoor heat exposure risk. The data is distributed along an equal count scale (quantile), so each score bin represents 20% of the neighborhoods across New York City (i.e. a score of 5 means the top 20% of neighborhoods across NYC).
@@ -390,7 +391,7 @@ const NeighborhoodProfile = () => {
                                 <h3 className="font-regular text-regular lg:text-[1rem] text-[#BDBDBD]">Medium High</h3>
                             </div>
                         </div>
-                        <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-scroll">
+                        <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-y-auto scrollbar">
                             <div className="flex justify-between items-center gap-4 ">
                                 <h3 className="text-small text-gray_six min-w-20">Mean Radiant Temperature</h3>
                                 <div className="flex items-center gap-2.5">
@@ -486,7 +487,15 @@ const NeighborhoodProfile = () => {
                         }
                         <div className='flex-1 w-full rounded-[12px] rounded-tl-[0px] bg-[#333]'>
                             <div className='flex justify-between items-center px-5 w-full h-[20%]'>
-                                <h2 className='font-semibold text-[21px] text-white'>Area of Tree Canopy in Brooklyn</h2>
+                                <h2 className='font-semibold text-[21px] text-white'>
+                                    {
+                                        clickedMetric === "Outdooor_Heat_Volnerability_Index" ? "Outdoor Heat Exposure Index " :
+                                            clickedMetric === "NTA_PCT_MRT_Less_Than_110" ? "Mean Radiant Temperature " :
+                                                clickedMetric === "SURFACETEMP" ? "Surface Temperature " :
+                                                    clickedMetric === "PCT_TREES" ? "Tree Canopy " :
+                                                        clickedMetric === "PCT_AREA_COOLROOF" ? "Cool Roofs " :
+                                                            "Permeable Surfaces"
+                                    } in {clickedNeighborhoodInfo.value?.boro}</h2>
                                 <div className="relative inline-block text-left">
                                     {/* Dropdown Trigger */}
                                     <div

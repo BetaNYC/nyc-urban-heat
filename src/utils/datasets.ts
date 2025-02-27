@@ -20,6 +20,8 @@ import { nta_dataset_info } from "../App";
 import { viewMRT } from "./viewMRT";
 import { viewCoolRoofs } from "./viewCoolRoofs";
 import { viewPremeableSurface } from "./viewPremeableSurface";
+import { viewAirTemperature } from "./viewAirTemperature";
+import { viewAirHeatIndex } from "./viewAirHeatIndex";
 import { format } from "d3";
 
 type IconType = typeof outdoorHeatExposureIndex;
@@ -88,17 +90,35 @@ export const datasets: Dataset[] = [
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Outdoor Heat Exposure Index. ",
       year: "2025 ",
     },
+    getDownloadUrls: async () => {
+      const urls = nta_dataset_info.value
+        .filter((dataset) => dataset.metric === "MRT")
+        .reduce((urls: DownloadUrl[], dataset: any) => {
+          const tiff_url = dataset.downloads;
+          return [
+            ...urls,
+            {
+              name: "Tiff",
+              url: tiff_url,
+              date: "",
+              format: "tiff",
+            },
+          ];
+        }, []);
+
+      return urls;
+    },
     currentView: "nta",
     views: {
       nta: {
         name: "NTA Aggregated",
         legendTitle: "Outdoor Heat Exposure Index (OHEI)",
         legend: [
-          { label: "0", value: "#faebc5" },
-          { label: "1", value: "#e8a98b" },
-          { label: "2", value: "#d66852" },
-          { label: "3", value: "#943d33" },
-          { label: "4", value: "#511314" },
+          { label: "1", value: "#F9EBC5" },
+          { label: "2", value: "#E7A98B" },
+          { label: "3", value: "#D66852" },
+          { label: "4", value: "#A33F34" },
+          { label: "5", value: "#841F21" },
         ],
         legendLastNumber: "5",
         init: function (map) {
@@ -113,15 +133,15 @@ export const datasets: Dataset[] = [
                 ["linear"],
                 ["get", "Outdooor_Heat_Volnerability_Index"],
                 1,
-                "#faebc5",
+                "#F9EBC5",
                 2,
-                "#e8a98b",
+                "#E7A98B",
                 3,
-                "#d66852",
+                "#D66852",
                 4,
-                "#943d33",
+                "#A33F34",
                 5,
-                "#511314",
+                "#841F21",
               ],
             }
           );
@@ -285,15 +305,6 @@ export const datasets: Dataset[] = [
       nta: {
         name: "NTA Aggregated",
         legendTitle: "Average surface temperature (°F)",
-        legend: [
-          { label: "80.8", value: "#f4e0d7" },
-          { label: "92.1", value: "#cbada6" },
-          { label: "93.3", value: "#a37a76" },
-          { label: "94.4", value: "#7a4645" },
-          { label: "95.7", value: "#511314" },
-          //
-        ],
-        legendLastNumber: "98.8",
         init: function (map, options) {
           const date = `ST_${options?.date || "20230902"}`;
           const data = nta_dataset_info.value.find(
@@ -390,11 +401,11 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Area of buildings with cool roofs",
         legend: [
-          { label: "76%", value: "#d3d5d9" },
-          { label: "55%", value: "#a6abb3" },
-          { label: "47%", value: "#7a818c" },
-          { label: "37%", value: "#4d5766" },
-          { label: "20%", value: "#212d40" },
+          { label: "76%", value: "#D2D6DC" },
+          { label: "55%", value: "#A4ADBA" },
+          { label: "47%", value: "#818FA4" },
+          { label: "37%", value: "#526B8F" },
+          { label: "20%", value: "#2D5185" },
         ],
         legendLastNumber: "3%",
         init: function (map) {
@@ -407,15 +418,15 @@ export const datasets: Dataset[] = [
               "fill-color": [
                 "case",
                 ["<=", ["get", "PCT_AREA_COOLROOF"], 20],
-                "#212d40",
+                "#2D5185",
                 ["<=", ["get", "PCT_AREA_COOLROOF"], 37],
-                "#4d5766",
+                "#526B8F",
                 ["<=", ["get", "PCT_AREA_COOLROOF"], 47],
-                "#7a818c",
+                "#818FA4",
                 ["<=", ["get", "PCT_AREA_COOLROOF"], 55],
-                "#a6abb3",
+                "#A4ADBA",
                 ["<=", ["get", "PCT_AREA_COOLROOF"], 76],
-                "#d3d5d9",
+                "#D2D6DC",
                 "#000000", // Default color if no match
               ],
             }
@@ -599,12 +610,74 @@ export const datasets: Dataset[] = [
       year: "2025",
     },
     currentView: null,
+    getDates: async () => {
+      return nta_dataset_info.value
+        .filter((dataset) => dataset.type === "air_temp")
+        .map((d: any) => d.date)
+        .sort();
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
         legendTitle: "Average air temperature (°F)",
+        init: function (map, options) {
+          const date = `Air_temp_raster_${options?.date || "20230902"}`;
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
+          );
+          const values = Object.entries(data)
+            .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== ""  && value !== "inf" && !isNaN(Number(value)))
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          console.log(minValue)
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+
+          return createNtaLayer(map, date, this.name, this.legend!, {
+            "fill-color": [
+              "case",
+              ["<=", ["get", date], +bins[1]],
+              "#F4D9CD",
+              ["<=", ["get", date], +bins[2]],
+              "#EFC9A9",
+              ["<=", ["get", date], +bins[3]],
+              "#EBBC85",
+              ["<=", ["get", date], +bins[4]],
+              "#E6AE61",
+              "#E19F3D",
+            ],
+          });
+        },
       },
-      raw: { name: "Raw Data" },
+      raw: {
+        name: "Raw Data",
+        init: function (map, options) {
+          const date = `Air_temp_raster_${options?.date || "20230902"}`;
+          const airTemperatureCleanup = viewAirTemperature(
+            map,
+            options?.date
+          );
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            date,
+            this.name,
+            this.legend!
+          );
+
+          return function onDestroy() {
+            ntaLayerCleanup();
+            airTemperatureCleanup();
+          };
+        },
+      },
     },
   },
   {
@@ -618,47 +691,75 @@ export const datasets: Dataset[] = [
       year: "2025",
     },
     currentView: null,
+    getDates: async () => {
+      return nta_dataset_info.value
+        .filter((dataset) => dataset.type === "air_heat_index")
+        .map((d: any) => d.date)
+        .sort();
+    },
     views: {
       nta: {
         name: "NTA Aggregated",
         legendTitle: "Average air heat index (°F)",
-      },
-      raw: { name: "Raw Data" },
-    },
-  },
+        init: function (map, options) {
+          const date = `Air_Heat_Index_outputs${options?.date || "20230902"}`;
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
+          );
+          const values = Object.entries(data)
+            .filter(([key, value]) => /^[A-Z]{2}\d{2}$/.test(key as string) && value !== "" && value !== "inf" && !isNaN(Number(value)) )
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
 
-  // {
-  //   name: "Parks",
-  //   group: "Heat Mitigation",
-  //   icon: parks,
-  //   currentView: null,
-  //   views: {
-  //     nta: {
-  //       name: "NTA Aggregated",
-  //       legend: [
-  //         { label: 6144, value: "#d4dfda" },
-  //         { label: 4662, value: "#a9bfb5" },
-  //         { label: 3182, value: "#7e9f91" },
-  //         { label: 1702, value: "#537e6c" },
-  //         { label: 222, value: "#295f48" },
-  //       ],
-  //       init: function (map) {
-  //         return createNtaLayer(map, "AVG_DIST_TO_PARKS_FT", this.name, {
-  //           "fill-color": [
-  //             "interpolate",
-  //             ["linear"],
-  //             ["get", "AVG_DIST_TO_PARKS_FT"],
-  //             222,
-  //             "#295f48",
-  //             6144,
-  //             "#d4dfda",
-  //           ],
-  //         });
-  //       },
-  //     },
-  //     raw: { name: "Raw Data" },
-  //   },
-  // },
+          return createNtaLayer(map, date, this.name, this.legend!, {
+            "fill-color": [
+              "case",
+              ["<=", ["get", date], +bins[1]],
+              "#F7E7D0",
+              ["<=", ["get", date], +bins[2]],
+              "#EFC7B1",
+              ["<=", ["get", date], +bins[3]],
+              "#E6A891",
+              ["<=", ["get", date], +bins[4]],
+              "#DE8872",
+              "#D66852",
+            ],
+          });
+        },
+      },
+      raw: {
+        name: "Raw Data",
+        init: function (map, options) {
+          const date = `Air_Heat_Index_outputs${options?.date || "20230902"}`;
+          const airHeatIndexCleanup = viewAirHeatIndex(
+            map,
+            options?.date
+          );
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            date,
+            this.name,
+            this.legend!
+          );
+
+          return function onDestroy() {
+            ntaLayerCleanup();
+            airHeatIndexCleanup();
+          };
+        },
+      },
+    },
+  }  
 ];
 
 let destroyCallback: (() => void) | null = null;
@@ -669,7 +770,6 @@ export async function initializeView(
 ) {
   if (!dataset.currentView || !map) return dataset;
 
-  // remove the previous view
   try {
     if (destroyCallback) destroyCallback();
   } catch (error) {
