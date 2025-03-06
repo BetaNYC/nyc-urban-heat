@@ -3,19 +3,19 @@ import React from "react";
 type Props = {
   title: string;
   tags: string[];
+  content:string,
   clickedIndex?: string;
   setClickedIndex?: (value: string) => void;
 };
 
-const Banner = ({ title, tags, clickedIndex, setClickedIndex }: Props) => {
+const Banner = ({ title, tags, content, clickedIndex, setClickedIndex }: Props) => {
   return (
     <div className="relative flex flex-col justify-center items-center w-full h-[20rem] bg-[#1B1B1B]">
       <div className="container px-5">
         <div className="flex justify-between">
           <h1 className="font-bold text-[3rem] text-[#EBEBEB]">{title}</h1>
           <p className="max-w-[25rem] font-regular text-[1rem] text-[#EBEBEB]">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
+              {content}
           </p>
         </div>
         {tags.length > 0 && (

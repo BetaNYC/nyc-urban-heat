@@ -19,8 +19,6 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         return parseInt(b.date ?? '') - parseInt(a.date ?? '');
     }).map(d => d.date).filter(d => d))]
 
-    console.log(dateOptions)
-
     // get unique file formats
     const formatOptions = [...new Set(urls.map(d => d.format))]
 
@@ -29,7 +27,6 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
     useEffect(() => {
         if(dataset.getDownloadUrls){
             dataset.getDownloadUrls().then(downloadUrls => {
-                console.log(downloadUrls)
                 setUrls(downloadUrls)
             })
         }

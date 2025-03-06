@@ -5,10 +5,11 @@ type Props = {
     title: string,
     cta: string
     content: string,
+    url:string
     // children: ReactNode
 }
 
-const ResourceCard = ({ title, cta, content }: Props) => {
+const ResourceCard = ({ title, cta, content, url }: Props) => {
     return (
         <div className='flex flex-col justify-between p-6 min-h-[20rem] bg-[#EFEFEF] rounded-[0.75rem] '>
             <div className='flex flex-col'>
@@ -25,8 +26,8 @@ const ResourceCard = ({ title, cta, content }: Props) => {
                 </div>
             </div>
             <div className="">
-                {/* <img className="w-6 h-6" src={linkIcon} alt="" /> */}
-                <button className='mt-4 w-[15rem] h-12 font-semibold text-[14px] text-[#F3F3F3] bg-[#333333] rounded-[6px]'>{cta}</button>
+
+                <button className='mt-4 w-[15rem] h-14 font-semibold text-[14px] text-[#F3F3F3] bg-[#333333] rounded-[6px]'  onClick={() => window.open(`${url}`, '_blank')}>{cta}</button>
             </div>
         </div>
     )

@@ -13,7 +13,7 @@ const DownloadPage = () => {
     <>
       <Nav />
       <Banner title="Download" tags={["Dataset"]} clickedIndex={clickedIndex}
-        setClickedIndex={setClickedIndex} />
+        setClickedIndex={setClickedIndex} content="Download the data visualized the NYC Urban Heat Portal for further research and analysis." />
       <div className="flex justify-center pt-8">
         <div className="container px-5">
           <div>
@@ -36,6 +36,12 @@ const DownloadPage = () => {
             />
             <DatasetDownloadRow
               dataset={datasets.find(d => d.name === 'Permeable Surfaces')}
+            />
+            <DatasetDownloadRow
+              dataset={datasets.find(d => d.name === 'Air Temperature')}
+            />
+            <DatasetDownloadRow
+              dataset={datasets.find(d => d.name === 'Air Heat Index')}
             />
           </div>
         </div>
