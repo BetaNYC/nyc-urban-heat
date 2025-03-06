@@ -729,6 +729,7 @@ export const datasets: Dataset[] = [
         .reduce((urls: DownloadUrl[], dataset: any) => {
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
+          console.log(raw_url)
           const relative_url = dataset.downloads_2;
           return [
             ...urls,

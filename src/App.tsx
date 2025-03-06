@@ -45,7 +45,8 @@ function App() {
             .forEach(([key, value]) => {
                 const type = key.startsWith("Air_temp_raster_") ? "air_temp" : "air_heat_index";
                 const date = key.replace("Air_temp_raster_", "").replace("Air_Heat_Index_outputs", "");
-    
+                const downloads = `https://urban-heat-portal-tiles.s3.us-east-1.amazonaws.com/${key}.tif`
+      
                 // 如果這個 metric 尚未在 aggregatedData 創建，則初始化
                 if (!aggregatedData[key]) {
                     aggregatedData[key] = {
@@ -53,7 +54,7 @@ function App() {
                         metric: key,
                         date,
                         type,
-                        downloads: `https://urban-heat-files.s3.amazonaws.com/${key}.geotiff`,
+                        downloads,
                         downloads_2: "tda"
                     };
                 }
