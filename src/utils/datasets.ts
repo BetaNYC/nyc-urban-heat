@@ -84,7 +84,7 @@ export const datasets: Dataset[] = [
     name: "Outdoor Heat Exposure Index",
     group: "",
     icon: outdoorHeatExposureIndex,
-    info: "This index represents the overall risk of heat exposure on summer days in different neighborhoods. Please note that the outdoor temperature and thermal comfort levels are different from indoor conditions. Building quality, exposure to direct radiation, cooling systems, and other building features will be essential in translating outdoor heat into health factors. If you are interested in the health implications of heat exposure, you may need to explore the Heat Vulnerability Index that New York City's Department of Health has provided here: https://a816-dohbesp.nyc.gov/IndicatorPublic/data-features/hvi/ The OHRI can be used in conjunction with HVI but only represents the intensity of outdoor heat in each neighborhood. You can use this index to compare the heat exposure intensity in different communities. ",
+    info: "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments. This index combines mean tree cover, radiant temperature (MRT), surface temperature, permeable surfaces, and cool roofs.",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Outdoor Heat Exposure Index. ",
@@ -153,7 +153,7 @@ export const datasets: Dataset[] = [
     name: "Weather Stations",
     group: "",
     icon: weatherStations,
-    info: "Weather station data is produced using professional sensors and instruments. However, they offer insight into the condition of air around a point. They are a reliable resource if you need to know how temperature is changing day to day. This dataset reports the minimum and maximum air temperature and heat index for any summer day. Such temporal resolution is not available for other heat-related data sources. Also, air temperature is highly variable in different locations, but comparing the temperatures of different weather stations can give you a general idea of the heat distribution in the city.",
+    info: "VisualCrossing weather station locations measure daily air temperature and relative humidity, and are aggregated to show the number of extreme heat days measured per year.",
     externalSource: {
       citation: "Visual Crossing. Timeline Weather Data.",
       year: "2013 - 2023",
@@ -179,7 +179,7 @@ export const datasets: Dataset[] = [
     name: "Mean Radiant Temperature",
     group: "Static Factors",
     icon: meanRadiantTemperature,
-    info: "The Mean Radiant Temperature (MRT) map shows the amount of radiation a pedestrian receives from its environment. The MRT data presents the conditions for only one day (July 15th) as a sample day and only one hour (2 PM, peak radiation). So, this layer does not provide information about heat exposure in other hours. For example, morning or evening hours should be relatively cooler. The MRT layer that is modeled here is spatially static. In other words, the MRT map does not tell you how temperature changes during the day. It shows how the radiation exposure is distributed across the space. The MRT values are highly dependent on shade coverage. Therefore, in the morning hours and later afternoon hours, there will be more shade in the space, and MRT would be lower in any shaded spot. To see how shade affects the MRT values, you can explore the current data (2 PM) and see how shaded areas are more remarkable than those without shade. One thing that you should pay attention to is that at 2 PM, the sun is slightly on the west side of the sky, and therefore, the shade of any objects (buildings and trees) would be on the east side. In later hours (i.e., 4 and 5 PM), the shades would be longer and will cover more space but in the same directions. The shade in the morning will be in the opposite direction of the objects. ",
+    info: "The area-weighted mean temperature of all the objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement).",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Mean Radiant Temperature.",
@@ -263,7 +263,7 @@ export const datasets: Dataset[] = [
     name: "Surface Temperature",
     group: "Static Factors",
     icon: surfaceTemperature,
-    info: `The surface temperature layers represent the temperature of surfaces such as roofs, streets, and pavements. In a given space, the surface temperature will be different from the air temperature or MRT. To know what the surface temperature is, you should touch the surface. On summer days, the surfaces that have been exposed to sunlight are usually much warmer than other surfaces. It is not unusual for an asphalt surface that is exposed to direct sunlight to have a 120F temperature. High surface temperatures eventually warm up the air above it, but there are so many different factors that contribute to that conversion. For example, wind speed and direction are major determinants of how surface temperature will warm up the air above it and how that air moves around. Our goal in urban heat mitigation is to reduce surface temperatures because it eventually reduces the air temperature across the city. Use the surface temperature to see what surfaces are generating heat and what surfaces are generating cool air. Note that parks are cooler, cool roofs are cooler than dark roofs, and trees are cooler than open impervious surfaces such as highways and parking lots.`,
+    info: `The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating.`,
     externalSource: {
       citation:
         "Earth Resources Observation and Science (EROS) Center. Landsat 8-9 Operational Land Imager / Thermal Infrared Sensor Level-2, Collection 2 [dataset]. U.S. Geological Survey",
@@ -373,7 +373,7 @@ export const datasets: Dataset[] = [
     name: "Cool Roofs",
     group: "Static Factors",
     icon: coolRoofs,
-    info: "The cool roof layer shows the buildings that have reflective roofs and the buildings that have dark roofs.",
+    info: "Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.",
     externalSource: {
       citation:
         "Heris, M., George, R., Flohr, T., Avila, A. New York City Cool Roofs. Hunter College City University of New York, Penn State University, and the Mayor's Office of Climate and Environmental Justice of New York.",
@@ -458,7 +458,7 @@ export const datasets: Dataset[] = [
     name: "Tree Canopy",
     group: "Static Factors",
     icon: treeCanopy,
-    info: "The tree canopy map shows what areas in the city are covered by trees.",
+    info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above. Tree canopy areas reduce urban heat island effect.",
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution.",
@@ -538,7 +538,7 @@ export const datasets: Dataset[] = [
     name: "Permeable Surfaces",
     group: "Static Factors",
     icon: premeableSurface,
-    info: "This layer shows the areas that can absorb water and they are usually cooler  than impervious surfaces.",
+    info: "Areas with porous surface materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution",
@@ -606,7 +606,7 @@ export const datasets: Dataset[] = [
     name: "Air Temperature",
     group: "Dynamic Factors",
     icon: airTemperature,
-    info: "The air temperature raster layer is modeled, and therefore, it represents the estimated air temperature for any given cell/pixel. The air temperature layers are estimated based on the surface temperature around a cell and the wind direction and speed at a given hour/day. Therefore, it is specific to the air movement patterns. In other summer days and other hours, the air temperature distribution will have different patterns. If your neighborhood has a higher temperature (compared to its adjacent neighborhoods) in one of the air temperature raster layers, it does not mean that it is always warmer. If the wind direction changes, the air temperature pattern will change, too. That's why we call these layers dynamic layers; they are variable based on wind and regional temperature patterns. If you need to see how the built environment in your neighborhood affects the temperature patterns, we suggest using MRT or surface temperature layers. We call those layers static layers because their spatial pattersn are not very variable.",
+    info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter.",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Temperature.",
@@ -714,7 +714,7 @@ export const datasets: Dataset[] = [
     name: "Air Heat Index",
     group: "Dynamic Factors",
     icon: airHeatIndex,
-    info: "Air heat index raster layer is very similar to the air temperature raster layer. The difference is that the heat index is the combination of air temperature and relative humidity. Similar to the air temperature raster layers, this heat index layer is also modeled based on the wind direction and speed, and therefore, it is a dynamic layer (for more information, please see the use case of the air temperature layer). The heat index is what feels like temperature. In a given temperature, higher relative humidity will create higher heat index values because the evaporating cooling will be more complex, and you will feel warmer. In a weather situation where the relative humidity is lower, it feels like the temperature or heat index will also be lower. Read this page for more information: https://www.weather.gov/ama/heatindex",
+    info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort.",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Heat Index",
