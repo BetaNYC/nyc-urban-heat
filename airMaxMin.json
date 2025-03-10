@@ -1,0 +1,163 @@
+[
+  {
+    "date": "20130601",
+    "AHI_max": 88.1314,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 87.5045,
+    "AirTemp_min": 68.9356
+  },
+  {
+    "date": "20140807",
+    "AHI_max": 128.5613,
+    "AHI_min": 10.0492,
+    "AirTemp_max": 91.6672,
+    "AirTemp_min": 70.185
+  },
+  {
+    "date": "20160609",
+    "AHI_max": 105.0368,
+    "AHI_min": 10.0113,
+    "AirTemp_max": 79.723,
+    "AirTemp_min": 60.3273
+  },
+  {
+    "date": "20160618",
+    "AHI_max": 126.4726,
+    "AHI_min": 10.1153,
+    "AirTemp_max": 87.5045,
+    "AirTemp_min": 68.8349
+  },
+  {
+    "date": "20160625",
+    "AHI_max": 124.9719,
+    "AHI_min": 10.4955,
+    "AirTemp_max": 90.8063,
+    "AirTemp_min": 69.8661
+  },
+  {
+    "date": "20170612",
+    "AHI_max": 121.6364,
+    "AHI_min": 10.0113,
+    "AirTemp_max": 92.0054,
+    "AirTemp_min": 70.1236
+  },
+  {
+    "date": "20190830",
+    "AHI_max": 119.0222,
+    "AHI_min": 10.0113,
+    "AirTemp_max": 84.0833,
+    "AirTemp_min": 69.0539
+  },
+  {
+    "date": "20190922",
+    "AHI_max": 122.2172,
+    "AHI_min": 10.0753,
+    "AirTemp_max": 83.7913,
+    "AirTemp_min": 69.7248
+  },
+  {
+    "date": "20200613",
+    "AHI_max": 90.5109,
+    "AHI_min": 12.1875,
+    "AirTemp_max": 90.5225,
+    "AirTemp_min": 70.1236
+  },
+  {
+    "date": "20200706",
+    "AHI_max": 82.2001,
+    "AHI_min": 54.98,
+    "AirTemp_max": 92.0054,
+    "AirTemp_min": 71.529
+  },
+  {
+    "date": "20210623",
+    "AHI_max": 80.0113,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 89.3182,
+    "AirTemp_min": 70.1236
+  },
+  {
+    "date": "20210826",
+    "AHI_max": 86.8512,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 88.602,
+    "AirTemp_min": 70.5382
+  },
+  {
+    "date": "20220509",
+    "AHI_max": 75.2095,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 83.9164,
+    "AirTemp_min": 70.1236
+  },
+  {
+    "date": "20220619",
+    "AHI_max": 79.0922,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 85.6122,
+    "AirTemp_min": 70.1236
+  },
+  {
+    "date": "20220704",
+    "AHI_max": 81.4202,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 87.5045,
+    "AirTemp_min": 69.0539
+  },
+  {
+    "date": "20220720",
+    "AHI_max": 83.2086,
+    "AHI_min": 54.98,
+    "AirTemp_max": 87.5045,
+    "AirTemp_min": 70.4312
+  },
+  {
+    "date": "20220914",
+    "AHI_max": 77.6477,
+    "AHI_min": 54.98,
+    "AirTemp_max": 85.5045,
+    "AirTemp_min": 71.1005
+  },
+  {
+    "date": "20220915",
+    "AHI_max": 85.0695,
+    "AHI_min": 69.1689,
+    "AirTemp_max": 81.3907,
+    "AirTemp_min": 69.1678
+  },
+  {
+    "date": "20230723",
+    "AHI_max": 82.8971,
+    "AHI_min": 54.98,
+    "AirTemp_max": 90.8063,
+    "AirTemp_min": 70.7246
+  },
+  {
+    "date": "20230731",
+    "AHI_max": 82.4649,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 90.8063,
+    "AirTemp_min": 69.8764
+  },
+  {
+    "date": "20230809",
+    "AHI_max": 81.9676,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 87.3536,
+    "AirTemp_min": 69.5154
+  },
+  {
+    "date": "20230901",
+    "AHI_max": 80.9398,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 89.189,
+    "AirTemp_min": 70.215
+  },
+  {
+    "date": "20230902",
+    "AHI_max": 85.319,
+    "AHI_min": 54.9729,
+    "AirTemp_max": 89.4525,
+    "AirTemp_min": 70.6762
+  }
+]
