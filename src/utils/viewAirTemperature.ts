@@ -14,8 +14,6 @@ const airTemperatureValues = airData.reduce((acc, { date, AirTemp_min, AirTemp_m
   return acc;
 }, {});
 
-console.log(airTemperatureValues)
-
 export function viewAirTemperature(
   map: mapboxgl.Map,
   date: string = "20230902"

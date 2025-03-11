@@ -137,6 +137,7 @@ const NeighborhoodProfile = () => {
 
 
     const profileChangeClickHandler = () => {
+        console.log('aa')
         isNeighborhoodProfileExpanded.value = false
         isWeatherStationProfileExpanded.value = true
         selectedDataset.value = datasets[1]
@@ -533,17 +534,17 @@ const NeighborhoodProfile = () => {
                                 <NeighborhoodProfileBarChart data={barChartData} valueAverage={valueAverage} boro={clickedNeighborhoodInfo.value?.boro} metric={clickedMetric} />}
                         </div>
                     </div>
-                    <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
+                    {/* <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0"> */}
                         {/* <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">
                             Print profile
                         </button> */}
                         {isTablet &&
-                            <div className="flex items-center">
-                                <button className="p-[0.625rem] text-regular text-[#E0E0E0]" onClick={profileChangeClickHandler}>View the closest weather station</button> :
+                            <div className="flex items-center cursor-pointer z-[9999]" onClick={profileChangeClickHandler}>
+                                <button className="p-[0.625rem] text-regular text-[#E0E0E0]" >View the closest weather station</button>
                                 <ArrowLongRightIcon width={20} height={20} className="text-white" />
                             </div>
                         }
-                    </div>
+                    {/* </div> */}
                 </div>
             </div>
         </div>

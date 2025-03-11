@@ -40,7 +40,8 @@ export function createNtaLayer(
   //@ts-ignore
   layerName: string,
   breakpoints: { label: string; value: string }[],
-  fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" }
+  fillPaintStyles: any = { "fill-color": "rgba(0,0,0,0)" },
+  date?: string
 ) {
   const sourceId = metric + "_SOURCE";
   const layerFillId = metric + "_FILL";
@@ -219,6 +220,7 @@ export function createNtaLayer(
         const hoveredNeighbohoodNTAMetrics = out_door_heat_index.value.filter(
           (d) => d.ntacode === ntacode
         )[0];
+
         //@ts-ignore
         hoveredOutDoorHeatIndexClass = (+hoveredNeighbohoodNTAMetrics[
           "Outdooor_Heat_Volnerability_Index"
@@ -232,6 +234,8 @@ export function createNtaLayer(
           +hoveredNeighbohoodNTAMetrics["cool_roof_class"];
         hoveredPermeableSurfaceClass =
           +hoveredNeighbohoodNTAMetrics["Permeable_class"];
+        hoveredSurfaceTemperatureClass =
+          +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
       }
 
       const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
@@ -239,31 +243,51 @@ export function createNtaLayer(
       const textColor =
         selectedMetric < parseInt(sortedBreakpoints[2].label)
           ? "text-[#FFF]"
-          : "text-[#333]"
+          : "text-[#333]";
+      const ascendingTextColor =
+        selectedMetric > parseInt(sortedBreakpoints[2].label)
+          ? "text-[#FFF]"
+          : "text-[#333]";
 
-      const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] ${textColor} rounded-t-[0.75rem]" style="${backgroundColor}">
+      const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] ${
+        metric === `${date}` ? ascendingTextColor : textColor
+      } rounded-t-[0.75rem]" style="${backgroundColor}">
                               <div class="flex flex-col justify-between items-center gap-2">
                                   <div class="font-bold text-[32px] ">${
                                     metric === "PCT_AREA_COOLROOF"
-                                    ? hoveredCoolRoofsClass
-                                    : metric === "NTA_PCT_MRT_Less_Than_110"
-                                    ? hoveredMRTClass
-                                    : metric === "PCT_PERMEABLE"
-                                    ? hoveredPermeableSurfaceClass
-                                    : metric === "PCT_TREES"
-                                    ? hoveredTreeCanopyClass
-                                    : ""
+                                      ? hoveredCoolRoofsClass
+                                      : metric === "NTA_PCT_MRT_Less_Than_110"
+                                      ? hoveredMRTClass
+                                      : metric === "PCT_PERMEABLE"
+                                      ? hoveredPermeableSurfaceClass
+                                      : metric === "PCT_TREES"
+                                      ? hoveredTreeCanopyClass
+                                      : metric === `${date}`
+                                      ? hoveredSurfaceTemperatureClass
+                                      : ""
                                   }.0</div>
                                   <div class="font-regular text-[10px] leading-none">
                                     ${
                                       metric === "PCT_AREA_COOLROOF"
-                                        ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
+                                        ? outDoorHeatIndexTextLevelHandler(
+                                            hoveredCoolRoofsClass
+                                          )
                                         : metric === "NTA_PCT_MRT_Less_Than_110"
-                                        ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
+                                        ? outDoorHeatIndexTextLevelHandler(
+                                            hoveredMRTClass
+                                          )
                                         : metric === "PCT_PERMEABLE"
-                                        ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
+                                        ? outDoorHeatIndexTextLevelHandler(
+                                            hoveredPermeableSurfaceClass
+                                          )
                                         : metric === "PCT_TREES"
-                                        ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
+                                        ? outDoorHeatIndexTextLevelHandler(
+                                            hoveredTreeCanopyClass
+                                          )
+                                        : metric === `${date}`
+                                        ? outDoorHeatIndexTextLevelHandler(
+                                            hoveredSurfaceTemperatureClass
+                                          )
                                         : ""
                                     }
                                   </div>
@@ -334,12 +358,12 @@ export function createNtaLayer(
                   }
               </div>`;
 
-
-
       const outdoorHeatExposureIndexTitle = `
       <div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem]" style="background-color: ${outDoorHeatIndexBackgroundColorHandler(
         hoveredOutDoorHeatIndexClass
-      )};  color: ${outDoorHeatIndexTextColorHandler(hoveredOutDoorHeatIndexClass)};">
+      )};  color: ${outDoorHeatIndexTextColorHandler(
+        hoveredOutDoorHeatIndexClass
+      )};">
                                 <div class="flex flex-col justify-between items-center gap-2">
                                   <div class="font-bold text-[32px] ">${hoveredOutDoorHeatIndexClass}</div>
                                   <div class="font-regular text-[10px] leading-none">${outDoorHeatIndexTextLevelHandler(

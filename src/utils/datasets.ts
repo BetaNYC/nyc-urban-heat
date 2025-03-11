@@ -280,12 +280,13 @@ export const datasets: Dataset[] = [
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
           const relative_url = dataset.downloads_2;
+          console.log(relative_url)
           return [
             ...urls,
             // { name: "Raw", url: raw_url, date: dataset.date, format: "tiff" },
             {
               name: "Relative",
-              url: relative_url,
+              url: raw_url,
               date: dataset.date,
               format: "tiff",
             },
@@ -329,8 +330,17 @@ export const datasets: Dataset[] = [
           const bins = Array.from({ length: 6 }, (_, i) =>
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
+          console.log(bins);
 
-          return createNtaLayer(map, date, this.name, this.legend!, {
+          const legend = [
+            { label: bins[5], value: "#511314" },
+            { label: bins[4], value: "#7a4645" },
+            { label: bins[3], value: "#a37a76" },
+            { label: bins[2], value: "#cbada6" },
+            { label: bins[1], value: "#f4e0d7" },
+          ];
+
+          return createNtaLayer(map, date, this.name, legend, {
             "fill-color": [
               "case",
               ["<=", ["get", date], +bins[1]],
@@ -343,7 +353,7 @@ export const datasets: Dataset[] = [
               "#7a4645",
               "#511314",
             ],
-          });
+          },date);
         },
       },
       raw: {
@@ -550,7 +560,7 @@ export const datasets: Dataset[] = [
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "PCT_PERMEABLE")
         .reduce((urls: DownloadUrl[], dataset: any) => {
-          const tiff_url = dataset.downloads;
+          const tiff_url = dataset.downloads_2;
           return [
             ...urls,
             {
@@ -622,7 +632,7 @@ export const datasets: Dataset[] = [
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
           const relative_url = dataset.downloads_2;
-          console.log()
+          console.log();
           return [
             ...urls,
             // { name: "Raw", url: raw_url, date: dataset.date, format: "tiff" },
@@ -729,7 +739,7 @@ export const datasets: Dataset[] = [
         .reduce((urls: DownloadUrl[], dataset: any) => {
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
-          console.log(raw_url)
+          console.log(raw_url);
           const relative_url = dataset.downloads_2;
           return [
             ...urls,
