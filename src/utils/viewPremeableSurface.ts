@@ -2,6 +2,8 @@ import * as mapboxPmTiles from "mapbox-pmtiles";
 import mapboxgl from "mapbox-gl";
 
 
+import { viewNTABorderLine } from "./viewNTABorderLine";
+
 export function viewPremeableSurface(map: mapboxgl.Map) {
     const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
@@ -30,6 +32,7 @@ export function viewPremeableSurface(map: mapboxgl.Map) {
             type: "raster",
             "layout": { "visibility": "visible" },
             paint: {
+                "raster-opacity": .85,
                 'raster-color': [
                     "interpolate",
                     ["linear"],
@@ -41,10 +44,15 @@ export function viewPremeableSurface(map: mapboxgl.Map) {
                 "raster-resampling": "nearest",
             },
         });
+
+
+    viewNTABorderLine(map)
     });
 
     return function onDestory() {
         map.removeLayer("premeable_surface")
         map.removeSource("premeable_surface")
+        map.removeLayer('nta_outline')
+        map.removeSource("nta");
     }
 }

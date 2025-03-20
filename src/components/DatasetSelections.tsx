@@ -5,6 +5,7 @@ import DatasetSelectionOption from './DatasetSelectionOption'
 import { Dataset, ViewOptions, datasets, initializeView } from '../utils/datasets'
 import { group } from 'd3-array';
 import { ChevronUpIcon, ChevronDownIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid'
+import InformationCircle from './InformationCircle';
 
 
 const groupedDataset = group(datasets, d => d.group)
@@ -66,7 +67,8 @@ const DatasetSelections = () => {
                   {category !== '' ?
                     <div className='px-5 w-[20rem] flex justify-between items-center'>
                       <h3 className="pt-3 pb-1 text-regular text-[#BDBDBD]">{category}</h3>
-                      {/* <InformationCircle size='big'/> */}
+                      {category === "Static Factors" ? <InformationCircle size='small' content='stable based on the built environment'/> : <InformationCircle size='small' content='variable due to changes wind direction changes, these layers are dependent on'/>}            
+
                     </div>
 
                     : ''}

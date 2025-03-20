@@ -1,7 +1,7 @@
 import * as mapboxPmTiles from 'mapbox-pmtiles';
 import mapboxgl from "mapbox-gl"
 
-
+import { viewNTABorderLine } from "./viewNTABorderLine";
 export function viewTreeCanopy(map: mapboxgl.Map) {
     const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
@@ -30,6 +30,7 @@ export function viewTreeCanopy(map: mapboxgl.Map) {
             type: "raster",
             "layout": { "visibility": "visible" },
             paint: {
+                "raster-opacity": .85,
                 'raster-color': [
                     'case',
                     ['==', ['raster-value'], 0], 'rgba(0, 0, 0, 0)', 
@@ -38,10 +39,14 @@ export function viewTreeCanopy(map: mapboxgl.Map) {
                 "raster-resampling": "nearest",
             },
         });
+
+        viewNTABorderLine(map)
     });
 
     return function onDestory() {
         map.removeLayer('tree_canopy')
         map.removeSource('tree_canopy')
+        map.removeLayer('nta_outline')
+        map.removeSource("nta");
     }
 }

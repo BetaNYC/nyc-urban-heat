@@ -92,7 +92,7 @@ export const datasets: Dataset[] = [
     },
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
-        .filter((dataset) => dataset.metric === "MRT")
+        .filter((dataset) => dataset.metric === "Outdooor_Heat_Volnerability_Index")
         .reduce((urls: DownloadUrl[], dataset: any) => {
           const tiff_url = dataset.downloads;
           return [
@@ -280,7 +280,6 @@ export const datasets: Dataset[] = [
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
           const relative_url = dataset.downloads_2;
-          console.log(relative_url)
           return [
             ...urls,
             // { name: "Raw", url: raw_url, date: dataset.date, format: "tiff" },
@@ -296,7 +295,6 @@ export const datasets: Dataset[] = [
       return urls;
     },
     getDates: async () => {
-      console.log();
       return nta_dataset_info.value
         .filter((dataset) => dataset.type === "surface_temp")
         .map((d: any) => d.date)
@@ -330,7 +328,6 @@ export const datasets: Dataset[] = [
           const bins = Array.from({ length: 6 }, (_, i) =>
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
-          console.log(bins);
 
           const legend = [
             { label: bins[5], value: "#511314" },
@@ -359,7 +356,38 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = `ST_${options?.date || "20230731"}`;
+          const date = `ST_${options?.date || "20230902"}`;
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
+          );
+          const values = Object.entries(data)
+            .filter(
+              ([key, value]) =>
+                /^[A-Z]{2}\d{2}$/.test(key as string) && value !== ""
+            ) // 只保留符合地區代碼格式的鍵
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          // 轉換成浮點數
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          // 3. 計算四個等距的數字
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+
+
+          const legend = [
+            { label: bins[5], value: "#511314" },
+            { label: bins[4], value: "#7a4645" },
+            { label: bins[3], value: "#a37a76" },
+            { label: bins[2], value: "#cbada6" },
+            { label: bins[1], value: "#f4e0d7" },
+          ]
           const surfaceTemperatureCleanup = viewSurfaceTemperature(
             map,
             options?.date
@@ -368,7 +396,21 @@ export const datasets: Dataset[] = [
             map,
             date,
             this.name,
-            this.legend!
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", date], +bins[1]],
+                "#f4e0d7",
+                ["<=", ["get", date], +bins[2]],
+                "#cbada6",
+                ["<=", ["get", date], +bins[3]],
+                "#a37a76",
+                ["<=", ["get", date], +bins[4]],
+                "#7a4645",
+                "#511314",
+              ],
+            },date
           );
 
           return function onDestroy() {
@@ -449,15 +491,21 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         init: function (map) {
-          // const ntaLayerCleanup = createNtaLayer(
-          //   map,
-          //   "PCT_AREA_COOLROOF",
-          //   this.name,
-          //   this.legend!
-          // );
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            "PCT_AREA_COOLROOF",
+            this.name,
+            [
+              { label: "76%", value: "#D2D6DC" },
+              { label: "55%", value: "#A4ADBA" },
+              { label: "47%", value: "#818FA4" },
+              { label: "37%", value: "#526B8F" },
+              { label: "20%", value: "#2D5185" },
+            ]
+          );
           const coolRoofsCleanup = viewCoolRoofs(map);
           return function onDestroy() {
-            // ntaLayerCleanup();
+            ntaLayerCleanup();
             coolRoofsCleanup();
           };
         },
@@ -532,7 +580,13 @@ export const datasets: Dataset[] = [
             map,
             "PCT_TREES",
             this.name,
-            this.legend!
+            [
+              { label: "50%", value: "#d6dfe1" },
+              { label: "24%", value: "#adbec3" },
+              { label: "20%", value: "#859ea4" },
+              { label: "17%", value: "#5c7d86" },
+              { label: "14%", value: "#335d68" },
+            ],
           );
           const treeCanopyCleanup = viewTreeCanopy(map);
           return function onDestroy() {
@@ -608,7 +662,25 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         legend: [],
-        init: (map) => viewPremeableSurface(map),
+        init: function(map) {
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            "PCT_PERMEABLE",
+            this.name,
+            [
+              { label: "71%", value: "#f3d9b1" },
+              { label: "20%", value: "#dabb8b" },
+              { label: "10%", value: "#c19d65" },
+              { label: "6%", value: "#a87e3e" },
+              { label: "4%", value: "#8f6018" },
+            ],
+          );
+          const premeableSurfaceCleanup =  viewPremeableSurface(map)
+          return function onDestroy(){
+            ntaLayerCleanup();
+            premeableSurfaceCleanup()
+          }
+        },
       },
     },
   },
@@ -616,13 +688,13 @@ export const datasets: Dataset[] = [
     name: "Air Temperature",
     group: "Dynamic Factors",
     icon: airTemperature,
-    info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter.",
+    info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter which is calculated at 3pm in the following dates",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Temperature.",
       year: "2025",
     },
-    currentView: null,
+    currentView: 'raw',
     dates: [],
     currentDate: null,
     getDownloadUrls: async () => {
@@ -632,7 +704,6 @@ export const datasets: Dataset[] = [
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
           const relative_url = dataset.downloads_2;
-          console.log();
           return [
             ...urls,
             // { name: "Raw", url: raw_url, date: dataset.date, format: "tiff" },
@@ -673,7 +744,6 @@ export const datasets: Dataset[] = [
             .map(([_, value]) => parseFloat(value as string).toFixed(1));
           //@ts-ignore
           const minValue = Math.min(...values).toFixed(1);
-          console.log(minValue);
           //@ts-ignore
           const maxValue = Math.max(...values).toFixed(1);
           const step = (
@@ -684,7 +754,15 @@ export const datasets: Dataset[] = [
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
 
-          return createNtaLayer(map, date, this.name, this.legend!, {
+          const legend = [
+            { label: bins[5], value: "#E19F3D" },
+            { label: bins[4], value: "#E6AE61" },
+            { label: bins[3], value: "#EBBC85" },
+            { label: bins[2], value: "#EFC9A9" },
+            { label: bins[1], value: "#F4D9CD" },
+          ];
+
+          return createNtaLayer(map, date, this.name, legend, {
             "fill-color": [
               "case",
               ["<=", ["get", date], +bins[1]],
@@ -704,13 +782,52 @@ export const datasets: Dataset[] = [
         name: "Raw Data",
         init: function (map, options) {
           const date = `Air_temp_raster_${options?.date || "20230902"}`;
-          const airTemperatureCleanup = viewAirTemperature(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(
-            map,
-            date,
-            this.name,
-            this.legend!
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
           );
+          const values = Object.entries(data)
+            .filter(
+              ([key, value]) =>
+                /^[A-Z]{2}\d{2}$/.test(key as string) &&
+                value !== "" &&
+                value !== "inf" &&
+                !isNaN(Number(value))
+            )
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+
+          const legend = [
+            { label: bins[5], value: "#E19F3D" },
+            { label: bins[4], value: "#E6AE61" },
+            { label: bins[3], value: "#EBBC85" },
+            { label: bins[2], value: "#EFC9A9" },
+            { label: bins[1], value: "#F4D9CD" },
+          ];
+          const airTemperatureCleanup = viewAirTemperature(map, options?.date);
+          const ntaLayerCleanup = createNtaLayer(map, date, this.name, legend, {
+            "fill-color": [
+              "case",
+              ["<=", ["get", date], +bins[1]],
+              "#F4D9CD",
+              ["<=", ["get", date], +bins[2]],
+              "#EFC9A9",
+              ["<=", ["get", date], +bins[3]],
+              "#EBBC85",
+              ["<=", ["get", date], +bins[4]],
+              "#E6AE61",
+              "#E19F3D",
+            ],
+          });
 
           return function onDestroy() {
             ntaLayerCleanup();
@@ -724,13 +841,13 @@ export const datasets: Dataset[] = [
     name: "Air Heat Index",
     group: "Dynamic Factors",
     icon: airHeatIndex,
-    info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort.",
+    info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort. The parameter is calculated at 3pm in the following dates",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Heat Index",
       year: "2025",
     },
-    currentView: null,
+    currentView: "raw",
     dates: [],
     currentDate: null,
     getDownloadUrls: async () => {
@@ -739,7 +856,6 @@ export const datasets: Dataset[] = [
         .reduce((urls: DownloadUrl[], dataset: any) => {
           // todo: setup csv in a better format
           const raw_url = dataset.downloads;
-          console.log(raw_url);
           const relative_url = dataset.downloads_2;
           return [
             ...urls,
@@ -791,7 +907,15 @@ export const datasets: Dataset[] = [
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
 
-          return createNtaLayer(map, date, this.name, this.legend!, {
+          const legend = [
+            { label: bins[5], value: "#D66852" },
+            { label: bins[4], value: "#7a4645" },
+            { label: bins[3], value: "#E6A891" },
+            { label: bins[2], value: "#EFC7B1" },
+            { label: bins[1], value: "#F7E7D0" },
+          ]
+
+          return createNtaLayer(map, date, this.name, legend, {
             "fill-color": [
               "case",
               ["<=", ["get", date], +bins[1]],
@@ -811,13 +935,51 @@ export const datasets: Dataset[] = [
         name: "Raw Data",
         init: function (map, options) {
           const date = `Air_Heat_Index_outputs${options?.date || "20230902"}`;
-          const airHeatIndexCleanup = viewAirHeatIndex(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(
-            map,
-            date,
-            this.name,
-            this.legend!
+          const data = nta_dataset_info.value.find(
+            (dataset) => dataset.metric === date
           );
+          const values = Object.entries(data)
+            .filter(
+              ([key, value]) =>
+                /^[A-Z]{2}\d{2}$/.test(key as string) &&
+                value !== "" &&
+                value !== "inf" &&
+                !isNaN(Number(value))
+            )
+            .map(([_, value]) => parseFloat(value as string).toFixed(1));
+          //@ts-ignore
+          const minValue = Math.min(...values).toFixed(1);
+          //@ts-ignore
+          const maxValue = Math.max(...values).toFixed(1);
+          const step = (
+            (parseFloat(maxValue) - parseFloat(minValue)) /
+            5
+          ).toFixed(1);
+          const bins = Array.from({ length: 6 }, (_, i) =>
+            (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
+          );
+          const legend = [
+            { label: bins[5], value: "#D66852" },
+            { label: bins[4], value: "#7a4645" },
+            { label: bins[3], value: "#E6A891" },
+            { label: bins[2], value: "#EFC7B1" },
+            { label: bins[1], value: "#F7E7D0" },
+          ]
+          const airHeatIndexCleanup = viewAirHeatIndex(map, options?.date);
+          const ntaLayerCleanup = createNtaLayer(map, date, this.name, legend, {
+            "fill-color": [
+              "case",
+              ["<=", ["get", date], +bins[1]],
+              "#F7E7D0",
+              ["<=", ["get", date], +bins[2]],
+              "#EFC7B1",
+              ["<=", ["get", date], +bins[3]],
+              "#E6A891",
+              ["<=", ["get", date], +bins[4]],
+              "#DE8872",
+              "#D66852",
+            ],
+          });
 
           return function onDestroy() {
             ntaLayerCleanup();

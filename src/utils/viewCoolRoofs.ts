@@ -2,6 +2,8 @@
 import * as mapboxPmTiles from "mapbox-pmtiles";
 import mapboxgl from "mapbox-gl";
 
+import { viewNTABorderLine } from "./viewNTABorderLine";
+
 export function viewCoolRoofs(map: mapboxgl.Map) {
   const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
@@ -26,6 +28,7 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
       type: "raster",
       layout: { visibility: "visible" },
       paint: {
+        "raster-opacity": .85,
         "raster-color": [
           "interpolate",
           ["linear"], 
@@ -38,18 +41,15 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
       },
     });
 
-    const source = map.getSource("cool_roofs");
-    // if (source) {
-    //   console.log(source);
-    // }
 
-    // map.on("click", "cool_roofs", (e) => {
-    // })
+    viewNTABorderLine(map)
   });
 
   return function onDestory() {
     map.removeLayer("cool_roofs");
     map.removeSource("cool_roofs");
+    map.removeLayer('nta_outline')
+    map.removeSource("nta");
   };
 
   // see attributes here

@@ -9,13 +9,18 @@ import AirTemperatureLineChart from "./AirTemperatureLineChart";
 
 import { ChevronLeftIcon, ChevronRightIcon, InformationCircleIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid'
 
-import { isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, clickedAddress, clickedWeatherStationName, map, weatherStationProfileData, clickedNeighborhoodInfo, clickedWeatherStationPopup, clickedNeighborhoodPopup, clickedWeatherStationNeighborhoodID } from "../pages/MapPage";
+import {
+    isNeighborhoodProfileExpanded, isWeatherStationProfileExpanded, selectedDataset, clickedAddress, clickedWeatherStationName, map, weatherStationProfileData, clickedNeighborhoodInfo, clickedWeatherStationPopup, clickedNeighborhoodPopup, clickedWeatherStationNeighborhoodID, clickedWeatherStationHeatEventDays,
+    clickedWeatherStationHeatAdvisoryDays,
+    clickedWeatherStationExcesiveHeatDays,
+
+} from "../pages/MapPage";
 
 import { datasets, initializeView } from "../utils/datasets"
 
 import { WeatherStationData } from "../types";
 
-import { fetchWeatherStationData } from "../utils/api";
+import { fetchStationHeatStats, fetchWeatherStationData } from "../utils/api";
 
 
 import nta from "../data/nta.geo.json"
@@ -31,6 +36,15 @@ const WeatherStationProfile = () => {
     const currentWeatherStationName = clickedWeatherStationName.value
 
     const [weatherStationData, setWeatherStationData] = useState<WeatherStationData[]>([]);
+    const [heatStatusData, setHeatStatusData] = useState<{
+        excessiveHeatDays:number,
+        heatAdvisoryDays:number,
+        heatEventDays:number
+    }>({
+        excessiveHeatDays:0,
+        heatAdvisoryDays:0,
+        heatEventDays:0
+    })
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,7 +53,20 @@ const WeatherStationProfile = () => {
                 ...d,
                 datetime: new Date(d.datetime)
             }));
+
+            const heatStatusRes = await fetchStationHeatStats()
+            // @ts-ignore
+            const heatData = await heatStatusRes.features.filter(d => d.properties.year === currentYear).filter(d => d.properties.address === currentAddress)[0]
+            const heatDaysData = {
+                excessiveHeatDays:heatData.properties['Days_with_NWS_Excessive_Heat_Event'],
+                heatAdvisoryDays:heatData.properties['Days_with_NWS_HeatAdvisory'],
+                heatEventDays:heatData.properties['Days_with_NYC_HeatEvent']
+            }
+
             setWeatherStationData(data)
+            setHeatStatusData(heatDaysData)
+
+
         }
         fetchData()
     }, [currentYear, currentAddress, currentWeatherStationName])
@@ -65,10 +92,13 @@ const WeatherStationProfile = () => {
         Normal_Temp_Min: d.Normal_Temp_Min!,
     }));
 
+    console.log(weatherStationData.filter(d => d.ExcessiveHeat === "Excessive_Heat_Event").length)
+    console.log(weatherStationData.filter(d => d.HeatAdvisory === "Heat_Advisory_Event").length)
+    console.log(weatherStationData.filter(d => d.NYC_HeatEvent === "NYC_Heat_Event").length)
 
-    const heatEventDays = weatherStationData.filter(d => d.NYC_HeatEvent !== "").length;
-    const heatAdvisoryDays = weatherStationData.filter(d => d.HeatAdvisory !== "").length;
-    const excessiveHeatDays = weatherStationData.filter(d => d.ExcessiveHeat !== "").length;
+    const heatEventDays = heatStatusData.heatEventDays;
+    const heatAdvisoryDays = heatStatusData.heatAdvisoryDays;
+    const excessiveHeatDays = heatStatusData.excessiveHeatDays;
 
     const aboveHistoricMaxDays = weatherStationData.filter(d => d.feelslikemax > d.Record_Max).length
     const aboveHistoricMinDays = weatherStationData.filter(d => d.feelslikemin > d.Record_Min).length
@@ -265,7 +295,7 @@ const WeatherStationProfile = () => {
                                 <div className="">
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Heat Index </h2>
-                                        <InformationCircle size="small" content="Number of days per year when the air heat index temperature meets NWS and NYC extreme heat advisory criteria."/>
+                                        <InformationCircle size="small" content="Number of days per year when the air heat index temperature meets NWS and NYC extreme heat advisory criteria." />
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular">Extreme Heat days in {currentYear}</h2>
                                     <div className="">
@@ -286,7 +316,7 @@ const WeatherStationProfile = () => {
                                 <div>
                                     <div className="flex items-center gap-2">
                                         <h2 className="font-medium text-[#F2F2F2] text-regular">Air Temperature</h2>
-                                        <InformationCircle size="small" content="Number of days per year when the minimum and maximum air temperature exceeds the historic normals between 1991-2020."/>
+                                        <InformationCircle size="small" content="Number of days per year when the minimum and maximum air temperature exceeds the historic normals between 1991-2020." />
                                     </div>
                                     <h2 className="mb-2 font-medium text-[#F2F2F2] text-regular"> Days Exceeding Historic Normal in {currentYear}</h2>
                                     <div className="">
@@ -350,12 +380,12 @@ const WeatherStationProfile = () => {
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#EE745D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Max Daily Temperature</p>
-                                                <InformationCircle size="small" content="Number of days per year when the maximum air temperature exceeds the historic normals between 1991-2020."/>
+                                                <InformationCircle size="small" content="Number of days per year when the maximum air temperature exceeds the historic normals between 1991-2020." />
                                             </div>
                                             <div className="flex items-center gap-2">
                                                 <div className="w-6 h-[2px] bg-[#49808D] rounded-full"></div>
                                                 <p className="w-[7.5rem] font-regular text-xsmall text-[#BDBDBD]">Min Daily Temperature</p>
-                                                <InformationCircle size="small" content="Number of days per year when the minimum air temperature exceeds the historic normals between 1991-2020."/>
+                                                <InformationCircle size="small" content="Number of days per year when the minimum air temperature exceeds the historic normals between 1991-2020." />
                                             </div>
                                         </div>
                                         {
@@ -365,17 +395,17 @@ const WeatherStationProfile = () => {
                                                     <div className="flex items-center gap-2 ">
                                                         <div className="w-4 h-2 bg-[#823E35]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Excessive Heat</p>
-                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F."/>
+                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 105° F or higher for at least 2 days and night time air temperatures do not drop below 75° F." />
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#A46338]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NWS Heat Advisory</p>
-                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F."/>
+                                                        <InformationCircle size="small" content="Periods when the maximum heat index temperature is 100° F or higher for at least 2 days, and night time air temperatures do not drop below 75° F." />
                                                     </div>
                                                     <div className="flex items-center gap-2">
                                                         <div className="w-4 h-2 bg-[#AD844A]"></div>
                                                         <p className="w-[6.75rem] font-regular text-xsmall text-[#999]">NYC Heat Event</p>
-                                                        <InformationCircle size="small" content="Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days."/>
+                                                        <InformationCircle size="small" content="Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days." />
                                                     </div>
                                                 </div> :
                                                 <div>
@@ -428,12 +458,12 @@ const WeatherStationProfile = () => {
                         </div>
                         {/* <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0">
                             <button className="min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">Print Profile</button> */}
-                            {isTablet &&
-                                <div className="flex items-center cursor-pointer z-[999]">
-                                    <button className="p-[0.625rem] text-regular text-[#E0E0E0] " onClick={profileChangeClickHandler}>View the Outdoor Heat Exposure Index for this neighborhood</button> :
-                                    <ArrowLongRightIcon width={20} height={20} className="text-white" />
-                                </div> 
-                            }
+                        {isTablet &&
+                            <div className="flex items-center cursor-pointer z-[999]">
+                                <button className="p-[0.625rem] text-regular text-[#E0E0E0] " onClick={profileChangeClickHandler}>View the Outdoor Heat Exposure Index for this neighborhood</button> :
+                                <ArrowLongRightIcon width={20} height={20} className="text-white" />
+                            </div>
+                        }
                         {/* </div> */}
                     </div>
                 )}

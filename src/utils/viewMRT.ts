@@ -2,6 +2,8 @@ import * as mapboxPmTiles from "mapbox-pmtiles";
 import mapboxgl from "mapbox-gl";
 import { nta_dataset_info } from "../App";
 
+import { viewNTABorderLine } from "./viewNTABorderLine";
+
 export function viewMRT(map: mapboxgl.Map) {
   const { PmTilesSource, SOURCE_TYPE } = mapboxPmTiles;
 
@@ -28,7 +30,7 @@ export function viewMRT(map: mapboxgl.Map) {
       "source-layer": "raster-layer",
       type: "raster",
       paint: {
-        "raster-opacity": 0.8,
+        "raster-opacity": 0.85,
         "raster-color": [
           "interpolate",
           ["linear"],
@@ -47,10 +49,15 @@ export function viewMRT(map: mapboxgl.Map) {
         "raster-resampling": "nearest",
       },
     });
+
+
+    viewNTABorderLine(map)
   });
 
   return function onDestory() {
     map.removeLayer("mrt");
     map.removeSource("mrt");
+    map.removeLayer('nta_outline')
+    map.removeSource("nta");
   };
 }

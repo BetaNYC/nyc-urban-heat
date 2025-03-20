@@ -2,6 +2,8 @@ import * as mapboxPmTiles from "mapbox-pmtiles";
 import mapboxgl from "mapbox-gl";
 import airData from "../../public/airMaxMin.json"
 
+import { viewNTABorderLine } from "./viewNTABorderLine";
+
   //@ts-ignore
 const generateSequence = (min, max) => {
   const step = (max - min) / 5;
@@ -41,33 +43,37 @@ export function viewAirTemperature(
       layout: { visibility: "visible" },
       interactive: true,
       paint: {
-        "raster-opacity": 1,
+        "raster-opacity": 0.85,
         "raster-color": [
           "interpolate",
           ["linear"],
           ["raster-value"],
             //@ts-ignore
           airTemperatureValues[date][0] / 255,
-          "#F4D9CD",
+          "#98c1d9",
             //@ts-ignore
           airTemperatureValues[date][1] / 255,
-          "#EFC9A9",
+          "#ffe6a8",
             //@ts-ignore
           airTemperatureValues[date][2] / 255,
-          "#EBBC85",
+          "#ffbba8",
             //@ts-ignore
           airTemperatureValues[date][3] / 255,
-          "#E6AE61",
+          "#d66852",
             //@ts-ignore
           airTemperatureValues[date][4] / 255,
-          "#E19F3D",
+          "#511113",
         ],
       },
     });
+
+    viewNTABorderLine(map)
   });
 
   return function onDestroy() {
     map.removeLayer("air_temperature");
     map.removeSource("air_temperature");
+    map.removeLayer('nta_outline')
+    map.removeSource("nta");
   };
 }

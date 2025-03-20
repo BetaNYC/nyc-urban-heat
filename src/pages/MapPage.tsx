@@ -37,6 +37,10 @@ export const clickedNeighborhoodInfo = signal<{
   nta: "West Village"
 })
 
+export const clickedWeatherStationHeatEventDays = signal<number>(0)
+export const clickedWeatherStationHeatAdvisoryDays = signal<number>(0)
+export const clickedWeatherStationExcesiveHeatDays = signal<number>(0)
+
 export const clickedWeatherStationNeighborhoodID = signal<string | null>(null)
 export const clickedNeighborhoodNearestStationAddress = signal<string | null>(null)
 

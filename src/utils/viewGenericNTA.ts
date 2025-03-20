@@ -200,14 +200,13 @@ export function createNtaLayer(
         ntaname,
         [metric]: selectedMetric,
       } = e.features[0].properties as any;
-
       const sortedBreakpoints = breakpoints.sort(
         (a, b) => parseInt(b.label) - parseInt(a.label)
       );
 
       const selectedBreakpoint = breakpoints.find(
         (breakpoint, index, array) => {
-          const currentLabel = parseInt(breakpoint.label);
+          const currentLabel = parseFloat(breakpoint.label);
           const nextLabel =
             index < array.length - 1
               ? parseInt(array[index + 1].label)
@@ -215,6 +214,7 @@ export function createNtaLayer(
           return selectedMetric <= currentLabel && selectedMetric > nextLabel;
         }
       );
+
 
       if (out_door_heat_index.value.length) {
         const hoveredNeighbohoodNTAMetrics = out_door_heat_index.value.filter(
@@ -237,6 +237,8 @@ export function createNtaLayer(
         hoveredSurfaceTemperatureClass =
           +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
       }
+
+
 
       const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
 
@@ -315,9 +317,9 @@ export function createNtaLayer(
                   </div>
                   <div class="flex items-start gap-3">
                     <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="${backgroundColor}">
-                      <div class='font-bold text-[1rem] ${textColor}'>${Math.round(
-        selectedMetric
-      )}%</div>              
+                      <div class='font-bold text-[1rem]  ${
+                        metric === `${date}` ? ascendingTextColor : textColor
+                      }'>${Math.round(selectedMetric)}%</div>              
                     </div>
                     <div>
                       <div class="font-semibold text-[1rem] text-white whitespace-nowrap">

@@ -102,7 +102,6 @@ const Legends = () => {
                     .map(([_, value]) => parseFloat(value as string).toFixed(1));
                 //@ts-ignore
                 const minValue = Math.min(...values).toFixed(1);
-                console.log(minValue)
                 //@ts-ignore
                 const maxValue = Math.max(...values).toFixed(1);
                 const step = (
@@ -374,7 +373,7 @@ const Legends = () => {
                             <span>high</span>
                         </div>
                         <div className='flex my-1 h-5'>
-                            <div className='w-full h-full bg-gradient-to-r from-[#F4D9CD] via-[#EFC9A9,#EBBC85,#E6AE61] to-[#E19F3D]'></div>
+                            <div className='w-full h-full bg-gradient-to-r from-[#98c1d9] via-[#ffe6a8,#ffbba8,#d66852] to-[#511113]'></div>
                             {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
@@ -419,7 +418,7 @@ const Legends = () => {
                             <span>high</span>
                         </div>
                         <div className='flex my-1 h-5'>
-                            <div className='w-full h-full bg-gradient-to-r from-[#F7E7D0] via-[#EFC7B1,#E6A891,#DE8872] to-[#D66852]'></div>
+                            <div className='w-full h-full bg-gradient-to-r from-[#98c1d9] via-[#ffe6a8,#ffbba8,#d66852] to-[#511113]'></div>
                             {/* <div className='w-[50%] h-full bg-gradient-to-r from-[] via-[] to-[]'></div> */}
                         </div>
                         <div className='flex justify-between text-xsmall text-[#F4F4F4]'>

@@ -18,10 +18,12 @@ import {
   previousClickCor,
   clickedWeatherStationPopup,
   clickedNeighborhoodNearestStationAddress,
+  clickedWeatherStationHeatEventDays,
+  clickedWeatherStationHeatAdvisoryDays,
+  clickedWeatherStationExcesiveHeatDays,
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
-import ntaFeatureCollection from "../data/nta.geo.json";
 
 export function viewWeatherStations(map: mapboxgl.Map, year: number) {
   fetchStationHeatStats().then((data) => {
@@ -159,12 +161,23 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
       "click",
       "weather_stations_heat_event",
       (event: MapMouseEvent & EventData) => {
-        const { address, name } = event.features[0].properties;
+        const {
+          address,
+          name,
+          Days_with_NWS_Excessive_Heat_Event,
+          Days_with_NWS_HeatAdvisory,
+          Days_with_NYC_HeatEvent,
+        } = event.features[0].properties;
 
         clickedAddress.value = address;
         clickedWeatherStationName.value = name;
         isWeatherStationProfileExpanded.value = true;
         isDataSelectionExpanded.value = false;
+        clickedWeatherStationHeatEventDays.value = Days_with_NYC_HeatEvent;
+        clickedWeatherStationHeatAdvisoryDays.value =
+          Days_with_NWS_HeatAdvisory;
+        clickedWeatherStationExcesiveHeatDays.value =
+          Days_with_NWS_Excessive_Heat_Event;
 
         const clickedLat = event.lngLat.lat;
         const clickedLng = event.lngLat.lng;
