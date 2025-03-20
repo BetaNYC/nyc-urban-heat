@@ -8,34 +8,52 @@ const AboutPage = () => {
       <Banner title="About" tags={[]} content="Learn more about the NYC Urban Heat Portal and the team that created it." />
       <div className="flex justify-center py-9">
         <div className="px-5 container">
-          <div className="mb-12">
+          <div className="mb-8">
             <h1 className="mb-2 font-semibold text-headline">About the project</h1>
-            <p className="font-light text-small">The NYC Urban Heat Portal was created by a team of researchers with urban heat island, microclimate, design and planning, statistical, and computational expertise. The tool combines several sources of ecological, meteorological, remote sensing, and GIS (Geographic Information System) data specific to New York City. This project was partially funded by NASA's Applied Sciences program.</p>
+            <p className="font-light text-small">Higher temperatures in urban areas pose risks to public health and will continue to be intensified as temperatures increase globally. This raises important questions for planners and environmental justice advocates. What is the intensity of heat in the city? Who is affected the most? How can we understand and measure it? And how can we mitigate it?
+              We know that there is a lot of confusion around different types of temperatures, such as surface temperature, air temperature, air heat index, and mean radiant temperature. Each of these measures paints one part of urban heat science. To understand how heat is distributed, we need to understand these and combine them.
+
+              Our team of researchers designed the New York City Urban Heat Portal with the goal of making urban heat data accessible to empower community groups and policymakers with their planning and advocacy strategies.
+
+              The NYC Urban Heat Portal maps and visualizes several temperature measures for heat exposure to offer actionable insights in comparable profiles. To measure the overall risk of heat exposure in neighborhoods across New York City, the Outdoor Heat Exposure Index combines outdoor environmental factors, including mean radiant temperature, surface temperature, cool roofs, tree canopy, and permeable surfaces. Daily weather station data during summer months can also be explored to compare locations with more days per year (between 2013-2023) that qualify for extreme heat advisory conditions.
+
+              Data visualized on the NYC Urban Heat Portal is available for download in multiple formats for stakeholders to use the data to conduct further research and analysis to support efforts to raise awareness, mobilize communities, and influence policy.</p>
           </div>
-          <div>
+          <div className="mb-8">
             <div className="mb-2">
               <h1 className="mb-2 font-semibold text-headline">Team</h1>
             </div>
-            <div className="mb-4">
-              <h2 className="mb-1 font-semibold text-subheadline">Hunter College</h2>
-              <p className="font-light text-small">Mehdi Heris, project lead</p>
-              <p className="font-light text-small">Peter Marcotullio, science collaborator</p>
-              <p className="font-light text-small">Andrew Reinman, science collaborator</p>
+            <div className="mb-2">
+              <h2 className="mb-1 font-semibold text-subheadline">Urban Heat Science and Data Preparation</h2>
+              <p className="font-light text-small">Mehdi P. Heris; Hunter College</p>
+              <p className="font-light text-small">Travis Flohr; Penn State University</p>
+              <p className="font-light text-small">Artem Pankin; Hunter College</p>
+              <p className="font-light text-small">Andrew Kittredge; Hunter College</p>
+              <p className="font-light text-small">Peter Marcotullio; Hunter College</p>
+              <p className="font-light text-small">Andrew Reinman; Hunter College</p>
+            </div>
+            <div className="mb-2">
+              <h2 className="mb-1 font-semibold text-subheadline">NYC Urban Heat Portal Design, Data Visualization & Web Development </h2>
+              <p className="font-light text-small">Ashley Louie, former Chief Technology Officer, BetaNYC</p>
+              <p className="font-light text-small">Hao Lun Hung, Frontend Development, BetaNYC</p>
+              <p className="font-light text-small">Hailee Luong, User Experience Design, BetaNYC</p>
+              <p className="font-light text-small">Zhi Keng He, Software Engineering, BetaNYC</p>
+              <p className="font-light text-small">Andrew Kittredge, Civic Innovation Lab Director, BetaNYC</p>
             </div>
             <div className="mb-4">
-              <h2 className="mb-1 font-semibold text-subheadline">The Pennsylvania State University</h2>
-              <p className="font-light text-small">Travis Flohr</p>
+              <h2 className="mb-1 font-semibold text-subheadline">Interviews, Advocacy</h2>
+              <p className="font-light text-small">Hunter College</p>
+              <p className="font-light text-small">Marisa Valley</p>
+              <p className="font-light text-small">Haijing Liu</p>
+            </div>
+          </div>
+          <div>
+            <div className="mb-2">
+              <h1 className="mb-2 font-semibold text-headline">Acknowledgements</h1>
             </div>
             <div className="mb-4">
-              <h2 className="mb-1 font-semibold text-subheadline">BetaNYC</h2>
-              <p className="font-light text-small">Ashley Louie, former Chief Technology Officer</p>
-              <p className="font-light text-small">Hao Lun Hung, Frontend Development</p>
-              <p className="font-light text-small">Hailee Luong, User Experience Design</p>
-              <p className="font-light text-small">Zhi Keng He, Software Engineering</p>
-              <p className="font-light text-small">Andrew Kittredge, Civic Innovation Lab Director</p>
-            </div>
-            <div className="mb-4">
-              <h2 className="mb-1 font-semibold text-subheadline">Acknowledgements</h2>
+              <h2 className="mb-1 font-semibold text-subheadline"></h2>
+              <p className="mb-1 selection:font-light text-small">The NYC Urban Heat Portal was partially funded by NASA's Applied Sciences program.</p>
               <p className="mb-1 selection:font-light text-small">Special thanks to the community-based groups that supported the creation of the NYC Urban Heat Portal through feedback in interviews and workshops.</p>
               <p className="font-light text-small">Mayor's Office of Climate and Environmental Justice</p>
               <p className="font-light text-small">WE ACT</p>
