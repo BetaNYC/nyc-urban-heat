@@ -305,9 +305,10 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average surface temperature (°F)",
         init: function (map, options) {
-          const date = `ST_${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `ST_${options?.date || "20230902"}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -337,16 +338,16 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#f4e0d7" },
           ];
 
-          return createNtaLayer(map, date, this.name, legend, {
+          return createNtaLayer(map, metric, this.name, legend, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], +bins[1]],
+              ["<=", ["get", metric], +bins[1]],
               "#f4e0d7",
-              ["<=", ["get", date], +bins[2]],
+              ["<=", ["get", metric], +bins[2]],
               "#cbada6",
-              ["<=", ["get", date], +bins[3]],
+              ["<=", ["get", metric], +bins[3]],
               "#a37a76",
-              ["<=", ["get", date], +bins[4]],
+              ["<=", ["get", metric], +bins[4]],
               "#7a4645",
               "#511314",
             ],
@@ -356,9 +357,10 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = `ST_${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `ST_${options?.date || "20230902"}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric 
           );
           const values = Object.entries(data)
             .filter(
@@ -394,19 +396,19 @@ export const datasets: Dataset[] = [
           );
           const ntaLayerCleanup = createNtaLayer(
             map,
-            date,
+            metric ,
             this.name,
             legend,
             {
               "fill-color": [
                 "case",
-                ["<=", ["get", date], +bins[1]],
+                ["<=", ["get", metric ], +bins[1]],
                 "#f4e0d7",
-                ["<=", ["get", date], +bins[2]],
+                ["<=", ["get", metric ], +bins[2]],
                 "#cbada6",
-                ["<=", ["get", date], +bins[3]],
+                ["<=", ["get", metric ], +bins[3]],
                 "#a37a76",
-                ["<=", ["get", date], +bins[4]],
+                ["<=", ["get", metric ], +bins[4]],
                 "#7a4645",
                 "#511314",
               ],
@@ -729,9 +731,10 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average air temperature (°F)",
         init: function (map, options) {
-          const date = `Air_temp_raster_${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `Air_temp_raster_${date}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -762,28 +765,29 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#F4D9CD" },
           ];
 
-          return createNtaLayer(map, date, this.name, legend, {
+          return createNtaLayer(map, metric, this.name, legend, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], +bins[1]],
+              ["<=", ["get", metric], +bins[1]],
               "#F4D9CD",
-              ["<=", ["get", date], +bins[2]],
+              ["<=", ["get", metric], +bins[2]],
               "#EFC9A9",
-              ["<=", ["get", date], +bins[3]],
+              ["<=", ["get", metric], +bins[3]],
               "#EBBC85",
-              ["<=", ["get", date], +bins[4]],
+              ["<=", ["get", metric], +bins[4]],
               "#E6AE61",
               "#E19F3D",
             ],
-          });
+          }, date);
         },
       },
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = `Air_temp_raster_${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `Air_temp_raster_${date}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -814,20 +818,20 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#F4D9CD" },
           ];
           const airTemperatureCleanup = viewAirTemperature(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(map, date, this.name, legend, {
+          const ntaLayerCleanup = createNtaLayer(map, metric, this.name, legend, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], +bins[1]],
+              ["<=", ["get", metric], +bins[1]],
               "#F4D9CD",
-              ["<=", ["get", date], +bins[2]],
+              ["<=", ["get", metric], +bins[2]],
               "#EFC9A9",
-              ["<=", ["get", date], +bins[3]],
+              ["<=", ["get", metric], +bins[3]],
               "#EBBC85",
-              ["<=", ["get", date], +bins[4]],
+              ["<=", ["get", metric], +bins[4]],
               "#E6AE61",
               "#E19F3D",
             ],
-          });
+          },date);
 
           return function onDestroy() {
             ntaLayerCleanup();
@@ -882,9 +886,10 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average air heat index (°F)",
         init: function (map, options) {
-          const date = `Air_Heat_Index_outputs${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `Air_Heat_Index_outputs${date}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -909,34 +914,35 @@ export const datasets: Dataset[] = [
 
           const legend = [
             { label: bins[5], value: "#D66852" },
-            { label: bins[4], value: "#7a4645" },
+            { label: bins[4], value: "#DE8872" },
             { label: bins[3], value: "#E6A891" },
             { label: bins[2], value: "#EFC7B1" },
             { label: bins[1], value: "#F7E7D0" },
           ]
 
-          return createNtaLayer(map, date, this.name, legend, {
+          return createNtaLayer(map, metric, this.name, legend, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], +bins[1]],
+              ["<=", ["get", metric], +bins[1]],
               "#F7E7D0",
-              ["<=", ["get", date], +bins[2]],
+              ["<=", ["get", metric], +bins[2]],
               "#EFC7B1",
-              ["<=", ["get", date], +bins[3]],
+              ["<=", ["get", metric], +bins[3]],
               "#E6A891",
-              ["<=", ["get", date], +bins[4]],
+              ["<=", ["get", metric], +bins[4]],
               "#DE8872",
               "#D66852",
             ],
-          });
+          },date);
         },
       },
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = `Air_Heat_Index_outputs${options?.date || "20230902"}`;
+          const date = options?.date || "20230902"
+          const metric = `Air_Heat_Index_outputs${date}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === date
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -960,26 +966,26 @@ export const datasets: Dataset[] = [
           );
           const legend = [
             { label: bins[5], value: "#D66852" },
-            { label: bins[4], value: "#7a4645" },
+            { label: bins[4], value: "#DE8872" },
             { label: bins[3], value: "#E6A891" },
             { label: bins[2], value: "#EFC7B1" },
             { label: bins[1], value: "#F7E7D0" },
           ]
           const airHeatIndexCleanup = viewAirHeatIndex(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(map, date, this.name, legend, {
+          const ntaLayerCleanup = createNtaLayer(map, metric, this.name, legend, {
             "fill-color": [
               "case",
-              ["<=", ["get", date], +bins[1]],
+              ["<=", ["get", metric], +bins[1]],
               "#F7E7D0",
-              ["<=", ["get", date], +bins[2]],
+              ["<=", ["get", metric], +bins[2]],
               "#EFC7B1",
-              ["<=", ["get", date], +bins[3]],
+              ["<=", ["get", metric], +bins[3]],
               "#E6A891",
-              ["<=", ["get", date], +bins[4]],
+              ["<=", ["get", metric], +bins[4]],
               "#DE8872",
               "#D66852",
             ],
-          });
+          },date);
 
           return function onDestroy() {
             ntaLayerCleanup();
