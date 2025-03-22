@@ -160,10 +160,8 @@ const Legends = () => {
     })
 
 
-
     //@ts-ignore
     const legendLastNum = selectedDataset.value?.views[selectedDataset.value.currentView].legendLastNumber
-
 
 
 

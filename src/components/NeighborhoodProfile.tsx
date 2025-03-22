@@ -137,7 +137,6 @@ const NeighborhoodProfile = () => {
 
 
     const profileChangeClickHandler = () => {
-        console.log('aa')
         isNeighborhoodProfileExpanded.value = false
         isWeatherStationProfileExpanded.value = true
         selectedDataset.value = datasets[1]

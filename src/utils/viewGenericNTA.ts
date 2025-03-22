@@ -7,6 +7,7 @@ import { GeoJSONTransformHandler } from "./geojson";
 import { format } from "d3-format";
 import { nta_dataset_info, out_door_heat_index } from "../App";
 import {
+  selectedDataset,
   isNeighborhoodProfileExpanded,
   neighborhoodProfileData,
   clickedNeighborhoodPopup,
@@ -14,11 +15,12 @@ import {
   previousClickCor,
   clickedNeighborhoodInfo,
   clickedWeatherStationNeighborhoodID,
+  isWeatherStationProfileExpanded,
 } from "../pages/MapPage";
 
 import "../pages/Map.css";
 import { centerOfMass } from "@turf/turf";
-import { useEffect } from "react";
+import { datasets, initializeView  } from "./datasets";
 
 let hoveredNtacode: null | string = null;
 let clickedNtacode: null | string = null;
@@ -254,7 +256,11 @@ export function createNtaLayer(
           ? "pl-0 pr-[1rem]"
           : "px-[1rem]"
       }  pt-[0.75rem] pb-[0.5rem] ${
-        metric.includes("Air_temp") || metric.includes("Air_Heat_Index") || metric.includes("ST_20") ? ascendingTextColor : textColor
+        metric.includes("Air_temp") ||
+        metric.includes("Air_Heat_Index") ||
+        metric.includes("ST_20")
+          ? ascendingTextColor
+          : textColor
       } rounded-t-[0.75rem]" style="${backgroundColor}">
                               <div class="flex flex-col justify-between items-center gap-2">
                                   <div class="font-bold text-[32px] ">${
@@ -301,7 +307,7 @@ export function createNtaLayer(
                                   <h1 class='font-medium text-[0.75rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
                               </div>
                           </div>`;
-      console.log(backgroundColor)
+
       const details = `
               <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem]">
                   <div class="font-medium text-[0.75rem] text-white leading-normal">
@@ -320,7 +326,11 @@ export function createNtaLayer(
                   <div class="flex items-start gap-3">
                     <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="${backgroundColor}">
                       <div class='font-bold text-[1rem]  ${
-                        metric.includes("Air_temp") || metric.includes("Air_Heat_Index") || metric.includes("ST_20") ? ascendingTextColor : textColor
+                        metric.includes("Air_temp") ||
+                        metric.includes("Air_Heat_Index") ||
+                        metric.includes("ST_20")
+                          ? ascendingTextColor
+                          : textColor
                       }'>${Math.round(selectedMetric)}%</div>              
                     </div>
                     <div>
@@ -346,7 +356,10 @@ export function createNtaLayer(
                         metric.includes("Air_Heat_Index") ||
                         metric.includes("ST_20")
                           ? `<div class='font-light text-[0.75rem] text-[#D9D9D9] leading-normal'>
-                              in ${ntaname} on ${date!.slice(4)} ${date!.slice(0, 4)} 
+                              in ${ntaname} on ${date!.slice(4)} ${date!.slice(
+                              0,
+                              4
+                            )} 
                               </div>`
                           : ""
                       }
@@ -461,7 +474,6 @@ export function createNtaLayer(
 </div>
       `;
 
-
       const divElement = document.createElement("div");
 
       divElement.innerHTML =
@@ -523,81 +535,95 @@ export function createNtaLayer(
   });
 
   map?.on("click", layerFillId, (e: MapLayerMouseEvent) => {
-    if (clickedNeighborhoodInfo.value.code !== null) {
-      map.setFeatureState(
-        { source: sourceId, id: clickedNeighborhoodInfo.value.code },
-        { clicked: false }
-      );
+    if (
+      layerFillId.includes("Air_temp_raster_") ||
+      layerFillId.includes("Air_Heat_Index_")
+    ) {
+      console.log('aa')
+      // selectedDataset.value = datasets[1]
+      // initializeView(datasets[1], map).then(dataset => {
+      //   selectedDataset.value = { ...dataset }
+      // })
+      // // isWeatherStationProfileExpanded.value = true
+      // isDataSelectionExpanded.value = false
+
+    } else {
+      if (clickedNeighborhoodInfo.value.code !== null) {
+        map.setFeatureState(
+          { source: sourceId, id: clickedNeighborhoodInfo.value.code },
+          { clicked: false }
+        );
+      }
+
+      const { ntacode, ntaname, boroname } = e.features![0].properties as any;
+
+      clickedNeighborhoodInfo.value = {
+        code: ntacode,
+        boro: boroname,
+        nta: ntaname,
+      };
+
+      isNeighborhoodProfileExpanded.value = true;
+      isDataSelectionExpanded.value = false;
+
+      const clickedLat = e.lngLat.lat;
+      const clickedLng = e.lngLat.lng;
+
+      previousClickCor.value = [clickedLng, clickedLat];
+
+      const bounds = map.getBounds();
+
+      const centerCoordinates = map.getCenter();
+      const centerLng = centerCoordinates.lng;
+
+      const mapWidth = bounds.getEast() - bounds.getWest();
+
+      const targetLng = bounds.getWest() + mapWidth * 0.175;
+
+      const newLng = centerLng + (clickedLng - targetLng) * 0.65;
+
+      const offsetLat = 0.005;
+      const tooltipLat = clickedLat + offsetLat;
+
+      if (clickedNeighborhoodPopup) {
+        clickedNeighborhoodPopup.value?.remove();
+        clickedNeighborhoodPopup.value = null;
+      }
+
+      clickedNeighborhoodPopup.value = new mapboxgl.Popup({
+        closeButton: false,
+        closeOnClick: false,
+        className: "clicked-popup",
+      })
+        .setLngLat([clickedLng, tooltipLat])
+        .setHTML(`<div class='clicked-nta'>${ntaname}</div>`)
+        .addTo(map);
+
+      map.flyTo({
+        center: [newLng, clickedLat],
+        zoom: map.getZoom(),
+        essential: true,
+        duration: 2000,
+        easing: (t) => t * (2.5 - t),
+      });
+
+      if (clickedNtacode !== null) {
+        map.setFeatureState(
+          { source: sourceId, id: clickedNtacode },
+          { clicked: false }
+        );
+      }
+
+      if (clickedWeatherStationNeighborhoodID !== null) {
+        map.setFeatureState(
+          { source: sourceId, id: clickedWeatherStationNeighborhoodID.value! },
+          { clicked: false }
+        );
+      }
+
+      clickedNtacode = ntacode;
+      map.setFeatureState({ source: sourceId, id: ntacode }, { clicked: true });
     }
-
-    const { ntacode, ntaname, boroname } = e.features![0].properties as any;
-
-    clickedNeighborhoodInfo.value = {
-      code: ntacode,
-      boro: boroname,
-      nta: ntaname,
-    };
-
-    isNeighborhoodProfileExpanded.value = true;
-    isDataSelectionExpanded.value = false;
-
-    const clickedLat = e.lngLat.lat;
-    const clickedLng = e.lngLat.lng;
-
-    previousClickCor.value = [clickedLng, clickedLat];
-
-    const bounds = map.getBounds();
-
-    const centerCoordinates = map.getCenter();
-    const centerLng = centerCoordinates.lng;
-
-    const mapWidth = bounds.getEast() - bounds.getWest();
-
-    const targetLng = bounds.getWest() + mapWidth * 0.175;
-
-    const newLng = centerLng + (clickedLng - targetLng) * 0.65;
-
-    const offsetLat = 0.005;
-    const tooltipLat = clickedLat + offsetLat;
-
-    if (clickedNeighborhoodPopup) {
-      clickedNeighborhoodPopup.value?.remove();
-      clickedNeighborhoodPopup.value = null;
-    }
-
-    clickedNeighborhoodPopup.value = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: false,
-      className: "clicked-popup",
-    })
-      .setLngLat([clickedLng, tooltipLat])
-      .setHTML(`<div class='clicked-nta'>${ntaname}</div>`)
-      .addTo(map);
-
-    map.flyTo({
-      center: [newLng, clickedLat],
-      zoom: map.getZoom(),
-      essential: true,
-      duration: 2000,
-      easing: (t) => t * (2.5 - t),
-    });
-
-    if (clickedNtacode !== null) {
-      map.setFeatureState(
-        { source: sourceId, id: clickedNtacode },
-        { clicked: false }
-      );
-    }
-
-    if (clickedWeatherStationNeighborhoodID !== null) {
-      map.setFeatureState(
-        { source: sourceId, id: clickedWeatherStationNeighborhoodID.value! },
-        { clicked: false }
-      );
-    }
-
-    clickedNtacode = ntacode;
-    map.setFeatureState({ source: sourceId, id: ntacode }, { clicked: true });
   });
 
   return function onDestory() {
@@ -628,4 +654,3 @@ export function removeAllPopupsAndBorders(map: mapboxgl.Map, sourceId: string) {
     }
   }
 }
-

@@ -92,9 +92,6 @@ const WeatherStationProfile = () => {
         Normal_Temp_Min: d.Normal_Temp_Min!,
     }));
 
-    console.log(weatherStationData.filter(d => d.ExcessiveHeat === "Excessive_Heat_Event").length)
-    console.log(weatherStationData.filter(d => d.HeatAdvisory === "Heat_Advisory_Event").length)
-    console.log(weatherStationData.filter(d => d.NYC_HeatEvent === "NYC_Heat_Event").length)
 
     const heatEventDays = heatStatusData.heatEventDays;
     const heatAdvisoryDays = heatStatusData.heatAdvisoryDays;

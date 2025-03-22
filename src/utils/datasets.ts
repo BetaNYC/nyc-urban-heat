@@ -171,6 +171,7 @@ export const datasets: Dataset[] = [
     views: {
       points: {
         name: "Raw Data",
+        legendLastNumber: "0",
         init: (map, options) => viewWeatherStations(map, options?.year!),
       },
     },
