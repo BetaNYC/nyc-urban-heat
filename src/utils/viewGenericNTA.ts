@@ -236,8 +236,6 @@ export function createNtaLayer(
           +hoveredNeighbohoodNTAMetrics["cool_roof_class"];
         hoveredPermeableSurfaceClass =
           +hoveredNeighbohoodNTAMetrics["Permeable_class"];
-        hoveredSurfaceTemperatureClass =
-          +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
       }
 
       const backgroundColor = `background-color: ${selectedBreakpoint!.value}`;
@@ -331,7 +329,7 @@ export function createNtaLayer(
                         metric.includes("ST_20")
                           ? ascendingTextColor
                           : textColor
-                      }'>${Math.round(selectedMetric)}%</div>              
+                      }'>${Math.round(selectedMetric)}${metric.includes("ST_20") ? "°F":"%"} </div>              
                     </div>
                     <div>
                       <div class="font-semibold text-[1rem] text-white whitespace-nowrap">

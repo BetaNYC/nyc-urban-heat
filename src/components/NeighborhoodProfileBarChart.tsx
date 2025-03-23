@@ -1,6 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
+import { nta_dataset_info, out_door_heat_index } from "../App";
+import ntaFeatureCollection from "../data/nta.geo.json";
+
 type Props = {
     data: { neighborhood: string; value: number }[];
     isActive?: boolean;
@@ -24,8 +27,6 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
         const { width, height } = svgRef.current.getBoundingClientRect();
         const tooltip = document.getElementById("tooltip");
 
-
-
         const margin = { top: 10, right: 20, bottom: 50, left: 65 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
@@ -44,7 +45,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("font-size", "16px")
             .style("font-weight", "bold")
             .style("fill", "#333")
-            .text("Neighborhood Tree Canopy Profile");
+        // .text("Neighborhood Tree Canopy Profile");
 
         const chart = svg
             .append("g")
@@ -75,14 +76,14 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .nice()
             .range([innerHeight, 0]);
 
-        chart
-            .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -199)
-            .attr("y", -margin.left + 21)
-            .style("font-size", "12px")
-            .style("fill", "#ababab")
-            .text("Percentage area of tree canopy");
+        // chart
+        //     .append("text")
+        //     .attr("transform", "rotate(-90)")
+        //     .attr("x", -199)
+        //     .attr("y", -margin.left + 21)
+        //     .style("font-size", "12px")
+        //     .style("fill", "#ababab")
+        //     .text("Percentage area of tree canopy");
 
         let colorPalette, colorDomain;
 
@@ -149,6 +150,33 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("stroke-width", 1);  // 线的宽度
 
 
+        let hoveredOutDoorHeatIndexClass = 0;
+        let hoveredMRTClass = 0;
+        let hoveredTreeCanopyClass = 0;
+        let hoveredSurfaceTemperatureClass = 0;
+        let hoveredCoolRoofsClass = 0;
+        let hoveredPermeableSurfaceClass = 0;
+
+
+        const outDoorHeatIndexTextLevelHandler = (
+            hoveredOutDoorHeatIndexClass: number
+        ) => {
+            switch (true) {
+                case hoveredOutDoorHeatIndexClass < 1:
+                    return "low";
+                case hoveredOutDoorHeatIndexClass < 2:
+                    return "med-low";
+                case hoveredOutDoorHeatIndexClass < 3:
+                    return "med";
+                case hoveredOutDoorHeatIndexClass < 4:
+                    return "med-high";
+                case hoveredOutDoorHeatIndexClass <= 5:
+                    return "high";
+                default:
+                    return "unknown";
+            }
+        };
+
 
         chart
             .selectAll(".bar")
@@ -162,40 +190,184 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("height", 0)
             .attr("fill", (d) => colorScale(d.value))
             .on("mousemove", (event, index) => {
+                const [xPos, yPos] = d3.pointer(event, svgRef.current);
                 const ntacode = index.neighborhood
-                //     const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] ${textColor} rounded-t-[0.75rem]" style="${backgroundColor}">
-                //     <div class="flex flex-col justify-between items-center gap-2">
-                //         <div class="font-bold text-[32px] ">${metric === "PCT_AREA_COOLROOF"
-                //             ? hoveredCoolRoofsClass
-                //             : metric === "NTA_PCT_MRT_Less_Than_110"
-                //                 ? hoveredMRTClass
-                //                 : metric === "PCT_PERMEABLE"
-                //                     ? hoveredPermeableSurfaceClass
-                //                     : metric === "PCT_TREES"
-                //                         ? hoveredTreeCanopyClass
-                //                         : ""
-                //         }.0</div>
-                //         <div class="font-regular text-[10px] leading-none">
-                //           ${metric === "PCT_AREA_COOLROOF"
-                //             ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
-                //             : metric === "NTA_PCT_MRT_Less_Than_110"
-                //                 ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
-                //                 : metric === "PCT_PERMEABLE"
-                //                     ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
-                //                     : metric === "PCT_TREES"
-                //                         ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
-                //                         : ""
-                //         }
-                //         </div>
-                //       </div>
-                //     <div>
-                //         <h1 class='mb-1 font-bold text-[1rem] leading-tight'>${ntaname}</h1>
-                //         <h1 class='font-medium text-[0.75rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
-                //     </div>
-                // </div>`;
-                tooltip!.innerHTML = `<strong>aaa</strong><br/>`;
-                tooltip!.style.left = `${event.offsetX + 10}px`;
-                tooltip!.style.top = `${event.offsetY + 10}px`;
+                // @ts-ignore
+                const ntaFeatures = ntaFeatureCollection.features
+                // @ts-ignore
+                const ntaname = ntaFeatures.filter(f => f.properties.ntacode === ntacode)[0].properties.ntaname
+                // @ts-ignore
+                const boroname = ntaFeatures.filter(f => f.properties.ntacode === ntacode)[0].properties.boroname
+                const color = event.target.getAttribute('fill')
+
+                if (out_door_heat_index.value.length) {
+                    const hoveredNeighbohoodNTAMetrics = out_door_heat_index.value.filter(
+                        (d) => d.ntacode === ntacode
+                    )[0];
+
+                    //@ts-ignore
+                    hoveredOutDoorHeatIndexClass = (+hoveredNeighbohoodNTAMetrics[
+                        "Outdooor_Heat_Volnerability_Index"
+                    ]).toFixed(1);
+                    hoveredMRTClass = +hoveredNeighbohoodNTAMetrics["MRT_class"];
+                    hoveredTreeCanopyClass =
+                        +hoveredNeighbohoodNTAMetrics["pct_tree_class"];
+                    hoveredSurfaceTemperatureClass =
+                        +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
+                    hoveredCoolRoofsClass =
+                        +hoveredNeighbohoodNTAMetrics["cool_roof_class"];
+                    hoveredPermeableSurfaceClass =
+                        +hoveredNeighbohoodNTAMetrics["Permeable_class"];
+                    hoveredSurfaceTemperatureClass =
+                        +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
+                }
+
+                const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
+                                <div class="flex flex-col justify-between items-center ">
+                                    <div class="font-bold text-[16px] ">${metric === "PCT_AREA_COOLROOF"
+                        ? `${hoveredCoolRoofsClass}.0` : metric === "NTA_PCT_MRT_Less_Than_110"
+                            ? `${hoveredMRTClass}.0` : metric === "PCT_PERMEABLE"
+                                ? `${hoveredPermeableSurfaceClass}.0` : metric === "PCT_TREES"
+                                    ? `${hoveredTreeCanopyClass}.0` : metric === "SURFACETEMP"
+                                        ? `${hoveredSurfaceTemperatureClass}.0`
+                                        : ""}
+                                    </div>
+                                    <div class="font-regular text-[10px] leading-none">
+                                        ${metric === "PCT_AREA_COOLROOF" ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
+                        : metric === "NTA_PCT_MRT_Less_Than_110"
+                            ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
+                            : metric === "PCT_PERMEABLE"
+                                ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
+                                : metric === "PCT_TREES"
+                                    ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
+                                    : metric.includes("ST_20")
+                                        ? outDoorHeatIndexTextLevelHandler(hoveredSurfaceTemperatureClass)
+                                        : ""}
+                                    </div>
+                                </div>
+                                <div>
+                                  <h1 class='mb-1 font-bold text-[0.8rem] leading-tight'>${ntaname}</h1>
+                                  <h1 class='font-medium text-[0.5rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
+                              </div>
+                            </div>`;
+
+                const outdoorHeatExposureIndexTitle = `
+                            <div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem] text-[#FFF]" style="background-color: ${color};">
+                                                      <div class="flex flex-col justify-between items-center">
+                                                        <div class="font-bold text-[18px] ">${hoveredOutDoorHeatIndexClass}</div>
+                                                        <div class="font-regular text-[10px] leading-none">${outDoorHeatIndexTextLevelHandler(
+                    hoveredOutDoorHeatIndexClass
+                )}</div>
+                                                      </div>
+                      
+                                                    <div>
+                                                        <h1 class='mb-1 font-bold text-[1rem] leading-none'>${ntaname}</h1>
+                                                        <h1 class='font-medium text-[0.75rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
+                                                    </div>
+                                                </div>
+                            `;
+
+                const details = `<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] max-w-[360px] bg-[#333] rounded-b-[0.75rem]">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="background-color:${color}">
+                                            <div class='font-bold text-[12px] text-white'>${Math.round(index.value)} ${metric === 'SURFACETEMP' ? "°F" : "%"} </div>
+                                        </div>
+                                        <div class="font-semibold text-[0.75rem] text-white whitespace-nowrap">
+                                         ${metric === "PCT_AREA_COOLROOF"
+                        ? "Area of buildings with cool roofs"
+                        : metric === "NTA_PCT_MRT_Less_Than_110"
+                            ? "Outdoor area with thermal comfort"
+                            : metric === "PCT_PERMEABLE"
+                                ? "Area with permeable surfaces"
+                                : metric === "PCT_TREES"
+                                    ? "Area covered by tree canopy"
+                                    : "Average Surface Temperature"
+                    }                    
+                                        </div>
+                                    </div>
+                                </div>`;
+
+                const outdoorHeatExposureIndexDetails = `
+                                <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[0.5rem] py-[1rem] max-w-[360px] font-regular text-white bg-[#333] rounded-b-[0.75rem]">
+                                  <div class="flex items-center gap-4">
+                                    <div 
+                                      class="flex justify-center items-center w-[20px] h-8 font-medium text-[8px] bg-[#C68165] border-[1px] border-white" 
+                                      style="background-color: ${color};">
+                                      ${hoveredMRTClass}
+                                    </div>
+                                    <div>
+                                        <div class="text-[14px] text-white">Mean Radiant Temperature</div>
+                                    </div>
+                                  </div>
+                                  <div class="flex items-center gap-4">
+                                    <div 
+                                      class="flex justify-center items-center w-[20px] h-8 font-semibold text-[8px] bg-[#F4E0D7] border-[1px] border-white" 
+                                      style="background-color: ${color}};">
+                                      ${hoveredSurfaceTemperatureClass}
+                                    </div>
+                                    <div>
+                                        <div class="text-[14px] text-white">Surface Temperature</div>
+                                    </div>
+                                  </div>
+                                  <div class="flex items-center gap-4">
+                                    <div 
+                                      class="flex justify-center items-center w-[20px] h-8 font-semibold text-[8px] bg-[#D2D4D8] border-[1px] border-white" 
+                                      style="background-color: ${color};
+                                           ">
+                                      ${hoveredCoolRoofsClass}
+                                    </div>
+                                    <div>
+                                        <div class="text-[14px] text-white">Cool Roofs</div>
+                                    </div>
+                                
+                                  </div>
+                                  <div class="flex items-center gap-4">
+                                    <div 
+                                      class="flex justify-center items-center w-[20px] h-8 font-semibold text-[8px] bg-[#5C7D86] border-[1px] border-white" 
+                                      style="background-color: ${color};
+                                             ">
+                                      ${hoveredTreeCanopyClass}
+                                    </div>
+                                    <div>
+                                        <div class="text-[14px] text-white">Tree Canopy</div>
+
+                                    </div>
+                                  </div>
+                                  <div class="flex items-center gap-4">
+                                    <div 
+                                      class="flex justify-center items-center w-[20px] h-8 font-semibold text-[8px] bg-[#F3D9B1] border-[1px] border-white" 
+                                      style="background-color: ${color};">
+                                      ${hoveredPermeableSurfaceClass}
+                                    </div>
+                                    <div>
+                                        <div class="text-[14px] text-white">Permable Surfaces</div>
+                                    </div>    
+                                  </div>
+                                </div>
+                                      `;
+
+                tooltip!.innerHTML = metric === "Outdooor_Heat_Volnerability_Index"
+                    ? outdoorHeatExposureIndexTitle
+                    : title + details;
+
+                    const tooltipEl = tooltip!;
+                    const tooltipRect = tooltipEl.getBoundingClientRect();
+                    const containerWidth = svgRef.current?.clientWidth || window.innerWidth;
+                    const tooltipWidth = tooltipRect.width;
+                    const tooltipHeight = tooltipRect.height;
+                
+                    let tooltipLeft = xPos + 10;
+                    let tooltipTop = yPos - tooltipHeight / 2;
+                
+                    // 如果碰到右邊邊緣，往左顯示
+                    if (xPos + tooltipWidth + 20 > containerWidth) {
+                        tooltipLeft = xPos - tooltipWidth - 10;
+                    }
+                
+
+                
+                    tooltipEl.style.left = `${tooltipLeft}px`;
+                    tooltipEl.style.top = `${tooltipTop}px`;
 
                 tooltip!.classList.remove("hidden");
             })
@@ -246,7 +418,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("font-size", "12px")
             .style("fill", "#cccccb")
             .style("font-weight", "semibold")
-            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.NY} New York City Average` : `${valueAverage.NY}% New York City Average`);
+            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.NY} New York City Average` : `${valueAverage.NY} New York City Average`);
 
         chart
             .append("text")
@@ -257,7 +429,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .style("font-size", "12px")
             .style("fill", "#cccccb")
             .style("font-weight", "semibold")
-            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.boro} ${boro} Average` : `${valueAverage.boro}% ${boro} Average`);
+            .text(metric === 'Outdooor_Heat_Volnerability_Index' ? `${valueAverage.boro} ${boro} Average` : `${valueAverage.boro} ${boro} Average`);
     }
 
     useEffect(() => {
@@ -275,7 +447,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
     return (
         <div className="relative w-full h-full">
             <svg className="w-full h-[80%]" ref={svgRef} />;
-            <div id="tooltip" className="hidden absolute bg-white text-black text-xs px-2 py-1 rounded shadow-md pointer-events-none" />
+            <div id="tooltip" className="hidden absolute rounded shadow-md pointer-events-none" />
         </div>
     )
 
