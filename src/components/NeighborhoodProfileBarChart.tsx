@@ -222,7 +222,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                         +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
                 }
 
-                const title = `<div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
+                const title = `<div class="flex items-end gap-4 px-[1rem]  text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
                                 <div class="flex flex-col justify-between items-center ">
                                     <div class="font-bold text-[16px] ">${metric === "PCT_AREA_COOLROOF"
                         ? `${hoveredCoolRoofsClass}.0` : metric === "NTA_PCT_MRT_Less_Than_110"
@@ -252,7 +252,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                             </div>`;
 
                 const outdoorHeatExposureIndexTitle = `
-                            <div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem] text-[#FFF]" style="background-color: ${color};">
+                            <div class="flex items-center gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem] text-[#FFF]" style="background-color: ${color};">
                                                       <div class="flex flex-col justify-between items-center">
                                                         <div class="font-bold text-[18px] ">${hoveredOutDoorHeatIndexClass}</div>
                                                         <div class="font-regular text-[10px] leading-none">${outDoorHeatIndexTextLevelHandler(
