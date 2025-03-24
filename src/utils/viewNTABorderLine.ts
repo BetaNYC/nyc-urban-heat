@@ -24,7 +24,7 @@ export function viewNTABorderLine(map: mapboxgl.Map, metric?: string) {
     source: "nta",
     layout: {},
     paint: {
-      "line-color": metric === "NTA_PCT_MRT_Less_Than_110" ? "#D3D3D3" : metric === "PCT_AREA_COOLROOF" ? "#D3D3D3" : metric === "PCT_TREES" ? "#D3D3D3" :"#FFF",
+      "line-color": metric === "NTA_PCT_MRT_Less_Than_110" ? "#A9A9A9" : metric === "PCT_AREA_COOLROOF" ? "#A9A9A9" : metric === "PCT_TREES" ? "#A9A9A9" :"#FFF",
       "line-width": 1,
     },
   });
