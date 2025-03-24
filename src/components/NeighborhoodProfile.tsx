@@ -376,7 +376,7 @@ const NeighborhoodProfile = () => {
                         <h2 className="md:mb-4 text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro} <span className="font-medium md:text-subheadline">{clickedNeighborhoodInfo.value?.code}</span></h2>
                         {
                             isTablet &&
-                            <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-y-auto scrollbar">
+                            <p className="flex-1 p-4 text-small text-[#D5D5D5] border-[1px] border-[#333] rounded-[0.75rem] overflow-x-hidden overflow-y-auto scrollbar">
                                 This neighborhood profile summarizes Outdoor Heat Exposure Index (OHEI) data in {clickedNeighborhoodInfo.value?.nta}, {clickedNeighborhoodInfo.value?.boro} between 2013-2023. The OHEI measures the risk of exposure to higher temperatures in outdoor environments through the combination of static factors that do not change over time, including: Mean Radiant Temperature (MRT), Surface Temperature, Cool Roofs, Tree Canopy, and Permeable Surfaces.
                                 <p className="my-2"></p>
                                 The OHEI and the breakdown of each static factor within the OHEI is classified on a 1-5 index scale, where 1 indicates less outdoor heat exposure risk, and 5 indicates greater outdoor heat exposure risk. The data is distributed along an equal count scale (quantile), so each score bin represents 20% of the neighborhoods across New York City (i.e. a score of 5 means the top 20% of neighborhoods across NYC).
@@ -391,7 +391,7 @@ const NeighborhoodProfile = () => {
                                 <h3 className="font-regular text-regular lg:text-[1rem] text-[#BDBDBD]">Medium High</h3>
                             </div>
                         </div>
-                        <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-y-auto scrollbar">
+                        <div className="flex-1 flex flex-col gap-2 mt-2 pt-4 border-t-[1px] border-[#757575] overflow-x-hidden overflow-y-hidden scrollbar">
                             <div className="flex justify-between items-center gap-4 ">
                                 <h3 className="text-small text-gray_six min-w-20">Mean Radiant Temperature</h3>
                                 <div className="flex items-center gap-2.5">

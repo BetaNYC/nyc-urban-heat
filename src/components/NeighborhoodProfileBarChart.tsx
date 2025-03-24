@@ -267,7 +267,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                                                 </div>
                             `;
 
-                const details = `<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] max-w-[360px] bg-[#333] rounded-b-[0.75rem]">
+                const details = `<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem]  bg-[#333] rounded-b-[0.75rem]">
                                     <div class="flex items-start gap-3">
                                         <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="background-color:${color}">
                                             <div class='font-bold text-[12px] text-white'>${Math.round(index.value)} ${metric === 'SURFACETEMP' ? "°F" : "%"} </div>
@@ -350,24 +350,24 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                     ? outdoorHeatExposureIndexTitle
                     : title + details;
 
-                    const tooltipEl = tooltip!;
-                    const tooltipRect = tooltipEl.getBoundingClientRect();
-                    const containerWidth = svgRef.current?.clientWidth || window.innerWidth;
-                    const tooltipWidth = tooltipRect.width;
-                    const tooltipHeight = tooltipRect.height;
-                
-                    let tooltipLeft = xPos + 10;
-                    let tooltipTop = yPos - tooltipHeight / 2;
-                
-                    // 如果碰到右邊邊緣，往左顯示
-                    if (xPos + tooltipWidth + 20 > containerWidth) {
-                        tooltipLeft = xPos - tooltipWidth - 10;
-                    }
-                
+                const tooltipEl = tooltip!;
+                const tooltipRect = tooltipEl.getBoundingClientRect();
+                const containerWidth = svgRef.current?.clientWidth || window.innerWidth;
+                const tooltipWidth = tooltipRect.width;
+                const tooltipHeight = tooltipRect.height;
 
-                
-                    tooltipEl.style.left = `${tooltipLeft}px`;
-                    tooltipEl.style.top = `${tooltipTop}px`;
+                let tooltipLeft = xPos + 10;
+                let tooltipTop = yPos - tooltipHeight / 2;
+
+                // 如果碰到右邊邊緣，往左顯示
+                if (xPos + tooltipWidth + 20 > containerWidth) {
+                    tooltipLeft = xPos - tooltipWidth - 10;
+                }
+
+
+
+                tooltipEl.style.left = `${tooltipLeft}px`;
+                tooltipEl.style.top = `${tooltipTop}px`;
 
                 tooltip!.classList.remove("hidden");
             })
