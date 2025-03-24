@@ -13,7 +13,7 @@ import { signal } from '@preact/signals-react'
 import { Dataset, datasets } from '../utils/datasets.js';
 import { NtaProfileData, WeatherStationData } from '../types.js';
 import { initializeView } from '../utils/datasets.js';
-
+import { useGtagPageView } from '../hooks/useGtagPageView';
 
 export const map = signal<mapboxgl.Map | null>(null)
 export const selectedDataset = signal<Dataset | null>(datasets[0])
@@ -46,6 +46,7 @@ export const clickedNeighborhoodNearestStationAddress = signal<string | null>(nu
 
 
 const MapPage = () => {
+  useGtagPageView()
   const mapContainer = useRef<HTMLDivElement>(null);
 
   const defaultCoordinates: LngLatLike | undefined = [-73.913, 40.763]

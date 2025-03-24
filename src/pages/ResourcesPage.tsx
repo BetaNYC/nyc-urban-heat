@@ -4,8 +4,10 @@ import Banner from "../components/Banner";
 import ResourceDefinitionCard from "../components/ResourceDefinitionCard";
 import ResourceCard from "../components/ResourceCard";
 import AdvocacyGroupsCard from "../components/AdvocacyGroupsCard";
+import { useGtagPageView } from '../hooks/useGtagPageView';
 
 const ResourcesPage = () => {
+  useGtagPageView()
   const tags = [
     // "Understanding the NYC Urban Heat Data Portal",
     "NYC Extreme Heat Resources",

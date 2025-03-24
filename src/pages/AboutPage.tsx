@@ -1,7 +1,9 @@
 import Nav from "../components/Nav"
 import Banner from "../components/Banner"
+import { useGtagPageView } from '../hooks/useGtagPageView';
 
 const AboutPage = () => {
+  useGtagPageView()
   return (
     <>
       <Nav />

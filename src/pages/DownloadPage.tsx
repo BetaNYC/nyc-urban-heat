@@ -3,9 +3,10 @@ import Nav from "../components/Nav"
 import DatasetDownloadRow from "../components/DatasetDownloadRow"
 import { datasets } from "../utils/datasets"
 import Banner from "../components/Banner"
+import { useGtagPageView } from '../hooks/useGtagPageView';
 
 const DownloadPage = () => {
-
+  useGtagPageView()
   const tags = ['Dataset']
 
   const [clickedIndex, setClickedIndex] = useState<string>(tags[0]);
