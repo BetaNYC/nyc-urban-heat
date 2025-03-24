@@ -40,7 +40,7 @@ export function viewTreeCanopy(map: mapboxgl.Map) {
             },
         });
 
-        viewNTABorderLine(map)
+        viewNTABorderLine(map, "PCT_TREES")
     });
 
     return function onDestory() {

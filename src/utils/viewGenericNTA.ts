@@ -102,7 +102,7 @@ export function createNtaLayer(
     source: sourceId,
     layout: {},
     paint: {
-      "line-color": "#ffffff",
+      "line-color": metric === "NTA_PCT_MRT_Less_Than_110" ? "#D3D3D3" : metric === "PCT_AREA_COOLROOF" ? "#D3D3D3" : metric === "PCT_TREES" ? "#D3D3D3" :"#FFF",
       "line-width": 1,
     },
   });

@@ -42,7 +42,7 @@ export function viewCoolRoofs(map: mapboxgl.Map) {
     });
 
 
-    viewNTABorderLine(map)
+    viewNTABorderLine(map,"PCT_AREA_COOLROOF")
   });
 
   return function onDestory() {

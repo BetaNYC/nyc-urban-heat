@@ -46,7 +46,7 @@ export function viewPremeableSurface(map: mapboxgl.Map) {
         });
 
 
-    viewNTABorderLine(map)
+    viewNTABorderLine(map, "NTA_PCT_MRT_Less_Than_110")
     });
 
     return function onDestory() {
