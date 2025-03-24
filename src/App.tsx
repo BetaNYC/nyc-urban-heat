@@ -7,6 +7,8 @@ import AboutPage from './pages/AboutPage';
 import ResourcesPage from './pages/ResourcesPage';
 import DownloadPage from './pages/DownloadPage';
 
+import { useGtagPageView } from './hooks/useGtagPageView';
+
 export const nta_dataset_info = signal<any[]>([])
 export const out_door_heat_index = signal<any[]>([])
 export const air_temp_nta = signal<any[]>([])
@@ -14,6 +16,10 @@ export const air_temp_nta = signal<any[]>([])
 
 
 function App() {
+
+  useGtagPageView();
+
+  
   useEffect(() => {
     document.title = 'NYC Urban Heat Portal'
     // ${import.meta.env.BASE_URL}

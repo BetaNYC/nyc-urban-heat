@@ -222,9 +222,9 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                         +hoveredNeighbohoodNTAMetrics["RelativeST_class"];
                 }
 
-                const title = `<div class="flex items-end gap-4 px-[1rem]  text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
+                const title = `<div class="flex items-end gap-4 px-[1rem] py-[0.5rem]  text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
                                 <div class="flex flex-col justify-between items-center ">
-                                    <div class="font-bold text-[16px] ">${metric === "PCT_AREA_COOLROOF"
+                                    <div class="font-bold text-[18px] ">${metric === "PCT_AREA_COOLROOF"
                         ? `${hoveredCoolRoofsClass}.0` : metric === "NTA_PCT_MRT_Less_Than_110"
                             ? `${hoveredMRTClass}.0` : metric === "PCT_PERMEABLE"
                                 ? `${hoveredPermeableSurfaceClass}.0` : metric === "PCT_TREES"
@@ -240,13 +240,13 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                                 ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
                                 : metric === "PCT_TREES"
                                     ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
-                                    : metric.includes("ST_20")
+                                    : metric === "SURFACETEMP"
                                         ? outDoorHeatIndexTextLevelHandler(hoveredSurfaceTemperatureClass)
                                         : ""}
                                     </div>
                                 </div>
                                 <div>
-                                  <h1 class='mb-1 font-bold text-[0.8rem] leading-tight'>${ntaname}</h1>
+                                  <h1 class='mb-1 font-bold text-[1rem] leading-tight'>${ntaname}</h1>
                                   <h1 class='font-medium text-[0.5rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
                               </div>
                             </div>`;
