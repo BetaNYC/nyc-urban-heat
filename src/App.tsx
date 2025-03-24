@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { csv } from "d3";
 import { signal } from '@preact/signals-react'
 import { HashRouter, Route, Routes } from 'react-router-dom';
@@ -14,6 +14,11 @@ export const air_temp_nta = signal<any[]>([])
 // export const air_temp_raster = signal<any[]>([])
 
 function App() {
+
+  const [windowSize, setWindowSize] = useState({
+    width: 0,
+    height: 0,
+  });
 
 
   useEffect(() => {
@@ -139,6 +144,22 @@ function App() {
 
   }, [])
 
+  useEffect(() => {
+
+    function handleResize() {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    }
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   return (
     <main className='w-[100vw] h-[100vh] overflow-x-hidden overflow-y-scroll'>
@@ -150,6 +171,12 @@ function App() {
           <Route path='/download' element={<DownloadPage />} />
         </Routes>
       </HashRouter>
+      {
+          (windowSize.width < 820) &&
+          <div className='absolute top-0 left-0 flex justify-center items-center w-full h-full leading-[1.2] font-bold text-headline text-white bg-[#1B1B1B] z-[1000000]'>
+            This website is best viewed on desktop
+          </div>
+        }
     </main>
   );
 }

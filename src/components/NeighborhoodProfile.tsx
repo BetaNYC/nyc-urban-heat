@@ -363,12 +363,11 @@ const NeighborhoodProfile = () => {
     }, [selectedDataset.value]);
 
     return (
-        <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
-            {
-                isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={profileExpandedClickHandler}>
-                    {isNeighborhoodProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
-                </div>
-            }
+        <div className={`transition-all duration-[1500ms] ${!isNeighborhoodProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[calc(65vw)]"} absolute top-[3.125rem] right-0 flex items-center z-20`}>
+            <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={profileExpandedClickHandler}>
+                {isNeighborhoodProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
+            </div>
+
             <div className={`overflow-visible overflow-x-hidden printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:gap-8 md:h-[35%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
@@ -534,15 +533,15 @@ const NeighborhoodProfile = () => {
                         </div>
                     </div>
                     {/* <div className="flex-1 flex md:justify-between md:items-center gap-5 md:gap-0"> */}
-                        {/* <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">
+                    {/* <button onClick={printPage} className="print:hidden min-w-[9rem] h-[2.4rem] font-medium text-regular bg-[#E0E0E0] border-2 border-[#E0E0E0] rounded-[0.5rem]">
                             Print profile
                         </button> */}
-                        {isTablet &&
-                            <div className="flex items-center cursor-pointer z-[9999]" onClick={profileChangeClickHandler}>
-                                <button className="p-[0.625rem] text-regular text-[#E0E0E0]" >View the closest weather station</button>
-                                <ArrowLongRightIcon width={20} height={20} className="text-white" />
-                            </div>
-                        }
+                    {isTablet &&
+                        <div className="flex items-center cursor-pointer z-[9999]" onClick={profileChangeClickHandler}>
+                            <button className="p-[0.625rem] text-regular text-[#E0E0E0]" >View the closest weather station</button>
+                            <ArrowLongRightIcon width={20} height={20} className="text-white" />
+                        </div>
+                    }
                     {/* </div> */}
                 </div>
             </div>

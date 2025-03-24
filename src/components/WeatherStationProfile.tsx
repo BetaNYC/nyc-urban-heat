@@ -37,13 +37,13 @@ const WeatherStationProfile = () => {
 
     const [weatherStationData, setWeatherStationData] = useState<WeatherStationData[]>([]);
     const [heatStatusData, setHeatStatusData] = useState<{
-        excessiveHeatDays:number,
-        heatAdvisoryDays:number,
-        heatEventDays:number
+        excessiveHeatDays: number,
+        heatAdvisoryDays: number,
+        heatEventDays: number
     }>({
-        excessiveHeatDays:0,
-        heatAdvisoryDays:0,
-        heatEventDays:0
+        excessiveHeatDays: 0,
+        heatAdvisoryDays: 0,
+        heatEventDays: 0
     })
 
     useEffect(() => {
@@ -58,9 +58,9 @@ const WeatherStationProfile = () => {
             // @ts-ignore
             const heatData = await heatStatusRes.features.filter(d => d.properties.year === currentYear).filter(d => d.properties.address === currentAddress)[0]
             const heatDaysData = {
-                excessiveHeatDays:heatData.properties['Days_with_NWS_Excessive_Heat_Event'],
-                heatAdvisoryDays:heatData.properties['Days_with_NWS_HeatAdvisory'],
-                heatEventDays:heatData.properties['Days_with_NYC_HeatEvent']
+                excessiveHeatDays: heatData.properties['Days_with_NWS_Excessive_Heat_Event'],
+                heatAdvisoryDays: heatData.properties['Days_with_NWS_HeatAdvisory'],
+                heatEventDays: heatData.properties['Days_with_NYC_HeatEvent']
             }
 
             setWeatherStationData(data)
@@ -225,12 +225,11 @@ const WeatherStationProfile = () => {
 
 
     return (
-        <div className={`transition-all duration-[1500ms] ${!isWeatherStationProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[65vw]"} absolute bottom-0 md:top-[3.125rem] md:right-0 flex items-center z-20`}>
-            {
-                isTablet && <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
-                    {isWeatherStationProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
-                </div>
-            }
+        <div className={`transition-all duration-[1500ms] ${!isWeatherStationProfileExpanded.value && "translate-y-[70vh] md:translate-y-0 md:translate-x-[65vw]"} absolute top-[3.125rem] right-0 flex items-center z-20`}>
+            <div className="flex items-center justify-center w-9 h-24 bg-[#1B1B1B] rounded-l-2xl cursor-pointer" onClick={clickHandler}>
+                {isWeatherStationProfileExpanded.value ? <ChevronRightIcon width={20} height={20} className="text-[#BDBDBD]" /> : <ChevronLeftIcon width={20} height={20} className="text-[#BDBDBD]" />}
+            </div>
+
             <div className={`md:flex md:flex-col md:justify-center md:gap-6 px-6 lg:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem]  md:rounded-[0] overflow-y-auto scrollbar`}>
                 <div className="md:flex md:items-center md:gap-6  md:h-[25%] overflow-y-scroll">
                     <div className="md:flex md:flex-col md:justify-center md:gap-3 md:px-4 md:py-2 w-full h-full md:w-[70%] md:border-[1px] md:border-[#333] rounded-[0.5rem]">
