@@ -211,7 +211,9 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
           className: "clicked-popup",
         })
           .setLngLat([clickedLng, tooltipLat])
-          .setHTML(`<div class='clicked-nta'>${address}</div>`)
+          .setHTML(`
+            
+            <div class='clicked-nta'>${clickedWeatherStationName.value} ${address}</div>`)
           .addTo(map);
 
         map.flyTo({

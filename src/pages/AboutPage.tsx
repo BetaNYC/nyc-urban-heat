@@ -8,9 +8,9 @@ const AboutPage = () => {
       <Banner title="About" tags={[]} content="Learn more about the NYC Urban Heat Portal and the team that created it." />
       <div className="flex justify-center py-9">
         <div className="px-5 container">
-          <div className="mb-8">
+          <div className="mb-8 w-full">
             <h1 className="mb-2 font-semibold text-headline">About the project</h1>
-            <p className="font-light text-small">Higher temperatures in urban areas pose risks to public health and will continue to be intensified as temperatures increase globally. This raises important questions for planners and environmental justice advocates. What is the intensity of heat in the city? Who is affected the most? How can we understand and measure it? And how can we mitigate it?
+            <p className="w-[60%] font-light text-small">Higher temperatures in urban areas pose risks to public health and will continue to be intensified as temperatures increase globally. This raises important questions for planners and environmental justice advocates. What is the intensity of heat in the city? Who is affected the most? How can we understand and measure it? And how can we mitigate it?
               We know that there is a lot of confusion around different types of temperatures, such as surface temperature, air temperature, air heat index, and mean radiant temperature. Each of these measures paints one part of urban heat science. To understand how heat is distributed, we need to understand these and combine them.
 
               Our team of researchers designed the New York City Urban Heat Portal with the goal of making urban heat data accessible to empower community groups and policymakers with their planning and advocacy strategies.
@@ -54,7 +54,7 @@ const AboutPage = () => {
             <div className="mb-4">
               <h2 className="mb-1 font-semibold text-subheadline"></h2>
               <p className="mb-1 selection:font-light text-small">The NYC Urban Heat Portal was partially funded by NASA's Applied Sciences program.</p>
-              <p className="mb-1 selection:font-light text-small">Special thanks to the community-based groups that supported the creation of the NYC Urban Heat Portal through feedback in interviews and workshops.</p>
+              <p className="mb-1 max-w-[60vw] selection:font-light text-small">Special thanks to the community-based groups that supported the creation of the NYC Urban Heat Portal through feedback in interviews and workshops.</p>
               <p className="font-light text-small">Mayor's Office of Climate and Environmental Justice</p>
               <p className="font-light text-small">WE ACT</p>
               <p className="font-light text-small">I LOVE Greenville</p>

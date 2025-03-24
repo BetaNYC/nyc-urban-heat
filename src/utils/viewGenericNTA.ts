@@ -505,6 +505,8 @@ export function createNtaLayer(
         .setOffset([0, 0])
         .addTo(map);
 
+        popup.getElement().style.zIndex = "99999999";
+
       if (hoveredNtacode !== null && hoveredNtacode !== ntacode) {
         map.setFeatureState(
           { source: sourceId, id: hoveredNtacode },

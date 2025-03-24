@@ -93,17 +93,17 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
 
     return (
         <div className={`md:flex mb-5 `}>
-            <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
-                <div className="w-[170px] h-[124px] text-center bg-[#BDBDBD]">
-                    {/* <img src={dataset.icon} alt="" className="w-[120px] h-[120px] text-[#BDBDBD]" /> */}
+            <div className={`flex gap-[1.875rem] mb-5 md:w-[80%]`}>
+                {/* <div className="w-[170px] h-[124px] text-center bg-[#BDBDBD]"> */}
+                    <img src={dataset.thumbnail} alt="" className="w-[120px] h-[120px]" />
 
-                </div>
+                {/* </div> */}
                 <div className="flex-1">
                     <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
                     <div className="font-light text-small">
                         <a href={`${dataset.externalSource?.href}`} className="font-bold text-black">{dataset.externalSource?.citation}</a> <span className="font-bold text-black"> | {dataset.externalSource?.year}</span>
                         <p className="mt-2">
-                            {dataset.info}
+                            {dataset.description}
                         </p>
                     </div>
                 </div>

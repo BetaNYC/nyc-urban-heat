@@ -9,6 +9,16 @@ import coolRoofs from "/icons/cool_roofs.svg";
 import premeableSurface from "/icons/permeable_surface.svg";
 import parks from "/icons/parks.svg";
 
+import thumbnailOHE from "/thumbnails/OHE.png.png"
+import thumbnailWS from "/thumbnails/WS-2023.png.png"
+import thumbnailMRT from "/thumbnails/MRT_NTA.png.png"
+import thumbnailST from "/thumbnails/ST_NTA.png.png"
+import thumbnailCoolRoofs from "/thumbnails/coolroofs_NTA.png.png"
+import thumbnailTreeCanopy from "/thumbnails/treecanopy_NTA.png.png"
+import thumbnailPermableSurf from "/thumbnails/permablesurf_NTA.png.png"
+import thumbnailAirTemp from '/thumbnails/airtemp_raster.png.png'
+import thumbnailAirHeatIndex from "/thumbnails/airheatindex_raster.png.png"
+
 import mapboxgl, { Map } from "mapbox-gl";
 import { cachedFetch } from "./cache";
 import { viewSurfaceTemperature } from "./viewSurfaceTemperature";
@@ -59,7 +69,9 @@ export interface Dataset {
   name: string;
   group: string;
   icon: IconType;
+  thumbnail:string;
   info?: string;
+  description:string;
   externalSource?: {
     citation: string;
     year: string;
@@ -84,7 +96,9 @@ export const datasets: Dataset[] = [
     name: "Outdoor Heat Exposure Index",
     group: "",
     icon: outdoorHeatExposureIndex,
+    thumbnail: thumbnailOHE,
     info: "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments. This index combines mean tree cover, radiant temperature (MRT), surface temperature, permeable surfaces, and cool roofs.",
+    description:"To calculate the Outdoor Heat Exposure Index for each neighborhood, we combined the following variables: (1) the mean summertime surface temperature extracted from cloud-free Landsat images. (2) the average mean radiant temperature (MRT) calculated for 2 PM on a typical summer day. (3) a percentage of tree coverage in the neighborhood, (4) a percentage of permeable surfaces in the neighborhood, and (5) the percentage of cool roofs from the total roof area of the neighborhood. We simply calculated the average score of these five variables. ",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Outdoor Heat Exposure Index. ",
@@ -153,7 +167,9 @@ export const datasets: Dataset[] = [
     name: "Weather Stations",
     group: "",
     icon: weatherStations,
+    thumbnail: thumbnailWS,
     info: "VisualCrossing weather station locations measure daily air temperature and relative humidity, and are aggregated to show the number of extreme heat days measured per year.",
+    description:"The weather station data reports each day's air temperature, relative humidity, and heat index values. We included the maximum and minimum daily values. To show how these values differ from the historical normals, we provided both minimum and maximum air temperature averages. These values are calculated for 1991-2020 extracted from the New York City Central Park weather station (https://www.weather.gov/media/okx/Climate/CentralPark/monthlyannualtemp.pdf)",
     externalSource: {
       citation: "Visual Crossing. Timeline Weather Data.",
       year: "2013 - 2023",
@@ -180,7 +196,9 @@ export const datasets: Dataset[] = [
     name: "Mean Radiant Temperature",
     group: "Static Factors",
     icon: meanRadiantTemperature,
+    thumbnail: thumbnailMRT,
     info: "The area-weighted mean temperature of all the objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement).",
+    description:"Mean Radiant Temperature (MRT) is central to our understanding of the radiant heat exchange between the human body and the surrounding environment. MRT is a useful concept as the net exchange of radiant energy between two objects is approximately proportional to the product of their temperature difference multiplied by their emissivity (ability to emit and absorb heat). The MRT is simply the area-weighted mean temperature of all the objects surrounding the body. You can also use a dry black globe to measure MRT. The MRT layer in this portal is produced using the Land Cover Layer of New York City (2017, resampled to one-meter resolution). The MRT layer is calculated for 2 PM on July 15th as a typical summer day. The MRT is produced using SOLWEIG model. The input values of the model are: 1) air temperature: 82.4; relative humidity: 50%; water temperture: 71.6; global radation: 600; direct radation 700; diffuse radation: 150; wind speed: 3.1 m/s; wind sensor height 3m; utc offset: -4; local standard time 14:00. ",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Mean Radiant Temperature.",
@@ -264,7 +282,9 @@ export const datasets: Dataset[] = [
     name: "Surface Temperature",
     group: "Static Factors",
     icon: surfaceTemperature,
+    thumbnail: thumbnailST,
     info: `The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating.`,
+    description:"Surface Temperature (ST) refers to the temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating. Surface Temperature indicates how hot the “surface” of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report. We retrieved the surface temperature from the Landsat 8/9 Level 2 Collection dataset (https://www.usgs.gov/landsat-missions/landsat-collection-2-level-2-science-products). These layers are extracted from Band 10 of Landsat 8 and 9 images. The resolution of these raster layers is 30m. We have included all cloud-free images available for this region between 2013 and 2023. ",
     externalSource: {
       citation:
         "Earth Resources Observation and Science (EROS) Center. Landsat 8-9 Operational Land Imager / Thermal Infrared Sensor Level-2, Collection 2 [dataset]. U.S. Geological Survey",
@@ -428,7 +448,9 @@ export const datasets: Dataset[] = [
     name: "Cool Roofs",
     group: "Static Factors",
     icon: coolRoofs,
+    thumbnail: thumbnailCoolRoofs,
     info: "Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.",
+    description:"Buildings with cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof and have a have a reflectivity value greather than or equal to 60. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect. We have measured the roof reflectivity from the ortho images of New York City (2020). For further information about this layer",
     externalSource: {
       citation:
         "Heris, M., George, R., Flohr, T., Avila, A. New York City Cool Roofs. Hunter College City University of New York, Penn State University, and the Mayor's Office of Climate and Environmental Justice of New York.",
@@ -519,7 +541,9 @@ export const datasets: Dataset[] = [
     name: "Tree Canopy",
     group: "Static Factors",
     icon: treeCanopy,
+    thumbnail: thumbnailTreeCanopy,
     info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above. Tree canopy areas reduce urban heat island effect.",
+    description:"Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution. We have extracted the tree canopy layer from New York City's high-resolution land cover data (2017, 0.5 feet). The layer is resampled to a 1-meter resolution. The source of this layer is NYC Open Data. ",
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution.",
@@ -605,7 +629,9 @@ export const datasets: Dataset[] = [
     name: "Permeable Surfaces",
     group: "Static Factors",
     icon: premeableSurface,
+    thumbnail: thumbnailPermableSurf,
     info: "Areas with porous surface materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
+    description:"Permeable surfaces, also known as porous or pervious surfaces, are materials that allow water to pass through them, rather than impeding its flow. These surfaces are designed to reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers. This layer is extracted from New York City's high-resolution land cover layer (2017, 0.5 feet). We chose the land cover classes of bare soil, grass, and water as the permeable surfaces. We resampled this layer to 1 meter. The high-resolution land cover layer is available through NYC Open Data.",
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution",
@@ -691,7 +717,9 @@ export const datasets: Dataset[] = [
     name: "Air Temperature",
     group: "Dynamic Factors",
     icon: airTemperature,
+    thumbnail: thumbnailAirTemp,
     info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter which is calculated at 3pm in the following dates",
+    description:"Air Temperature or Dry-Bulb Temperature (DBT) is the temperature of air measured by a thermometer freely exposed to the air, but shielded from radiation. The thermometer is typically placed at about 2 meters above the ground. This is independent of the humidity of the air.",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Temperature.",
@@ -846,7 +874,9 @@ export const datasets: Dataset[] = [
     name: "Air Heat Index",
     group: "Dynamic Factors",
     icon: airHeatIndex,
+    thumbnail: thumbnailAirHeatIndex,
     info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort. The parameter is calculated at 3pm in the following dates",
+    description:"Heat Index is a measure of how hot it really feels when factoring in the relative humidity. This index is a combination of air temperature and relative humidity and you can calculate it using a formula.",
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Heat Index",
