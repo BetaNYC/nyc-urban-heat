@@ -52,33 +52,36 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         })
 
         if (download) {
+            console.log(download.url)
+            const format = download.url.split('.').at(-1)
+            const a = document.createElement('a');
+            a.target = '_blank'
             if (download.name === "csv") {
                 fetch(download.url)
                     .then(res => res.blob())
                     .then(blob => {
                         const blobUrl = URL.createObjectURL(blob)
                         const a = document.createElement('a')
-                        a.href = blobUrl
-                        a.download = filename ?? 'file.' + format
+                        a.href = ""
+                        a.download = download.url
                         document.body.appendChild(a)
                         a.click()
                         document.body.removeChild(a)
                         URL.revokeObjectURL(blobUrl)
                     })
-            }
-            const format = download.url.split('.').at(-1)
-            const a = document.createElement('a');
-            a.target = '_blank'
-            if (format === 'geojson') {
-                a.href = '';
-                a.download = download.url
             } else {
-                a.href = download.url;
+                if (format === 'geojson') {
+                    a.href = '';
+                    a.download = download.url
+                } else {
+                    a.href = download.url;
+                }
+                a.download = filename ?? 'file.' + format;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
             }
-            a.download = filename ?? 'file.' + format;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+
         } else {
             alert('Issue with download')
         }
