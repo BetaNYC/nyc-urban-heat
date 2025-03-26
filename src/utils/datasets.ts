@@ -112,10 +112,10 @@ export const datasets: Dataset[] = [
           return [
             ...urls,
             {
-              name: "Tiff",
-              url: tiff_url,
+              name: "csv",
+              url: "https://urban-heat-files.s3.us-east-1.amazonaws.com/NTA_Outdoor_Heat_Index.csv",
               date: "",
-              format: "tiff",
+              format: "csv",
             },
           ];
         }, []);
