@@ -105,7 +105,7 @@ function App() {
         "metric": "Outdooor_Heat_Volnerability_Index",
         "date": "",
         "type": "",
-        "downloads": "",
+        "downloads": "https://urban-heat-files.s3.us-east-1.amazonaws.com/NTA_Outdoor_Heat_Index.csv",
         "downloads_2": "",
       };
     

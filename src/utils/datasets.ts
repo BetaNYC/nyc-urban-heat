@@ -113,7 +113,7 @@ export const datasets: Dataset[] = [
             ...urls,
             {
               name: "csv",
-              url: "https://urban-heat-files.s3.us-east-1.amazonaws.com/NTA_Outdoor_Heat_Index.csv",
+              url: tiff_url,
               date: "",
               format: "csv",
             },

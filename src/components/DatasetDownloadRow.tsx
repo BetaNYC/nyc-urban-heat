@@ -22,36 +22,50 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
     // get unique file formats
     const formatOptions = [...new Set(urls.map(d => d.format))]
 
-    if(!dataset) return 'error'
+    if (!dataset) return 'error'
 
     useEffect(() => {
-        if(dataset.getDownloadUrls){
+        if (dataset.getDownloadUrls) {
             dataset.getDownloadUrls().then(downloadUrls => {
                 setUrls(downloadUrls)
             })
         }
-    },[])
+    }, [])
 
-    useEffect(()=> {
+    useEffect(() => {
         // update the selectedFormat and selectedDate, when the urls list gets updated
         setSelectedDate(dateOptions.at(0) ?? '')
         setSelectedFormat(formatOptions.at(0) ?? '')
-    },[urls])
+    }, [urls])
 
 
 
     const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, filename?: string) => {
         console.log(urls, selectedDate, selectedFormat)
         const download = urls.find((url: any) => {
-            if(selectedDate !== ''){
+            if (selectedDate !== '') {
                 // compare dates and format
                 return url.date === String(selectedDate) && url.format === selectedFormat
-            }else{
+            } else {
                 return url.format === selectedFormat
             }
         })
 
-        if(download){
+        if (download) {
+            if (download.name === "csv") {
+                fetch(download.url)
+                    .then(res => res.blob())
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = blobUrl
+                        a.download = filename ?? 'file.' + format
+                        document.body.appendChild(a)
+                        a.click()
+                        document.body.removeChild(a)
+                        URL.revokeObjectURL(blobUrl)
+                    })
+            }
             const format = download.url.split('.').at(-1)
             const a = document.createElement('a');
             a.target = '_blank'
@@ -65,9 +79,11 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-        }else{
+        } else {
             alert('Issue with download')
         }
+
+
     }
 
     // datasets that are external 
@@ -95,7 +111,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         <div className={`md:flex mb-5 `}>
             <div className={`flex gap-[1.875rem] mb-5 md:w-[80%]`}>
                 {/* <div className="w-[170px] h-[124px] text-center bg-[#BDBDBD]"> */}
-                    <img src={dataset.thumbnail} alt="" className="w-[120px] h-[120px]" />
+                <img src={dataset.thumbnail} alt="" className="w-[120px] h-[120px]" />
 
                 {/* </div> */}
                 <div className="flex-1">
@@ -135,8 +151,8 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
                             value={selectedFormat}
                             onChange={e => setSelectedFormat(e.target.value)}
                             className="py-1 pr-3 font-regular text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem]">
-                                {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
-                            </select>
+                            {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
+                        </select>
                         <button onClick={() => downloadFile(urls, selectedDate, selectedFormat)}
                             className="flex items-center justify-center w-8 h-8 bg-[#4F4F4F] border-[1px] border-[#4F4F4F] rounded-r-[0.25rem]">
                             <ArrowDownTrayIcon className="w-4 h-4 text-white" />
