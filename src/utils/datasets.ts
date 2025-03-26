@@ -108,12 +108,12 @@ export const datasets: Dataset[] = [
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "Outdooor_Heat_Volnerability_Index")
         .reduce((urls: DownloadUrl[], dataset: any) => {
-          const tiff_url = dataset.downloads;
+          const csv_url = dataset.downloads;
           return [
             ...urls,
             {
               name: "csv",
-              url: tiff_url,
+              url: csv_url,
               date: "",
               format: "csv",
             },

@@ -52,30 +52,33 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
         })
 
         if (download) {
-            console.log(download.url)
             const format = download.url.split('.').at(-1)
             const a = document.createElement('a');
             a.target = '_blank'
-            if (download.name === "csv") {
+            if (format === "csv") {
                 fetch(download.url)
-                    .then(res => res.blob())
+                    .then(res => {
+                        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
+                        return res.blob()
+                    })
                     .then(blob => {
                         const blobUrl = URL.createObjectURL(blob)
+                        console.log(blobUrl)
                         const a = document.createElement('a')
-                        a.href = ""
-                        a.download = download.url
+                        a.href = blobUrl
+                        a.download = 'Outdoor Heat Exposure Index.csv'
                         document.body.appendChild(a)
                         a.click()
                         document.body.removeChild(a)
                         URL.revokeObjectURL(blobUrl)
                     })
             } else {
-                if (format === 'geojson') {
-                    a.href = '';
-                    a.download = download.url
-                } else {
-                    a.href = download.url;
-                }
+                // if (format === 'geojson') {
+                //     a.href = '';
+                //     a.download = download.url
+                // } else {
+                // }
+                a.href = download.url;
                 a.download = filename ?? 'file.' + format;
                 document.body.appendChild(a);
                 a.click();
