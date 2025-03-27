@@ -7,6 +7,7 @@ import { group } from 'd3-array';
 import { ChevronUpIcon, ChevronDownIcon, ArrowDownTrayIcon } from '@heroicons/react/20/solid'
 import InformationCircle from './InformationCircle';
 
+import { Link } from 'react-router-dom';
 
 const groupedDataset = group(datasets, d => d.group)
 
@@ -85,10 +86,10 @@ const DatasetSelections = () => {
 
             </div>
             <div className='sticky bottom-0 py-4  w-full  bg-[#1B1B1B]'>
-              <div className='flex justify-between items-center px-2 py-6 m-auto w-[calc(100%_-_40px)] h-8 bg-[#4F4F4F] rounded-[0.25rem] cursor-pointer ' onClick={() => isDataSelectionExpanded.value = true}>
+              <Link to="/download" className='flex justify-between items-center px-2 py-6 m-auto w-[calc(100%_-_40px)] h-8 bg-[#4F4F4F] rounded-[0.25rem] cursor-pointer ' onClick={() => isDataSelectionExpanded.value = true}>
                 <div className='font-bold text-regular text-[#F2F2F2]'>Download dataset(s)</div>
                 <ArrowDownTrayIcon width={18} height={18} className='text-[#F2F2F2]' />
-              </div>
+              </Link>
             </div>
 
           </>

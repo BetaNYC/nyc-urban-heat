@@ -134,7 +134,7 @@ export const datasets: Dataset[] = [
           { label: "4", value: "#A33F34" },
           { label: "5", value: "#841F21" },
         ],
-        legendLastNumber: "5",
+        // legendLastNumber: "5",
         init: function (map) {
           return createNtaLayer(
             map,

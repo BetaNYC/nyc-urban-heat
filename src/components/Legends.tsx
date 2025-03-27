@@ -205,7 +205,7 @@ const Legends = () => {
                         </div>
                         <div className='relative flex items-center'>
                             {legend.value?.map((item: any) => (
-                                <div key={`legend-${item.label}`} className='flex flex-col items-start gap-1 text-xsmall text-[#F4F4F4]'>
+                                <div key={`legend-${item.label}`} className={`flex flex-col ${selectedDataset.value?.name === "Outdoor Heat Exposure Index"? "items-center" : "items-start"}  gap-1 text-xsmall text-[#F4F4F4]`}>
                                     <span className="w-[3.6rem] h-4 block " style={{ backgroundColor: item.value }} />
                                     {item.label}
                                 </div>

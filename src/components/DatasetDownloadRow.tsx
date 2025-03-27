@@ -41,7 +41,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
 
 
     const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, filename?: string) => {
-        console.log(urls, selectedDate, selectedFormat)
+
         const download = urls.find((url: any) => {
             if (selectedDate !== '') {
                 // compare dates and format
@@ -63,7 +63,6 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
                     })
                     .then(blob => {
                         const blobUrl = URL.createObjectURL(blob)
-                        console.log(blobUrl)
                         const a = document.createElement('a')
                         a.href = blobUrl
                         a.download = 'Outdoor Heat Exposure Index.csv'

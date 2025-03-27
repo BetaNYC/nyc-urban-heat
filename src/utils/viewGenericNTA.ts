@@ -329,7 +329,9 @@ export function createNtaLayer(
                         metric.includes("ST_20")
                           ? ascendingTextColor
                           : textColor
-                      }'>${Math.round(selectedMetric)}${metric.includes("ST_20") ? "°F":"%"} </div>              
+                      }'>${Math.round(selectedMetric)}${metric.includes("Air_temp") ||
+                      metric.includes("Air_Heat_Index") ||
+                      metric.includes("ST_20") ? "°F":"%"} </div>              
                     </div>
                     <div>
                       <div class="font-semibold text-[1rem] text-white whitespace-nowrap">
@@ -400,7 +402,7 @@ export function createNtaLayer(
     </div>
     <div>
         <div class="text-[14px] text-white">Mean Radiant Temperature</div>
-        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">15% outdoor area with thermal comfort <br/> 120 °F average mean radiant temerature</div>
+        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">outdoor areas with thermal comfort</div>
     </div>
   </div>
   <div class="flex items-center gap-4">
@@ -416,7 +418,7 @@ export function createNtaLayer(
     </div>
     <div>
         <div class="text-[14px] text-white">Surface Temperature</div>
-        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">120 °F average surface temperature</div>
+        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight"> average surface temperature</div>
     </div>
   </div>
   <div class="flex items-center gap-4">
@@ -432,7 +434,7 @@ export function createNtaLayer(
     </div>
     <div>
         <div class="text-[14px] text-white">Cool Roofs</div>
-        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">10% area of buildings with cool roofs</div>
+        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">areas of buildings with cool roofs</div>
     </div>
 
   </div>
@@ -449,7 +451,7 @@ export function createNtaLayer(
     </div>
     <div>
         <div class="text-[14px] text-white">Tree Canopy</div>
-        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">10% area covered by tree canopy</div>
+        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">areas covered by tree canopy</div>
     </div>
   </div>
   <div class="flex items-center gap-4">
@@ -465,7 +467,7 @@ export function createNtaLayer(
     </div>
     <div>
         <div class="text-[14px] text-white">Permable Surfaces</div>
-        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">10% area with permeable surfaces</div>
+        <div class="font-light text-[12px] text-[#D9D9D9] leading-tight">areas with permeable surfaces</div>
     </div>
 
   </div>
