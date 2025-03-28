@@ -84,19 +84,19 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
     if (map?.getLayer("weather_stations_heat_advisory"))
       map.removeLayer("weather_stations_heat_advisory");
 
-    // map?.addLayer({
-    //   id: "weather_stations_default",
-    //   type: "circle",
-    //   source: "weather_stations",
-    //   layout: {
-    //     visibility: "visible",
-    //   },
-    //   paint: {
-    //     "circle-radius": 5,
-    //     "circle-color": "#A9A9A9",
-    //     "circle-opacity": 0.5,
-    //   }
-    // })
+    map?.addLayer({
+      id: "weather_stations_default",
+      type: "circle",
+      source: "weather_stations",
+      layout: {
+        visibility: "visible",
+      },
+      paint: {
+        "circle-radius": 4,
+        "circle-color": "#A9A9A9",
+        "circle-opacity": 0.5,
+      }
+    })
 
     map?.addLayer({
       id: "weather_stations_heat_event",
@@ -361,7 +361,7 @@ export function viewWeatherStations(map: mapboxgl.Map, year: number) {
 
   return function onDestory() {
     removeAllPopups();
-    // map.removeLayer("weather_stations_default");
+    map.removeLayer("weather_stations_default");
     map.removeLayer("weather_stations_heat_event");
     map.removeLayer("weather_stations_heat_advisory");
     map.removeLayer("weather_stations_heat_excessive");
