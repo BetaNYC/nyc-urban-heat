@@ -237,6 +237,10 @@ const Legends = () => {
                                     <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>NYC Heat Event</div>
                                     <InformationCircle size='big' positionRight={true} content='Periods in New York City when the heat index is 100° F or higher for one or more days, or when the heat index is 95° F or higher for two or more consecutive days.' />
                                 </div>
+                                <div className='flex items-center gap-3'>
+                                    <div className='w-[0.625rem] h-[0.625rem] bg-[#A9A9A9] rounded-full'></div>
+                                    <div className='font-medium text-small text-[#F4F4F4] w-[125px]'>No Heat Event Days</div>
+                                </div>
                             </div>
                         </div>
                     </div>

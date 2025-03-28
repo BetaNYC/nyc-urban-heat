@@ -369,7 +369,7 @@ const NeighborhoodProfile = () => {
             </div>
 
             <div className={`overflow-visible overflow-x-hidden printable-white-bg md:flex md:flex-col md:justify-center md:gap-[4rem] px-6 md:px-10 pt-12 pb-6 md:pt-0 md:pb-0 w-[100vw] md:w-[65vw] h-[70vh] md:h-[calc(100vh_-_3.125rem)] bg-[#1B1B1B] rounded-[1rem] md:rounded-[0] overflow-y-auto scrollbar`}>
-                <div className="md:flex md:gap-8 md:h-[35%]">
+                <div className="md:flex md:gap-8 md:h-[40%]">
                     <div className="md:flex md:flex-col md:w-[50%] h-full">
                         <h1 className="font-semibold text-subheadline md:text-headline text-gray_six">{clickedNeighborhoodInfo.value?.nta}</h1>
                         <h2 className="md:mb-4 text-regular md:text-subheadline text-gray_six">{clickedNeighborhoodInfo.value?.boro} <span className="font-medium md:text-subheadline">{clickedNeighborhoodInfo.value?.code}</span></h2>
@@ -382,8 +382,8 @@ const NeighborhoodProfile = () => {
                             </p>
                         }
                     </div>
-                    <div className="md:flex md:flex-col md:gap-2 md:justify-center my-6 md:my-0 p-4 w-full md:w-[50%] md:h-full bg-[#333333] rounded-lg">
-                        <div className="flex justify-between md:h-[35%]">
+                    <div className="md:flex md:flex-col md:gap-2 md:justify-center p-4 pb-2 w-full md:w-[50%] md:h-full bg-[#333333] rounded-lg">
+                        <div className="flex justify-between md:h-[30%]">
                             <h2 className="font-semibold w-[50%] min-w-[4rem] text-regular md:text-[1rem] lg:text-subheadline text-gray_six">Outdoor Heat Exposure Index</h2>
                             <div className="flex flex-col">
                                 <h1 className="font-bold text-[2.5rem] lg:text-[3.5rem] text-gray_six leading-tight lg:leading-none ">{clickedOutDoorHeatIndexClass}</h1>
@@ -451,7 +451,6 @@ const NeighborhoodProfile = () => {
                                     <div className="text-small text-[#C5C5C5]">{clickedTreeCanopyClass}</div>
                                 </div>
                             </div>
-
                             <div className="flex justify-between items-center gap-4">
                                 <h3 className="text-small text-gray_six min-w-20">Premeable Surfaces</h3>
                                 <div className="flex items-center gap-2.5">
@@ -471,7 +470,7 @@ const NeighborhoodProfile = () => {
                     </div>
                 </div>
 
-                <div className="md:flex md:flex-col md:gap-6 w-full md:h-[55%]">
+                <div className="md:flex md:flex-col md:gap-6 w-full md:h-[50%]">
                     <div className="flex flex-col w-full h-[16rem] md:h-[90%] rounded-[0.75rem]">
                         {
                             isTablet &&

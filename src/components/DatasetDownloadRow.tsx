@@ -114,7 +114,7 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
 
     return (
         <div className={`md:flex mb-5 `}>
-            <div className={`flex gap-[1.875rem] mb-5 md:w-[80%]`}>
+            <div className={`flex gap-[1.875rem] mb-5 md:w-[70%]`}>
                 {/* <div className="w-[170px] h-[124px] text-center bg-[#BDBDBD]"> */}
                 <img src={dataset.thumbnail} alt="" className="w-[120px] h-[120px]" />
 
