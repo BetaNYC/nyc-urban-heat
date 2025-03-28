@@ -21,12 +21,12 @@ const DownloadPage = () => {
             <h1 className="mb-6 font-semibold text-headline">NYC Urban Heat Datasets</h1>
             <DatasetDownloadRow
               dataset={datasets.find(d => d.name === 'Outdoor Heat Exposure Index')}
+              hasMulti={true}
             />
             <DatasetDownloadRow
               dataset={datasets.find(d => d.name === 'Mean Radiant Temperature')}
             />
             <DatasetDownloadRow
-              // hasDate={true}
               dataset={datasets.find(d => d.name === 'Surface Temperature')}
             />
             <DatasetDownloadRow

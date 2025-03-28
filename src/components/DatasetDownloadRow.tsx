@@ -6,10 +6,10 @@ import { formatDateString } from "../utils/format"
 
 type Props = {
     dataset: Dataset | undefined
-    hasDate?: boolean
+    hasMulti?: boolean
 }
 
-const DatasetDownloadRow = ({ dataset }: Props) => {
+const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
     const [urls, setUrls] = useState<DownloadUrl[]>([])
     const [selectedDate, setSelectedDate] = useState('')
     const [selectedFormat, setSelectedFormat] = useState('')
@@ -150,14 +150,19 @@ const DatasetDownloadRow = ({ dataset }: Props) => {
                 }
                 <div>
                     <h3 className="mb-2 font-semibold text-small">Download File</h3>
-                    <div className="flex cursor-pointer">
-                        <select name="FileFormat"
-                            id=""
-                            value={selectedFormat}
-                            onChange={e => setSelectedFormat(e.target.value)}
-                            className="py-1 pr-3 font-regular text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem]">
-                            {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
-                        </select>
+                    <div className="flex">
+                        {hasMulti ?
+                            <select name="FileFormat"
+                                id=""
+                                value={selectedFormat}
+                                onChange={e => setSelectedFormat(e.target.value)}
+                                className=" pl-1 pr-3 py-1 font-regular text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem] cursor-pointer">
+                                {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
+                            </select> :
+                            <div className="flex justify-start items-center pl-1 pr-3 py-1  font-regular  text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem]">
+                                tiff
+                            </div>
+                        }
                         <button onClick={() => downloadFile(urls, selectedDate, selectedFormat)}
                             className="flex items-center justify-center w-8 h-8 bg-[#4F4F4F] border-[1px] border-[#4F4F4F] rounded-r-[0.25rem]">
                             <ArrowDownTrayIcon className="w-4 h-4 text-white" />
