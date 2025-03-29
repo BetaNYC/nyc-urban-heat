@@ -9,15 +9,15 @@ import coolRoofs from "/icons/cool_roofs.svg";
 import premeableSurface from "/icons/permeable_surface.svg";
 import parks from "/icons/parks.svg";
 
-import thumbnailOHE from "/thumbnails/OHE.png.png"
-import thumbnailWS from "/thumbnails/WS-2023.png.png"
-import thumbnailMRT from "/thumbnails/MRT_NTA.png.png"
-import thumbnailST from "/thumbnails/ST_NTA.png.png"
-import thumbnailCoolRoofs from "/thumbnails/coolroofs_NTA.png.png"
-import thumbnailTreeCanopy from "/thumbnails/treecanopy_NTA.png.png"
-import thumbnailPermableSurf from "/thumbnails/permablesurf_NTA.png.png"
-import thumbnailAirTemp from '/thumbnails/airtemp_raster.png.png'
-import thumbnailAirHeatIndex from "/thumbnails/airheatindex_raster.png.png"
+import thumbnailOHE from "/thumbnails/OHE.png.png";
+import thumbnailWS from "/thumbnails/WS-2023.png.png";
+import thumbnailMRT from "/thumbnails/MRT_NTA.png.png";
+import thumbnailST from "/thumbnails/ST_NTA.png.png";
+import thumbnailCoolRoofs from "/thumbnails/coolroofs_NTA.png.png";
+import thumbnailTreeCanopy from "/thumbnails/treecanopy_NTA.png.png";
+import thumbnailPermableSurf from "/thumbnails/permablesurf_NTA.png.png";
+import thumbnailAirTemp from "/thumbnails/airtemp_raster.png.png";
+import thumbnailAirHeatIndex from "/thumbnails/airheatindex_raster.png.png";
 
 import mapboxgl, { Map } from "mapbox-gl";
 import { cachedFetch } from "./cache";
@@ -69,9 +69,13 @@ export interface Dataset {
   name: string;
   group: string;
   icon: IconType;
-  thumbnail:string;
+  thumbnail: string;
   info?: string;
-  description:string;
+  description: {
+    intro: string;
+    method: string;
+    case: string;
+  };
   externalSource?: {
     citation: string;
     year: string;
@@ -98,7 +102,13 @@ export const datasets: Dataset[] = [
     icon: outdoorHeatExposureIndex,
     thumbnail: thumbnailOHE,
     info: "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments. This index combines mean tree cover, radiant temperature (MRT), surface temperature, permeable surfaces, and cool roofs.",
-    description:"To calculate the Outdoor Heat Exposure Index for each neighborhood, we combined the following variables: (1) the mean summertime surface temperature extracted from cloud-free Landsat images. (2) the average mean radiant temperature (MRT) calculated for 2 PM on a typical summer day. (3) a percentage of tree coverage in the neighborhood, (4) a percentage of permeable surfaces in the neighborhood, and (5) the percentage of cool roofs from the total roof area of the neighborhood. We simply calculated the average score of these five variables. ",
+    description: {
+      intro:
+        "The Outdoor Heat Exposure Index (OHEI) measures the risk of exposure to higher temperatures in outdoor environments on summer days in different neighborhoods.",
+      method:
+        "OHEI is calculated for each neighborhood tabulation area (NTA) by calculating the average score from the following five variables: (1) the summertime mean surface temperature, extracted from cloud-free Landsat images, (2) the average mean radiant temperature (MRT) at 2pm on a typical summer day, (3) the percentage of tree coverage area in each NTA, (4) the percentage of permeable surfaces area in each NTA, and (5) the percentage of cool roofs from the total building roof area in each NTA.",
+      case: "OHEI can be used to compare the heat exposure intensity in different communities. The OHEI, which represents the outdoor heat intensity, was designed to be used in conjunction with the Heat Vulnerability Index (HVI), which considers social and environmental vulnerability factors of residents; both the OHEI and HVI aggregate data to NTA boundaries in NYC.Please note that the outdoor temperature and thermal comfort levels are different from indoor conditions. Building quality, exposure to direct radiation, cooling systems, and other building features will be essential in translating outdoor heat into health factors. If you are interested in the health implications of heat exposure, you may need to explore the Heat Vulnerability Index provided by the New York City Department of Health.",
+    },
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Outdoor Heat Exposure Index. ",
@@ -106,7 +116,9 @@ export const datasets: Dataset[] = [
     },
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
-        .filter((dataset) => dataset.metric === "Outdooor_Heat_Volnerability_Index")
+        .filter(
+          (dataset) => dataset.metric === "Outdooor_Heat_Volnerability_Index"
+        )
         .reduce((urls: DownloadUrl[], dataset: any) => {
           const csv_url = dataset.downloads;
           return [
@@ -169,7 +181,13 @@ export const datasets: Dataset[] = [
     icon: weatherStations,
     thumbnail: thumbnailWS,
     info: "VisualCrossing weather station locations measure daily air temperature and relative humidity, and are aggregated to show the number of extreme heat days measured per year.",
-    description:"The weather station data reports each day's air temperature, relative humidity, and heat index values. We included the maximum and minimum daily values. To show how these values differ from the historical normals, we provided both minimum and maximum air temperature averages. These values are calculated for 1991-2020 extracted from the New York City Central Park weather station (https://www.weather.gov/media/okx/Climate/CentralPark/monthlyannualtemp.pdf)",
+    description: {
+      intro:
+        "VisualCrossing weather station locations measure daily air temperature and relative humidity, and are aggregated to show the number of extreme heat days measured per year.",
+      method:
+        "Weather stations report data on daily air temperature, relative humidity, and air heat index values. The NYC Urban Heat Portal includes the minimum and maximum daily values for air temperature and air heat index for summer days (between May 1 - September 30), and shows how these values differ from the historical normal minimum and maximum air temperature averages. These historic normal values are calculated between 1991-2020, and are sampled from the New York City Central Park weather station. (https://www.weather.gov/media/okx/Climate/CentralPark/monthlyannualtemp.pdf)",
+      case: "Weather stations use professional sensors and instruments to measure data; however, they only offer insights into the condition of air around a point location. They are reliable resource for understanding how temperature changes from day to day. Although only measured in certain locations, such temporal resolution is not available for other heat-related data sources. Additionally, air temperature is highly variable by locations, but comparing the temperatures between different weather stations can provide a general idea of the heat distribution in urban areas.",
+    },
     externalSource: {
       citation: "Visual Crossing. Timeline Weather Data.",
       year: "2013 - 2023",
@@ -198,7 +216,13 @@ export const datasets: Dataset[] = [
     icon: meanRadiantTemperature,
     thumbnail: thumbnailMRT,
     info: "The area-weighted mean temperature of all the objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement).",
-    description:"Mean Radiant Temperature (MRT) is central to our understanding of the radiant heat exchange between the human body and the surrounding environment. MRT is a useful concept as the net exchange of radiant energy between two objects is approximately proportional to the product of their temperature difference multiplied by their emissivity (ability to emit and absorb heat). The MRT is simply the area-weighted mean temperature of all the objects surrounding the body. You can also use a dry black globe to measure MRT. The MRT layer in this portal is produced using the Land Cover Layer of New York City (2017, resampled to one-meter resolution). The MRT layer is calculated for 2 PM on July 15th as a typical summer day. The MRT is produced using SOLWEIG model. The input values of the model are: 1) air temperature: 82.4; relative humidity: 50%; water temperture: 71.6; global radation: 600; direct radation 700; diffuse radation: 150; wind speed: 3.1 m/s; wind sensor height 3m; utc offset: -4; local standard time 14:00. ",
+    description: {
+      intro:
+        "Mean Radiant Temperature (MRT) is the area-weighted mean temperature of all surrounding objects in the urban evironment surrounding the body (e.g. buildings, vegetation, pavement). A dry black globe is used to measure MRT and the net exchange of radiant energy between two objects. This measure is approximately proportional to the product of their temperature difference multiplied by their emissivity (the ability to emit and absorb heat). MRT is central to understanding the radiant heat exchange between the human body and the surrounding environment.",
+      method:
+        "The MRT data in the NYC Urban Heat Portal is resampled from the Land Cover Layer of New York City (2017) at a one-meter resolution. MRT data is calculated for a sample of a typical summer day (July 15, 2017) during one hour of peak radiation (2pm). The MRT is produced using the SOLWEIG model, in which the input values of the model are: 1) air temperature: 82.4; relative humidity: 50%; water temperture: 71.6; global radation: 600; direct radation 700; diffuse radation: 150; wind speed: 3.1 m/s; wind sensor height 3m; utc offset: -4; local standard time 14:00.",
+      case: "The mapped MRT data shows the amount of radiation that a pedestrian receives from the surrounding environment. The MRT data modeled in the NYC Urban Heat portal is spatially static, meaning that the map only shows how radiation exposure is distributed across space, and it does not represent how temperature changes during the day. These MRT values are highly dependent on shade coverage, where morning and late afternoon hours will create variability in shade within the urban environment. Because the MRT data was only sampled for the conditions of one typical summer day for one hour (July 15, 2017 at 2pm), this layer does not provide information about heat exposure in other hours (e.g. morning and evening hours are typically relatively cooler). The MRT values show lower values in shaded areas, and this can be seen in the sampled MRT data at 2pm, where the sun is oriented slightly west and the shade cast by objects (i.e. buildings and trees) would be on the east side. The MRT is variable based on the time of day; it is typically lower in the mornings and evenings, and likewise, the shade would change orientation in the morning or cover much more area during the late afternoon (i.e. 4-5pm).",
+    },
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Mean Radiant Temperature.",
@@ -284,7 +308,13 @@ export const datasets: Dataset[] = [
     icon: surfaceTemperature,
     thumbnail: thumbnailST,
     info: `The temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating.`,
-    description:"Surface Temperature (ST) refers to the temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating. Surface Temperature indicates how hot the “surface” of the Earth would feel to the touch in a particular location (i.e. building roofs, grass, tree canopy, etc.). Surface temperature is not the same as the air temperature in the daily weather report. We retrieved the surface temperature from the Landsat 8/9 Level 2 Collection dataset (https://www.usgs.gov/landsat-missions/landsat-collection-2-level-2-science-products). These layers are extracted from Band 10 of Landsat 8 and 9 images. The resolution of these raster layers is 30m. We have included all cloud-free images available for this region between 2013 and 2023. ",
+    description: {
+      intro:
+        "Surface temperature measures the temperature of the ground or other surfaces, which can vary significantly from air temperature due to direct solar heating. It indicates how hot the surface of the earth would feel to touch in a particular location (i.e. building roofs, grass, tree canopy, etc.).",
+      method:
+        "Surface temperature data in the NYC Urban Heat Portal is retrieved from the USGS Landsat 8/9 Level 2 Collection. Data was extracted rom Band 10 of Landsat 8 and 9 raster images, sampled at a resolution of 30m. All cloud-free raster images are available on the NYC Urban Heat Portal for the greater NYC region between 2013 and 2023.",
+      case: "Surface temperature represents the temperature of surfaces such as roofs, streets, and pavements (e.g. how it feels to touch the surface). On summer days, the surfaces that have been exposed to sunlight absorb heat and are usually much warmer than other surfaces. It is not unusual for an asphalt surface that is exposed to direct sunlight to have a 120°F temperature. High surface temperatures eventually warm up the air above it, but there are many different factors that contribute to that conversion. For example, wind speed and direction are major determinants of how surface temperature will warm up the air above it and how that air moves around. Our goal in urban heat mitigation is to reduce surface temperatures because it contributes to reducing the air temperature across the city. Use the surface temperature to see what surfaces are generating heat and what surfaces are generating cool air. Note that parks are cooler, cool roofs are cooler than dark roofs, and trees are cooler than open impervious surfaces, such as highways and parking lots. In a given space, surface temperature is different from air temperature or mean radiant temperature.",
+    },
     externalSource: {
       citation:
         "Earth Resources Observation and Science (EROS) Center. Landsat 8-9 Operational Land Imager / Thermal Infrared Sensor Level-2, Collection 2 [dataset]. U.S. Geological Survey",
@@ -326,7 +356,7 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average surface temperature (°F)",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `ST_${options?.date || "20230902"}`;
           const data = nta_dataset_info.value.find(
             (dataset) => dataset.metric === metric
@@ -359,29 +389,36 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#f4e0d7" },
           ];
 
-          return createNtaLayer(map, metric, this.name, legend, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", metric], +bins[1]],
-              "#f4e0d7",
-              ["<=", ["get", metric], +bins[2]],
-              "#cbada6",
-              ["<=", ["get", metric], +bins[3]],
-              "#a37a76",
-              ["<=", ["get", metric], +bins[4]],
-              "#7a4645",
-              "#511314",
-            ],
-          },date);
+          return createNtaLayer(
+            map,
+            metric,
+            this.name,
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", metric], +bins[1]],
+                "#f4e0d7",
+                ["<=", ["get", metric], +bins[2]],
+                "#cbada6",
+                ["<=", ["get", metric], +bins[3]],
+                "#a37a76",
+                ["<=", ["get", metric], +bins[4]],
+                "#7a4645",
+                "#511314",
+              ],
+            },
+            date
+          );
         },
       },
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `ST_${options?.date || "20230902"}`;
           const data = nta_dataset_info.value.find(
-            (dataset) => dataset.metric === metric 
+            (dataset) => dataset.metric === metric
           );
           const values = Object.entries(data)
             .filter(
@@ -403,37 +440,37 @@ export const datasets: Dataset[] = [
             (parseFloat(minValue) + parseFloat(step) * i).toFixed(1)
           );
 
-
           const legend = [
             { label: bins[5], value: "#511314" },
             { label: bins[4], value: "#7a4645" },
             { label: bins[3], value: "#a37a76" },
             { label: bins[2], value: "#cbada6" },
             { label: bins[1], value: "#f4e0d7" },
-          ]
+          ];
           const surfaceTemperatureCleanup = viewSurfaceTemperature(
             map,
             options?.date
           );
           const ntaLayerCleanup = createNtaLayer(
             map,
-            metric ,
+            metric,
             this.name,
             legend,
             {
               "fill-color": [
                 "case",
-                ["<=", ["get", metric ], +bins[1]],
+                ["<=", ["get", metric], +bins[1]],
                 "#f4e0d7",
-                ["<=", ["get", metric ], +bins[2]],
+                ["<=", ["get", metric], +bins[2]],
                 "#cbada6",
-                ["<=", ["get", metric ], +bins[3]],
+                ["<=", ["get", metric], +bins[3]],
                 "#a37a76",
-                ["<=", ["get", metric ], +bins[4]],
+                ["<=", ["get", metric], +bins[4]],
                 "#7a4645",
                 "#511314",
               ],
-            },date
+            },
+            date
           );
 
           return function onDestroy() {
@@ -450,7 +487,13 @@ export const datasets: Dataset[] = [
     icon: coolRoofs,
     thumbnail: thumbnailCoolRoofs,
     info: "Buildings with cool roofs absorb and transfer less heat from the sun; cool roof areas have a reflectivity value greater than or equal to 60.",
-    description:"Buildings with cool roofs absorb and transfer less heat from the sun to the building compared with a more conventional roof and have a have a reflectivity value greather than or equal to 60. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect. We have measured the roof reflectivity from the ortho images of New York City (2020). For further information about this layer",
+    description: {
+      intro:
+        "Buildings with cool roofs absorb and transfer less heat from the sun to the building.",
+      method:
+        "Roof reflecctivity is measured from ortho images of New York City (2020). The NYC Urban Heat Portal defines cool roofs for areas that have a reflectivity value greater than or equal to 60. ",
+      case: "Cool roofs data shows the buildings that have reflective roofs and the buildings that have dark roofs and retain more heat. Buildings with cool roofs use less air conditioning, save energy, and have more comfortable indoor temperatures. Cool roofs also impact surrounding areas by lowering temperatures outside of buildings and thus mitigating the heat island effect.",
+    },
     externalSource: {
       citation:
         "Heris, M., George, R., Flohr, T., Avila, A. New York City Cool Roofs. Hunter College City University of New York, Penn State University, and the Mayor's Office of Climate and Environmental Justice of New York.",
@@ -543,7 +586,13 @@ export const datasets: Dataset[] = [
     icon: treeCanopy,
     thumbnail: thumbnailTreeCanopy,
     info: "Areas where leaves, branches, and stems of trees cover the ground, when viewed from above. Tree canopy areas reduce urban heat island effect.",
-    description:"Urban tree canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above. UTC reduces the urban heat island effect, reduces heating/cooling costs, lowers air temperatures, reduces air pollution. We have extracted the tree canopy layer from New York City's high-resolution land cover data (2017, 0.5 feet). The layer is resampled to a 1-meter resolution. The source of this layer is NYC Open Data. ",
+    description: {
+      intro:
+        "Urban Tree Canopy (UTC) shows areas where leaves, branches, and stems of trees cover the ground, when viewed from above.",
+      method:
+        "Tree canopy data is referenced from New York City's high-resolution land cover data (2017, 0.5 feet), and resampled at a 1 meter resolution.",
+      case: "The tree canopy map shows what areas in the city are covered by trees. Tree canopy areas reduce urban heat island effect, reduces heating and cooling costs, lowers air temperature, and mitigates air pollution.",
+    },
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution.",
@@ -603,18 +652,13 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         init: function (map) {
-          const ntaLayerCleanup = createNtaLayer(
-            map,
-            "PCT_TREES",
-            this.name,
-            [
-              { label: "50%", value: "#d6dfe1" },
-              { label: "24%", value: "#adbec3" },
-              { label: "20%", value: "#859ea4" },
-              { label: "17%", value: "#5c7d86" },
-              { label: "14%", value: "#335d68" },
-            ],
-          );
+          const ntaLayerCleanup = createNtaLayer(map, "PCT_TREES", this.name, [
+            { label: "50%", value: "#d6dfe1" },
+            { label: "24%", value: "#adbec3" },
+            { label: "20%", value: "#859ea4" },
+            { label: "17%", value: "#5c7d86" },
+            { label: "14%", value: "#335d68" },
+          ]);
           const treeCanopyCleanup = viewTreeCanopy(map);
           return function onDestroy() {
             ntaLayerCleanup();
@@ -631,7 +675,13 @@ export const datasets: Dataset[] = [
     icon: premeableSurface,
     thumbnail: thumbnailPermableSurf,
     info: "Areas with porous surface materials that allow water to pass through them, which reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
-    description:"Permeable surfaces, also known as porous or pervious surfaces, are materials that allow water to pass through them, rather than impeding its flow. These surfaces are designed to reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers. This layer is extracted from New York City's high-resolution land cover layer (2017, 0.5 feet). We chose the land cover classes of bare soil, grass, and water as the permeable surfaces. We resampled this layer to 1 meter. The high-resolution land cover layer is available through NYC Open Data.",
+    description: {
+      intro:
+        "Permeable surfaces are areas with porous surface materials that allow water to pass through them, rather than impeding its flow.",
+      method:
+        "Permeable surface data is referenced from New York City's high-resolution land cover data (2017, 0.5 feet), and resampled at a 1 meter resolution. Permeable surfaces are defined by classes including: bare soil, grass, and water.",
+      case: "Permeable surface data shows the areas that can absorb water and are usually cooler than impervious surfaces. These surfaces are designed to reduce stormwater runoff, filter out pollutants, and recharge groundwater aquifers.",
+    },
     externalSource: {
       citation:
         "Office of Technology and Innovation. Land Cover Raster Data (2017) - 6in Resolution",
@@ -691,7 +741,7 @@ export const datasets: Dataset[] = [
       raw: {
         name: "Raw Data",
         legend: [],
-        init: function(map) {
+        init: function (map) {
           const ntaLayerCleanup = createNtaLayer(
             map,
             "PCT_PERMEABLE",
@@ -702,13 +752,13 @@ export const datasets: Dataset[] = [
               { label: "10%", value: "#c19d65" },
               { label: "6%", value: "#a87e3e" },
               { label: "4%", value: "#8f6018" },
-            ],
+            ]
           );
-          const premeableSurfaceCleanup =  viewPremeableSurface(map)
-          return function onDestroy(){
+          const premeableSurfaceCleanup = viewPremeableSurface(map);
+          return function onDestroy() {
             ntaLayerCleanup();
-            premeableSurfaceCleanup()
-          }
+            premeableSurfaceCleanup();
+          };
         },
       },
     },
@@ -719,13 +769,19 @@ export const datasets: Dataset[] = [
     icon: airTemperature,
     thumbnail: thumbnailAirTemp,
     info: "Temperature measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter which is calculated at 3pm in the following dates",
-    description:"Air Temperature or Dry-Bulb Temperature (DBT) is the temperature of air measured by a thermometer freely exposed to the air, but shielded from radiation. The thermometer is typically placed at about 2 meters above the ground. This is independent of the humidity of the air.",
+    description: {
+      intro:
+        "Air temperature is the measure of how hot or cold the air is. Air temperature is the most commonly measured weather parameter.",
+      method:
+        "Air temperature or dry-bulb Temperature (DBT) is the temperature of air measured by a thermometer freely exposed to the air, but shielded from radiation. The thermometer is typically placed at about 2 meters above the ground. The air temperature raster data is modeled as an estimate based on the surface temperature around a cell and the wind direction and speed at a given hour and day; the NYC Urban Heat Portal features air temperature sampled at 3pm in the afternoon for dates specified between 2013-2023.",
+      case: "Air temperature data is dynamic layer that is variable based on air movement patterns, including wind and regional temperature. In other summer days and other hours, the air temperature distribution will have different patterns. Air temperature raster layer is modeled, so this means that it represents the estimated air temperature for any given cell/pixel. If one neighborhood has a higher air temperature avefrage compared to its adjacent neighborhoods, this does not necessarily mean that it is always warmer. When the wind direction changes, the air temperature value in a given cell would change too. If you want to see how the built environment in a given neighborhood affects the temperature patterns, we suggest using static layers, such as mean radiant temperature or surface temperature data, that do not vary based on wind and temperature. Note that the measure for air temperature is independent of the humidity of the air. ",
+    },
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Temperature.",
       year: "2025",
     },
-    currentView: 'raw',
+    currentView: "raw",
     dates: [],
     currentDate: null,
     getDownloadUrls: async () => {
@@ -760,7 +816,7 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average air temperature (°F)",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `Air_temp_raster_${date}`;
           const data = nta_dataset_info.value.find(
             (dataset) => dataset.metric === metric
@@ -794,26 +850,33 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#F4D9CD" },
           ];
 
-          return createNtaLayer(map, metric, this.name, legend, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", metric], +bins[1]],
-              "#F4D9CD",
-              ["<=", ["get", metric], +bins[2]],
-              "#EFC9A9",
-              ["<=", ["get", metric], +bins[3]],
-              "#EBBC85",
-              ["<=", ["get", metric], +bins[4]],
-              "#E6AE61",
-              "#E19F3D",
-            ],
-          }, date);
+          return createNtaLayer(
+            map,
+            metric,
+            this.name,
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", metric], +bins[1]],
+                "#F4D9CD",
+                ["<=", ["get", metric], +bins[2]],
+                "#EFC9A9",
+                ["<=", ["get", metric], +bins[3]],
+                "#EBBC85",
+                ["<=", ["get", metric], +bins[4]],
+                "#E6AE61",
+                "#E19F3D",
+              ],
+            },
+            date
+          );
         },
       },
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `Air_temp_raster_${date}`;
           const data = nta_dataset_info.value.find(
             (dataset) => dataset.metric === metric
@@ -847,20 +910,27 @@ export const datasets: Dataset[] = [
             { label: bins[1], value: "#F4D9CD" },
           ];
           const airTemperatureCleanup = viewAirTemperature(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(map, metric, this.name, legend, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", metric], +bins[1]],
-              "#F4D9CD",
-              ["<=", ["get", metric], +bins[2]],
-              "#EFC9A9",
-              ["<=", ["get", metric], +bins[3]],
-              "#EBBC85",
-              ["<=", ["get", metric], +bins[4]],
-              "#E6AE61",
-              "#E19F3D",
-            ],
-          },date);
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            metric,
+            this.name,
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", metric], +bins[1]],
+                "#F4D9CD",
+                ["<=", ["get", metric], +bins[2]],
+                "#EFC9A9",
+                ["<=", ["get", metric], +bins[3]],
+                "#EBBC85",
+                ["<=", ["get", metric], +bins[4]],
+                "#E6AE61",
+                "#E19F3D",
+              ],
+            },
+            date
+          );
 
           return function onDestroy() {
             ntaLayerCleanup();
@@ -876,7 +946,13 @@ export const datasets: Dataset[] = [
     icon: airHeatIndex,
     thumbnail: thumbnailAirHeatIndex,
     info: "What the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort. The parameter is calculated at 3pm in the following dates",
-    description:"Heat Index is a measure of how hot it really feels when factoring in the relative humidity. This index is a combination of air temperature and relative humidity and you can calculate it using a formula.",
+    description: {
+      intro:
+        "Air heat index is what the temperature feels like to the human body when relative humidity is combined with the air temperature. This has important considerations for the human body's comfort.",
+      method:
+        "Air heat index raster data is modeled as an estimate based on the combination of air temperature and relative humidity. Similar to the air temperature data, air heat index is a dynamic layer that varies based on the wind direction and speed, but differs from air temperature because it also factors in relative humidity. Air heat index data is sampled at 3pm in the afternoon.",
+      case: "The heat index is what feels like temperature. In a given temperature, higher relative humidity will create higher heat index values because the evaporating cooling will be more complex, and you will feel warmer. In a weather situation where the relative humidity is lower, it feels like the temperature or heat index will also be lower.",
+    },
     externalSource: {
       citation:
         "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City Air Heat Index",
@@ -917,7 +993,7 @@ export const datasets: Dataset[] = [
         name: "NTA Aggregated",
         legendTitle: "Average air heat index (°F)",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `Air_Heat_Index_outputs${date}`;
           const data = nta_dataset_info.value.find(
             (dataset) => dataset.metric === metric
@@ -949,28 +1025,35 @@ export const datasets: Dataset[] = [
             { label: bins[3], value: "#E6A891" },
             { label: bins[2], value: "#EFC7B1" },
             { label: bins[1], value: "#F7E7D0" },
-          ]
+          ];
 
-          return createNtaLayer(map, metric, this.name, legend, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", metric], +bins[1]],
-              "#F7E7D0",
-              ["<=", ["get", metric], +bins[2]],
-              "#EFC7B1",
-              ["<=", ["get", metric], +bins[3]],
-              "#E6A891",
-              ["<=", ["get", metric], +bins[4]],
-              "#DE8872",
-              "#D66852",
-            ],
-          },date);
+          return createNtaLayer(
+            map,
+            metric,
+            this.name,
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", metric], +bins[1]],
+                "#F7E7D0",
+                ["<=", ["get", metric], +bins[2]],
+                "#EFC7B1",
+                ["<=", ["get", metric], +bins[3]],
+                "#E6A891",
+                ["<=", ["get", metric], +bins[4]],
+                "#DE8872",
+                "#D66852",
+              ],
+            },
+            date
+          );
         },
       },
       raw: {
         name: "Raw Data",
         init: function (map, options) {
-          const date = options?.date || "20230902"
+          const date = options?.date || "20230902";
           const metric = `Air_Heat_Index_outputs${date}`;
           const data = nta_dataset_info.value.find(
             (dataset) => dataset.metric === metric
@@ -1001,22 +1084,29 @@ export const datasets: Dataset[] = [
             { label: bins[3], value: "#E6A891" },
             { label: bins[2], value: "#EFC7B1" },
             { label: bins[1], value: "#F7E7D0" },
-          ]
+          ];
           const airHeatIndexCleanup = viewAirHeatIndex(map, options?.date);
-          const ntaLayerCleanup = createNtaLayer(map, metric, this.name, legend, {
-            "fill-color": [
-              "case",
-              ["<=", ["get", metric], +bins[1]],
-              "#F7E7D0",
-              ["<=", ["get", metric], +bins[2]],
-              "#EFC7B1",
-              ["<=", ["get", metric], +bins[3]],
-              "#E6A891",
-              ["<=", ["get", metric], +bins[4]],
-              "#DE8872",
-              "#D66852",
-            ],
-          },date);
+          const ntaLayerCleanup = createNtaLayer(
+            map,
+            metric,
+            this.name,
+            legend,
+            {
+              "fill-color": [
+                "case",
+                ["<=", ["get", metric], +bins[1]],
+                "#F7E7D0",
+                ["<=", ["get", metric], +bins[2]],
+                "#EFC7B1",
+                ["<=", ["get", metric], +bins[3]],
+                "#E6A891",
+                ["<=", ["get", metric], +bins[4]],
+                "#DE8872",
+                "#D66852",
+              ],
+            },
+            date
+          );
 
           return function onDestroy() {
             ntaLayerCleanup();

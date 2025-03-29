@@ -92,25 +92,25 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
     }
 
     // datasets that are external 
-    if (dataset.externalUrl) {
-        return (
-            <div className={`md:flex mb-5 `}>
-                <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
-                    <div className="w-[120px] h-[120px] text-center bg-[#DCDCDC]"></div>
-                    <div className="flex-1">
-                        <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
-                        <div className="font-light text-small">
-                            {/* @ts-ignore */}
-                            <a href={dataset.externalUrl}>{dataset.externalSource}</a><br />
-                            <p className="">
-                                {dataset.info}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+    // if (dataset.externalUrl) {
+    //     return (
+    //         <div className={`md:flex mb-5 `}>
+    //             <div className={`flex gap-[1.875rem] mb-5 md:w-[55%]`}>
+    //                 <div className="w-[120px] h-[120px] text-center bg-[#DCDCDC]"></div>
+    //                 <div className="flex-1">
+    //                     <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
+    //                     <div className="font-light text-small">
+    //                         {/* @ts-ignore */}
+    //                         <p >{dataset.externalSource}</p><br />
+    //                         <p className="">
+    //                             {dataset.info}
+    //                         </p>
+    //                     </div>
+    //                 </div>
+    //             </div>
+    //         </div>
+    //     )
+    // }
 
     return (
         <div className={`md:flex mb-5 `}>
@@ -121,11 +121,19 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
                 {/* </div> */}
                 <div className="flex-1">
                     <h3 className="mb-2 font-semibold text-subheadline">{dataset.name}</h3>
-                    <div className="font-light text-small">
-                        <a href={`${dataset.externalSource?.href}`} className="font-bold text-black">{dataset.externalSource?.citation}</a> <span className="font-bold text-black"> | {dataset.externalSource?.year}</span>
-                        <p className="mt-2">
-                            {dataset.description}
-                        </p>
+                    <div className="font-light text-small text-black">
+                        <p  className="font-bold ">{dataset.externalSource?.citation} <span className="font-bold text-black"> | {dataset.externalSource?.year}</span></p>
+                        <div className="mt-2">
+                        {dataset.description.intro}
+                        </div>
+                        <div className="mt-2">
+                            <h3 className="font-bold">Methodology</h3>
+                            {dataset.description.method}
+                        </div>
+                        <div className="mt-2">
+                            <h3 className="font-bold">Use Case</h3>
+                            {dataset.description.case}
+                        </div>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import * as d3 from "d3";
 
 import { nta_dataset_info, out_door_heat_index } from "../App";
 import ntaFeatureCollection from "../data/nta.geo.json";
+import { clickedNeighborhoodInfo } from "../pages/MapPage";
 
 type Props = {
     data: { neighborhood: string; value: number }[];
@@ -62,6 +63,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
 
         const maxBars = Math.floor(innerWidth / (barWidth + barSpacing));
         const displayedBars = sortedData.slice(0, maxBars);
+        console.log(displayedBars)
 
         const xScale = d3
             .scaleBand()
@@ -189,6 +191,8 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("width", barWidth)
             .attr("height", 0)
             .attr("fill", (d) => colorScale(d.value))
+            .attr("stroke", "#fff")
+            .attr("stroke-width", d => d.neighborhood === clickedNeighborhoodInfo.value?.code ? 2 : 0)
             .on("mousemove", (event, index) => {
                 const [xPos, yPos] = d3.pointer(event, svgRef.current);
                 const ntacode = index.neighborhood
@@ -223,33 +227,11 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                 }
 
                 const title = `<div class="flex items-end gap-4 px-[1rem] py-[0.5rem]  text-[#FFF] rounded-t-[0.75rem]" style="background-color: ${color}">
-                                <div class="flex flex-col justify-between items-center ">
-                                    <div class="font-bold text-[18px] ">${metric === "PCT_AREA_COOLROOF"
-                        ? `${hoveredCoolRoofsClass}.0` : metric === "NTA_PCT_MRT_Less_Than_110"
-                            ? `${hoveredMRTClass}.0` : metric === "PCT_PERMEABLE"
-                                ? `${hoveredPermeableSurfaceClass}.0` : metric === "PCT_TREES"
-                                    ? `${hoveredTreeCanopyClass}.0` : metric === "SURFACETEMP"
-                                        ? `${hoveredSurfaceTemperatureClass}.0`
-                                        : ""}
+                                    <div>
+                                        <h1 class='mb-1 font-bold text-[1rem] leading-tight'>${ntaname}</h1>
+                                        <h1 class='font-medium text-[0.5rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
                                     </div>
-                                    <div class="font-regular text-[10px] leading-none">
-                                        ${metric === "PCT_AREA_COOLROOF" ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
-                        : metric === "NTA_PCT_MRT_Less_Than_110"
-                            ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
-                            : metric === "PCT_PERMEABLE"
-                                ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
-                                : metric === "PCT_TREES"
-                                    ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
-                                    : metric === "SURFACETEMP"
-                                        ? outDoorHeatIndexTextLevelHandler(hoveredSurfaceTemperatureClass)
-                                        : ""}
-                                    </div>
-                                </div>
-                                <div>
-                                  <h1 class='mb-1 font-bold text-[1rem] leading-tight'>${ntaname}</h1>
-                                  <h1 class='font-medium text-[0.5rem] leading-none'>${boroname} <span class="font-medium text-[0.75rem]">${ntacode}</span></h1>
-                              </div>
-                            </div>`;
+                                </div>`;
 
                 const outdoorHeatExposureIndexTitle = `
                             <div class="flex items-center gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem] text-[#FFF]" style="background-color: ${color};">
@@ -267,25 +249,79 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
                                                 </div>
                             `;
 
-                const details = `<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem]  bg-[#333] rounded-b-[0.75rem]">
-                                    <div class="flex items-start gap-3">
-                                        <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="background-color:${color}">
-                                            <div class='font-bold text-[12px] text-white'>${Math.round(index.value)} ${metric === 'SURFACETEMP' ? "°F" : "%"} </div>
-                                        </div>
-                                        <div class="font-semibold text-[0.75rem] text-white whitespace-nowrap">
-                                         ${metric === "PCT_AREA_COOLROOF"
-                        ? "Area of buildings with cool roofs"
-                        : metric === "NTA_PCT_MRT_Less_Than_110"
-                            ? "Outdoor area with thermal comfort"
-                            : metric === "PCT_PERMEABLE"
-                                ? "Area with permeable surfaces"
-                                : metric === "PCT_TREES"
-                                    ? "Area covered by tree canopy"
-                                    : "Average Surface Temperature"
-                    }                    
-                                        </div>
+                            const details = `
+                            <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem]">
+                              <div class="flex items-start gap-3">
+                                <div class="flex flex-col items-center px-[0.625rem] py-[0.25rem] leading-tight" style="background-color:${color}">
+                                  <div class="flex flex-col justify-between items-center">
+                                    <div class="font-bold text-[18px] text-white">
+                                      ${
+                                        metric === "PCT_AREA_COOLROOF"
+                                          ? `${hoveredCoolRoofsClass}.0`
+                                          : metric === "NTA_PCT_MRT_Less_Than_110"
+                                          ? `${hoveredMRTClass}.0`
+                                          : metric === "PCT_PERMEABLE"
+                                          ? `${hoveredPermeableSurfaceClass}.0`
+                                          : metric === "PCT_TREES"
+                                          ? `${hoveredTreeCanopyClass}.0`
+                                          : metric === "SURFACETEMP"
+                                          ? `${hoveredSurfaceTemperatureClass}.0`
+                                          : ""
+                                      }
                                     </div>
-                                </div>`;
+                                    <div class="font-regular text-[10px] text-white leading-none">
+                                      ${
+                                        metric === "PCT_AREA_COOLROOF"
+                                          ? outDoorHeatIndexTextLevelHandler(hoveredCoolRoofsClass)
+                                          : metric === "NTA_PCT_MRT_Less_Than_110"
+                                          ? outDoorHeatIndexTextLevelHandler(hoveredMRTClass)
+                                          : metric === "PCT_PERMEABLE"
+                                          ? outDoorHeatIndexTextLevelHandler(hoveredPermeableSurfaceClass)
+                                          : metric === "PCT_TREES"
+                                          ? outDoorHeatIndexTextLevelHandler(hoveredTreeCanopyClass)
+                                          : metric === "SURFACETEMP"
+                                          ? outDoorHeatIndexTextLevelHandler(hoveredSurfaceTemperatureClass)
+                                          : ""
+                                      }
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-[1rem] text-white whitespace-nowrap">
+                                        ${
+                                            metric === "PCT_AREA_COOLROOF"
+                                            ? "Cool Roof score"
+                                            : metric === "NTA_PCT_MRT_Less_Than_110"
+                                            ? "Mean Radiant Temperature Score"
+                                            : metric === "PCT_PERMEABLE"
+                                            ? "Peamable Surfaces Score"
+                                            : metric === "PCT_TREES"
+                                            ? "Tree Canopy Score"
+                                            : "Surface Temperature Score"
+                                         }
+                                    </div>
+                                    <div class="leading-tight text-[12px] text-white">
+                                        <span class='font-bold '>${Math.round(index.value)} ${metric === 'SURFACETEMP' ? "°F" : "%"} </span>
+                                        ${
+                                            metric === "PCT_AREA_COOLROOF"
+                                            ? "Area of buildings with cool roofs"
+                                            : metric === "NTA_PCT_MRT_Less_Than_110"
+                                            ? "Outdoor area with thermal comfort"
+                                            : metric === "PCT_PERMEABLE"
+                                            ? "Area with permeable surfaces"
+                                            : metric === "PCT_TREES"
+                                            ? "Area covered by tree canopy"
+                                            :"Average Surface Temperature"
+                                        }
+                                    </div>
+                                </div>
+
+
+                              </div>
+                            </div>
+                          `;
+                          
+
 
                 const outdoorHeatExposureIndexDetails = `
                                 <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[0.5rem] py-[1rem] max-w-[360px] font-regular text-white bg-[#333] rounded-b-[0.75rem]">
@@ -392,7 +428,7 @@ const NeighborhoodProfileBarChart = ({ data, valueAverage, boro, metric }: Props
             .attr("transform", "rotate(-90)") // 按照你原来的要求旋转文本
             .style("font-size", "9px")
             .style("text-anchor", 'middle')
-            .style("fill", "#ababab")
+            .style("fill", d => d.neighborhood === clickedNeighborhoodInfo.value?.code ? "#fff" : '#ababab')
             .text((d) => `${d.neighborhood}`); // 显示 neighborhood 名称
 
         const thresholdValues = [valueAverage.NY, valueAverage.boro];

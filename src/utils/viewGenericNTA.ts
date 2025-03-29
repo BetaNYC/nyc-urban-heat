@@ -249,7 +249,7 @@ export function createNtaLayer(
           ? "text-[#FFF]"
           : "text-[#333]";
 
-      const title = `<div class="flex items-end gap-4 ${
+      const title = `<div class="flex items-end gap-4 z-[10000] ${
         metric.includes("Air_temp") || metric.includes("Air_Heat_Index")
           ? "pl-0 pr-[1rem]"
           : "px-[1rem]"
@@ -307,7 +307,7 @@ export function createNtaLayer(
                           </div>`;
 
       const details = `
-              <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem]">
+              <div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[1rem] pb-[1rem] bg-[#333] rounded-b-[0.75rem] z-[10000]">
                   <div class="font-medium text-[0.75rem] text-white leading-normal">
                   ${
                     metric === "PCT_AREA_COOLROOF"
@@ -369,7 +369,7 @@ export function createNtaLayer(
               </div>`;
 
       const outdoorHeatExposureIndexTitle = `
-      <div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem]" style="background-color: ${outDoorHeatIndexBackgroundColorHandler(
+      <div class="flex items-end gap-4 px-[1rem] pt-[0.75rem] pb-[0.5rem] rounded-t-[0.75rem] z-[10000]" style="background-color: ${outDoorHeatIndexBackgroundColorHandler(
         hoveredOutDoorHeatIndexClass
       )};  color: ${outDoorHeatIndexTextColorHandler(
         hoveredOutDoorHeatIndexClass
@@ -389,7 +389,7 @@ export function createNtaLayer(
       `;
 
       const outdoorHeatExposureIndexDetails = `
-<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[0.5rem] py-[1rem] font-regular text-white bg-[#333] rounded-b-[0.75rem]">
+<div class="flex flex-col gap-[0.75rem] px-[1rem] pt-[0.5rem] py-[1rem] font-regular text-white bg-[#333] rounded-b-[0.75rem] z-[10000]">
 <div class="text-[0.75rem] text-white bg-[#333] leading-snug">Outdoor Heat Exposure (OHE) measures the risk of exposure to higher temperatures in outdoor environments. OHE factors include:</div>
   <div class="flex items-center gap-4">
     <div 
@@ -507,7 +507,7 @@ export function createNtaLayer(
         .setOffset([0, 0])
         .addTo(map);
 
-        popup.getElement().style.zIndex = "99999999";
+        // popup.getElement().style.zIndex = "99999999";
 
       if (hoveredNtacode !== null && hoveredNtacode !== ntacode) {
         map.setFeatureState(
@@ -541,7 +541,6 @@ export function createNtaLayer(
       layerFillId.includes("Air_temp_raster_") ||
       layerFillId.includes("Air_Heat_Index_")
     ) {
-      console.log('aa')
       // selectedDataset.value = datasets[1]
       // initializeView(datasets[1], map).then(dataset => {
       //   selectedDataset.value = { ...dataset }

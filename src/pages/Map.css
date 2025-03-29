@@ -9,6 +9,7 @@
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
+  z-index: 9999999999 !important;
 }
 
 /* Remove any default styles applied to popup content */
