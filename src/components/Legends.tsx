@@ -321,6 +321,23 @@ const Legends = () => {
                     </div>
                 }
                 {
+                    datasetName.value === "Relative Surface Temperature" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[1rem]'>
+                        <div className='flex justify-between text-regular text-[#F4F4F4]'>
+                            <p>Relative Surface Temperature</p>
+                            <XMarkIcon width={18} height={18} className='cursor-pointer' onClick={handleClick} />
+                        </div>
+                        <div className='flex my-1 h-5'>
+                            <div className='w-[50%] h-full bg-gradient-to-r from-[#202E41] via-[#BED0DD] to-[#BED0DD]'></div>
+                            <div className='w-[50%] h-full bg-gradient-to-r from-[#FFE6A9] via-[#F2A18D] to-[#5E1A19]'></div>
+                        </div>
+                        <div className='flex justify-between text-xsmall text-[#F4F4F4]'>
+                            <p>-15 °F Below</p>
+                            <p>Baseline</p>
+                            <p>-50 °F Above</p>
+                        </div>
+                    </div>
+                }
+                {
                     datasetName.value === "Tree Canopy" && viewName.value == 'raw' && <div className='p-[1rem] w-[20rem] text-[#F4F4F4] bg-[#1B1B1B] rounded-[0.5rem]'>
                         <div className='flex justify-between text-regular '>
                             <p className='font-medium'>Tree Canopy Area</p>

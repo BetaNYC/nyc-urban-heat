@@ -33,6 +33,7 @@ import { viewPremeableSurface } from "./viewPremeableSurface";
 import { viewAirTemperature } from "./viewAirTemperature";
 import { viewAirHeatIndex } from "./viewAirHeatIndex";
 import { format } from "d3";
+import { viewRelativeSurfaceTemperature } from "./viewRelativeSurfaceTemperature";
 
 type IconType = typeof outdoorHeatExposureIndex;
 
@@ -297,6 +298,43 @@ export const datasets: Dataset[] = [
           return function onDestroy() {
             ntaLayerCleanup();
             MRTCleanup();
+          };
+        },
+      },
+    },
+  },
+  {
+    name: "Relative Surface Temperature",
+    group: "Static Factors",
+    icon: surfaceTemperature,
+    info: `Mean value ( lowest 20 percentiles and the highest 80 percentiles ) of the relative ST values (relative to the parks in NYC) `,
+    currentView: null,
+    currentDate: null,
+    getDownloadUrls: async () => {
+      const urls =  [{
+        name: "Relative",
+        url: 'https://urban-heat-files.s3.us-east-1.amazonaws.com/nanmean_raster_bet_20_80_percentiles.tif',
+        date: '',
+        format: "relative",
+      }]
+
+      return urls;
+    },
+    views: {
+      raw: {
+        name: "Raw Data",
+        init: function (map) {
+          const surfaceTemperatureCleanup = viewRelativeSurfaceTemperature(map);
+          // // Todo: Update datasets.csv have NTA_Relative_MEAN_ST_20_80_percentiles from NTA_Level_Heat_Data.csv, add to NTA shapefile?
+          // const ntaLayerCleanup = createNtaLayer(
+          //   map,
+          //   'NTA_Relative_MEAN_ST_20_80_percentiles', 
+          //   this.name,
+          //   this.legend!
+          // );
+          return function onDestroy() {
+            //ntaLayerCleanup();
+            surfaceTemperatureCleanup();
           };
         },
       },
