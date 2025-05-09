@@ -600,6 +600,11 @@ export function createNtaLayer(
         .setHTML(`<div class='clicked-nta'>${ntaname}</div>`)
         .addTo(map);
 
+      // Set the z-index for the popup
+      if (clickedNeighborhoodPopup.value) {
+        clickedNeighborhoodPopup.value.getElement().style.zIndex = '-999999999';
+      }
+
       map.flyTo({
         center: [newLng, clickedLat],
         zoom: map.getZoom(),

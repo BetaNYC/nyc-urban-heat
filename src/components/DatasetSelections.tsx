@@ -9,7 +9,8 @@ import InformationCircle from './InformationCircle';
 
 import { Link } from 'react-router-dom';
 
-const groupedDataset = group(datasets, d => d.group)
+const datasetsForMap = datasets.filter(d => Object.keys(d.views).length > 0);
+const groupedDataset = group(datasetsForMap, d => d.group)
 
 const DatasetSelections = () => {
   const destroyCallbackRef = useRef<any>(null);

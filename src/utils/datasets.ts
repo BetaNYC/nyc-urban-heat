@@ -18,6 +18,7 @@ import thumbnailTreeCanopy from "/thumbnails/treecanopy_NTA.png.png";
 import thumbnailPermableSurf from "/thumbnails/permablesurf_NTA.png.png";
 import thumbnailAirTemp from "/thumbnails/airtemp_raster.png.png";
 import thumbnailAirHeatIndex from "/thumbnails/airheatindex_raster.png.png";
+import thumbnailAllNTA from "/thumbnails/all_nta.png";
 
 import mapboxgl, { Map } from "mapbox-gl";
 import { cachedFetch } from "./cache";
@@ -92,6 +93,7 @@ export interface Dataset {
   years?: number[];
   currentYear?: null | number;
   getYears?: () => Promise<number[]>;
+  preferDirectDownload?: boolean;
   views: CollectionOfViews;
 }
 
@@ -135,6 +137,7 @@ export const datasets: Dataset[] = [
       return urls;
     },
     currentView: "nta",
+    preferDirectDownload: true,
     views: {
       nta: {
         name: "NTA Aggregated",
@@ -229,6 +232,7 @@ export const datasets: Dataset[] = [
       year: "2025",
     },
     currentView: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "MRT")
@@ -324,6 +328,7 @@ export const datasets: Dataset[] = [
     currentView: null,
     dates: [],
     currentDate: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.type === "surface_temp")
@@ -501,6 +506,7 @@ export const datasets: Dataset[] = [
       href: "https://storymaps.arcgis.com/stories/0cdc24592f85480ebaa094037b47a767.",
     },
     currentView: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "PCT_AREA_COOLROOF")
@@ -600,6 +606,7 @@ export const datasets: Dataset[] = [
       href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
     },
     currentView: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "PCT_TREES")
@@ -689,6 +696,7 @@ export const datasets: Dataset[] = [
       href: "https://data.cityofnewyork.us/Environment/Land-Cover-Raster-Data-2017-6in-Resolution/he6d-2qns.",
     },
     currentView: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric === "PCT_PERMEABLE")
@@ -784,6 +792,7 @@ export const datasets: Dataset[] = [
     currentView: "raw",
     dates: [],
     currentDate: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric.includes("Air_temp_raster_"))
@@ -961,6 +970,7 @@ export const datasets: Dataset[] = [
     currentView: "raw",
     dates: [],
     currentDate: null,
+    preferDirectDownload: true,
     getDownloadUrls: async () => {
       const urls = nta_dataset_info.value
         .filter((dataset) => dataset.metric.includes("Air_Heat_Index_outputs"))
@@ -1115,6 +1125,37 @@ export const datasets: Dataset[] = [
         },
       },
     },
+  },
+  {
+    name: "All NTA-Level Urban Heat Portal Data",
+    group: "",
+    icon: outdoorHeatExposureIndex, // Using a placeholder icon
+    thumbnail: thumbnailAllNTA, // Using a placeholder thumbnail
+    description: {
+      intro: "This package provides all NTA-level data of the urban heat portal. Please see the data dictionary for the description of each column. We have provided different formats, including a CSV table, a Geodatabase file, a Shapefile, and a Geopackage file.",
+      method: "",
+      case: "",
+    },
+    externalSource: {
+      citation:
+        "Heris, M., Louie, A., Flohr, T., Haijing, L., Kittredge, A., Pankin, He, Z., Marcotullio, P., Fein, M. New York City NTA-Level Data: Urban Heat Portal.",
+      year: "2025",
+    },
+    getDownloadUrls: async () => {
+      return [
+        {
+          name: "Download Zip File",
+          url: "https://urban-heat-files.s3.us-east-1.amazonaws.com/nta_urban_heat_data.zip",
+          format: "zip",
+        },
+      ];
+    },
+    currentView: null,
+    dates: [],
+    currentDate: null,
+    years: [],
+    currentYear: null,
+    views: {},
   },
 ];
 

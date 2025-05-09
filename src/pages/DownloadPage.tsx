@@ -44,6 +44,9 @@ const DownloadPage = () => {
             <DatasetDownloadRow
               dataset={datasets.find(d => d.name === 'Air Heat Index')}
             />
+            <DatasetDownloadRow
+              dataset={datasets.find(d => d.name === 'All NTA-Level Urban Heat Portal Data')}
+            />
           </div>
         </div>
       </div>

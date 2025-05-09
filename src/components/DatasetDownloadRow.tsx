@@ -1,8 +1,8 @@
-
 import { ArrowDownTrayIcon, CalendarDaysIcon } from "@heroicons/react/24/outline"
 import { useEffect, useState } from "react"
 import { Dataset, DownloadUrl } from "../utils/datasets"
 import { formatDateString } from "../utils/format"
+import { nta_dataset_info } from "../App"
 
 type Props = {
     dataset: Dataset | undefined
@@ -26,69 +26,121 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
 
     useEffect(() => {
         if (dataset.getDownloadUrls) {
+            console.log(`DatasetDownloadRow Effect for ${dataset.name}: nta_dataset_info.value length = ${nta_dataset_info.value?.length}`);
             dataset.getDownloadUrls().then(downloadUrls => {
+                console.log(`DatasetDownloadRow Effect for ${dataset.name}: Fetched downloadUrls:`, downloadUrls);
                 setUrls(downloadUrls)
             })
         }
-    }, [])
+    }, [dataset, nta_dataset_info.value])
 
     useEffect(() => {
         // update the selectedFormat and selectedDate, when the urls list gets updated
-        setSelectedDate(dateOptions.at(0) ?? '')
-        setSelectedFormat(formatOptions.at(0) ?? '')
-    }, [urls])
+        const currentFormatOptions = [...new Set(urls.map(d => d.format))];
+        const currentDateOptions = [...new Set(urls.map(d => d.date).filter(d => d).sort((a, b) => parseInt(b!) - parseInt(a!)))];
+
+        setSelectedDate(currentDateOptions.at(0) ?? '');
+        setSelectedFormat(currentFormatOptions.at(0) ?? '');
+    }, [urls]);
 
 
 
-    const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, filename?: string) => {
+    const downloadFile = (urls: DownloadUrl[], selectedDate: string, selectedFormat: string, datasetName: string) => {
+        console.log(`downloadFile called for ${datasetName}:`, { selectedDate, selectedFormat, urls });
 
-        const download = urls.find((url: any) => {
-            if (selectedDate !== '') {
-                // compare dates and format
-                return url.date === String(selectedDate) && url.format === selectedFormat
+        let foundDownload: DownloadUrl | undefined;
+
+        if (dateOptions.length > 0) { // Dataset is configured with dates
+            if (selectedDate) { // A date is selected
+                foundDownload = urls.find(url => url.date === selectedDate && url.format === selectedFormat);
             } else {
-                return url.format === selectedFormat
+                console.warn(`Dated dataset (${datasetName}), but no date selected for download. This may lead to download issues.`);
+                // Attempt to find based on format only as a fallback, though this might not be correct for dated sets
+                foundDownload = urls.find(url => url.format === selectedFormat);
             }
-        })
+        } else { // Dataset does not use dates (e.g., single TIFFs, new S3 zip file, OHEI without dates)
+            foundDownload = urls.find(url => url.format === selectedFormat);
+        }
 
-        if (download) {
-            const format = download.url.split('.').at(-1)
-            const a = document.createElement('a');
-            a.target = '_blank'
-            if (format === "csv") {
-                fetch(download.url)
-                    .then(res => {
-                        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`)
-                        return res.blob()
-                    })
-                    .then(blob => {
-                        const blobUrl = URL.createObjectURL(blob)
-                        const a = document.createElement('a')
-                        a.href = blobUrl
-                        a.download = 'Outdoor Heat Exposure Index.csv'
-                        document.body.appendChild(a)
-                        a.click()
-                        document.body.removeChild(a)
-                        URL.revokeObjectURL(blobUrl)
-                    })
+        console.log(`For ${datasetName}, foundDownload is:`, foundDownload);
+
+        if (foundDownload) {
+            const actualFormat = foundDownload.format;
+            const downloadUrl = foundDownload.url;
+
+            // ***** START DIAGNOSTIC BLOCK for Mean Radiant Temperature *****
+            // if (datasetName === "Mean Radiant Temperature") { // KEEPING THIS COMMENTED FOR NOW
+            //     console.log(`[MRT DIAGNOSTIC] Attempting to fetch: ${downloadUrl}`);
+            //     fetch(downloadUrl)
+            //         .then(response => {
+            //             console.log('[MRT DIAGNOSTIC] Fetch successful. Response object:', response);
+            //             console.log(`[MRT DIAGNOSTIC] Response status: ${response.status} ${response.statusText}`);
+            //             console.log('[MRT DIAGNOSTIC] Response headers:');
+            //             response.headers.forEach((value, name) => {
+            //                 console.log(`  ${name}: ${value}`);
+            //             });
+            //             if (!response.ok) {
+            //                console.error(`[MRT DIAGNOSTIC] Network response was not ok for ${downloadUrl}. Status: ${response.status}`);
+            //             }
+            //             // We will not proceed to blob or download for this test
+            //         })
+            //         .catch(err => {
+            //             console.error(`[MRT DIAGNOSTIC] Fetch error for ${downloadUrl}:`, err);
+            //             // Also log if the error object has more details
+            //             if (err.cause) console.error('[MRT DIAGNOSTIC] Error cause:', err.cause);
+            //         });
+            //     return; // IMPORTANT: Stop further execution for MRT for this test
+            // }
+            // ***** END DIAGNOSTIC BLOCK *****
+
+            let filenameToUse;
+            if (actualFormat === "csv" && datasetName === "Outdoor Heat Exposure Index") {
+                filenameToUse = "Outdoor Heat Exposure Index.csv";
+            } else if (selectedDate) {
+                filenameToUse = `${datasetName}_${selectedDate}.${actualFormat}`;
             } else {
-                // if (format === 'geojson') {
-                //     a.href = '';
-                //     a.download = download.url
-                // } else {
-                // }
-                a.href = download.url;
-                a.download = filename ?? 'file.' + format;
+                filenameToUse = `${datasetName}.${actualFormat}`;
+            }
+
+            // Conditional download logic based on preferDirectDownload flag
+            if (dataset.preferDirectDownload) {
+                console.log(`Using direct download for ${datasetName}: ${downloadUrl}`);
+                const a = document.createElement('a');
+                a.href = downloadUrl;
+                a.download = filenameToUse;
+                // a.target = '_blank'; // Consider if needed, can cause pop-up issues
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+            } else {
+                console.log(`Using fetch/blob download for ${datasetName}: ${downloadUrl}`);
+                fetch(downloadUrl)
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`Fetch failed for ${datasetName} (${actualFormat}): ${res.status} ${res.statusText}`);
+                        }
+                        return res.blob();
+                    })
+                    .then(blob => {
+                        const blobUrl = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = blobUrl;
+                        a.download = filenameToUse;
+                        a.type = blob.type;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(blobUrl);
+                    })
+                    .catch(err => {
+                        console.error(`Download failed for ${datasetName}:`, err);
+                        alert(`Failed to download ${filenameToUse}. Error: ${err.message}. Please check the console for more details.`);
+                    });
             }
-
         } else {
-            alert('Issue with download')
+            console.error("Download URL object not found for:", { datasetName, selectedDate, selectedFormat, availableUrls: urls });
+            alert('The selected file could not be found for download. Please check your selections or report an issue if the problem persists.');
         }
-
-
     }
 
     // datasets that are external 
@@ -126,14 +178,18 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
                         <div className="mt-2">
                         {dataset.description.intro}
                         </div>
-                        <div className="mt-2">
-                            <h3 className="font-bold">Methodology</h3>
-                            {dataset.description.method}
-                        </div>
-                        <div className="mt-2">
-                            <h3 className="font-bold">Use Case</h3>
-                            {dataset.description.case}
-                        </div>
+                        {dataset.description.method && (
+                            <div className="mt-2">
+                                <h3 className="font-bold">Methodology</h3>
+                                {dataset.description.method}
+                            </div>
+                        )}
+                        {dataset.description.case && (
+                            <div className="mt-2">
+                                <h3 className="font-bold">Use Case</h3>
+                                {dataset.description.case}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -159,7 +215,7 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
                 <div>
                     <h3 className="mb-2 font-semibold text-small">Download File</h3>
                     <div className="flex">
-                        {hasMulti ?
+                        {hasMulti || formatOptions.length > 1 ?
                             <select name="FileFormat"
                                 id=""
                                 value={selectedFormat}
@@ -168,10 +224,10 @@ const DatasetDownloadRow = ({ dataset, hasMulti }: Props) => {
                                 {formatOptions.map(key => <option key={key} value={key}>{key}</option>)}
                             </select> :
                             <div className="flex justify-start items-center pl-1 pr-3 py-1  font-regular  text-xsmall border-[1px] border-[#4F4F4F] rounded-l-[0.25rem]">
-                                tiff
+                                {selectedFormat || 'N/A'} {/* Display actual selected format or N/A if none */}
                             </div>
                         }
-                        <button onClick={() => downloadFile(urls, selectedDate, selectedFormat)}
+                        <button onClick={() => downloadFile(urls, selectedDate, selectedFormat, dataset.name)}
                             className="flex items-center justify-center w-8 h-8 bg-[#4F4F4F] border-[1px] border-[#4F4F4F] rounded-r-[0.25rem]">
                             <ArrowDownTrayIcon className="w-4 h-4 text-white" />
                         </button>
